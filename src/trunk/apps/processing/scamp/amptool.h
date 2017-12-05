@@ -68,6 +68,7 @@ class AmpTool : public Seiscomp::Client::StreamApplication {
 
 		void addObject(const std::string&, Seiscomp::DataModel::Object* object);
 		void updateObject(const std::string&, Seiscomp::DataModel::Object* object);
+		void removeObject(const std::string&, Seiscomp::DataModel::Object* object);
 
 
 	private:
@@ -156,7 +157,9 @@ class AmpTool : public Seiscomp::Client::StreamApplication {
 		std::string                _epFile;
 		EventParametersPtr         _ep;
 
-		int                        _acquisitionTimeout;
+		double                     _initialAcquisitionTimeout;
+		double                     _runningAcquisitionTimeout;
+		double                     _acquisitionTimeout;
 		bool                       _hasRecordsReceived;
 
 		Seiscomp::Util::Timer      _timer;

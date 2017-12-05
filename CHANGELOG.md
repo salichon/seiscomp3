@@ -1,176 +1,57 @@
 # Jakarta
 
-## Release YYYY.DDD
+## Release YYYY.ddd
+
+* trunk
+
+  * fix crash in FDSNWS recordstream if server cannot be reached
+  * Updated sc3ml_0.10.xsd
+
+* scamp
+
+  * Update internal cache if picks and/or amplitudes were removed via
+    messaging
+
+* GUI
+
+  * Event list shows only the full summary tooltip if the mouse hovers
+    the ID column (last column)
+
+## Release 2017.334
+
+```SC_API_VERSION 11.0.0```
 
 The database schema has changed since the previous version. To upgrade your
-database from version 0.9 to 0.10 to following SQL script can be used:
+database from version 0.9 to 0.10, please run ```seiscomp update-config scmaster```.
+If a database plugin is configured, then it will check the current database
+schema version and suggest migration scripts to be run. The output should
+look as follows:
 
-
-**MYSQL**
-
-```sql
-CREATE TABLE ResponseIIR (
-	_oid INTEGER(11) NOT NULL,
-	_parent_oid INTEGER(11) NOT NULL,
-	_last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	name VARCHAR(255),
-	type CHAR(1),
-	gain DOUBLE,
-	gainFrequency DOUBLE UNSIGNED,
-	decimationFactor SMALLINT UNSIGNED,
-	delay DOUBLE UNSIGNED,
-	correction DOUBLE,
-	numberOfNumerators TINYINT UNSIGNED,
-	numberOfDenominators TINYINT UNSIGNED,
-	numerators_content BLOB,
-	numerators_used TINYINT(1) NOT NULL DEFAULT '0',
-	denominators_content BLOB,
-	denominators_used TINYINT(1) NOT NULL DEFAULT '0',
-	remark_content BLOB,
-	remark_used TINYINT(1) NOT NULL DEFAULT '0',
-	PRIMARY KEY(_oid),
-	INDEX(_parent_oid),
-	FOREIGN KEY(_oid)
-		REFERENCES Object(_oid)
-		ON DELETE CASCADE,
-	UNIQUE KEY composite_index (_parent_oid,name)
-) ENGINE=INNODB;
-
-
-ALTER TABLE StationGroup ADD start_ms INTEGER AFTER start;
-ALTER TABLE StationGroup ADD end_ms INTEGER AFTER end;
-ALTER TABLE DataloggerCalibration ADD start_ms INTEGER AFTER start;
-ALTER TABLE DataloggerCalibration ADD end_ms INTEGER AFTER end;
-DROP INDEX _parent_oid_2 ON DataloggerCalibration;
-ALTER TABLE DataloggerCalibration ADD CONSTRAINT composite_index UNIQUE(_parent_oid,serialNumber,channel,start,start_ms);
-ALTER TABLE SensorCalibration ADD start_ms INTEGER AFTER start;
-ALTER TABLE SensorCalibration ADD end_ms INTEGER AFTER end;
-ALTER TABLE SensorCalibration MODIFY gain DOUBLE;
-DROP INDEX _parent_oid_2 ON SensorCalibration;
-ALTER TABLE SensorCalibration ADD CONSTRAINT composite_index UNIQUE(_parent_oid,serialNumber,channel,start,start_ms);
-ALTER TABLE AuxStream ADD start_ms INTEGER AFTER start;
-ALTER TABLE AuxStream ADD end_ms INTEGER AFTER end;
-DROP INDEX _parent_oid_2 ON AuxStream;
-ALTER TABLE AuxStream ADD CONSTRAINT composite_index UNIQUE(_parent_oid,code,start,start_ms);
-ALTER TABLE Stream ADD start_ms INTEGER AFTER start;
-ALTER TABLE Stream ADD end_ms INTEGER AFTER end;
-DROP INDEX _parent_oid_2 ON Stream;
-ALTER TABLE Stream ADD CONSTRAINT composite_index UNIQUE(_parent_oid,code,start,start_ms);
-ALTER TABLE SensorLocation ADD start_ms INTEGER AFTER start;
-ALTER TABLE SensorLocation ADD end_ms INTEGER AFTER end;
-DROP INDEX _parent_oid_2 ON SensorLocation;
-ALTER TABLE SensorLocation ADD CONSTRAINT composite_index UNIQUE(_parent_oid,code,start,start_ms);
-ALTER TABLE Station ADD start_ms INTEGER AFTER start;
-ALTER TABLE Station ADD end_ms INTEGER AFTER end;
-DROP INDEX _parent_oid_2 ON Station;
-ALTER TABLE Station ADD CONSTRAINT composite_index UNIQUE(_parent_oid,code,start,start_ms);
-ALTER TABLE Network ADD start_ms INTEGER AFTER start;
-ALTER TABLE Network ADD end_ms INTEGER AFTER end;
-DROP INDEX _parent_oid_2 ON Network;
-ALTER TABLE Network ADD CONSTRAINT composite_index UNIQUE(_parent_oid,code,start,start_ms);
-ALTER TABLE ResponseFIR ADD gainFrequency DOUBLE UNSIGNED AFTER gain;
-ALTER TABLE ResponsePAZ ADD decimationFactor SMALLINT UNSIGNED;
-ALTER TABLE ResponsePAZ ADD delay DOUBLE UNSIGNED;
-ALTER TABLE ResponsePAZ ADD correction DOUBLE;
-ALTER TABLE ResponsePAZ MODIFY gain DOUBLE;
-ALTER TABLE ResponsePolynomial MODIFY gain DOUBLE;
-ALTER TABLE ResponsePolynomial MODIFY approximationLowerBound DOUBLE;
-ALTER TABLE ResponsePolynomial MODIFY approximationUpperBound DOUBLE;
-ALTER TABLE ResponseFAP MODIFY gain DOUBLE;
-ALTER TABLE DataloggerCalibration MODIFY gain DOUBLE;
-ALTER TABLE Datalogger MODIFY gain DOUBLE;
-ALTER TABLE StationGroup MODIFY code CHAR(20);
-ALTER TABLE StationGroup MODIFY description VARCHAR(255);
-ALTER TABLE AuxSource MODIFY name VARCHAR(255);
-ALTER TABLE AuxSource MODIFY description VARCHAR(255);
-ALTER TABLE AuxDevice MODIFY name VARCHAR(255);
-ALTER TABLE AuxDevice MODIFY description VARCHAR(255);
-ALTER TABLE Sensor MODIFY name VARCHAR(255);
-ALTER TABLE Datalogger MODIFY description VARCHAR(255);
-ALTER TABLE Station MODIFY description VARCHAR(255);
-ALTER TABLE Network MODIFY description VARCHAR(255);
-
-UPDATE Meta SET value='0.10' WHERE name='Schema-Version';
+```
+* starting kernel modules
+spread is already running
+starting scmaster
+* configure scmaster
+  * check database write access ... OK
+  * database schema version is 0.9
+  * last migration version is 0.10
+  * migration to the current version is required. apply the following
+    scripts in exactly the given order:
+    * /home/sysop/seiscomp3/share/db/migrations/mysql/0_9_to_0_10.sql
+error: updating configuration for scmaster failed
 ```
 
-**PostgreSQL**
+To apply the given script, log into your database server and execute the script.
+In mysql it can be done with
 
-```sql
-CREATE TABLE ResponseIIR (
-	_oid BIGINT NOT NULL,
-	_parent_oid BIGINT NOT NULL,
-	_last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	m_name VARCHAR(255),
-	m_type VARCHAR(1),
-	m_gain DOUBLE PRECISION,
-	m_gainFrequency DOUBLE PRECISION,
-	m_decimationFactor SMALLINT,
-	m_delay DOUBLE PRECISION,
-	m_correction DOUBLE PRECISION,
-	m_numberOfNumerators SMALLINT,
-	m_numberOfDenominators SMALLINT,
-	m_numerators_content BYTEA,
-	m_numerators_used BOOLEAN NOT NULL DEFAULT '0',
-	m_denominators_content BYTEA,
-	m_denominators_used BOOLEAN NOT NULL DEFAULT '0',
-	m_remark_content BYTEA,
-	m_remark_used BOOLEAN NOT NULL DEFAULT '0',
-	PRIMARY KEY(_oid),
-	FOREIGN KEY(_oid)
-		REFERENCES Object(_oid)
-		ON DELETE CASCADE,
-	CONSTRAINT responseiir_composite_index UNIQUE(_parent_oid,m_name)
-);
+```
+mysql> source /home/sysop/seiscomp3/share/db/migrations/mysql/0_9_to_0_10.sql;
+```
 
-CREATE INDEX ResponseIIR__parent_oid ON ResponseIIR(_parent_oid);
-CREATE TRIGGER ResponseIIR_update BEFORE UPDATE ON ResponseIIR FOR EACH ROW EXECUTE PROCEDURE update_modified();
+and in psql with
 
-ALTER TABLE StationGroup ADD m_start_ms INTEGER;
-ALTER TABLE StationGroup ADD m_end_ms INTEGER;
-ALTER TABLE DataloggerCalibration ADD m_start_ms INTEGER;
-ALTER TABLE DataloggerCalibration ADD m_end_ms INTEGER;
-ALTER TABLE DataloggerCalibration DROP CONSTRAINT dataloggercalibration__parent_oid_m_serialnumber_m_channel__key;
-ALTER TABLE DataloggerCalibration ADD CONSTRAINT dataloggercalibration_composite_index UNIQUE(_parent_oid,m_serialNumber,m_channel,m_start,m_start_ms);
-ALTER TABLE SensorCalibration ADD m_start_ms INTEGER;
-ALTER TABLE SensorCalibration ADD m_end_ms INTEGER;
-ALTER TABLE SensorCalibration DROP CONSTRAINT sensorcalibration__parent_oid_m_serialnumber_m_channel_m_st_key;
-ALTER TABLE SensorCalibration ADD CONSTRAINT sensorcalibration_composite_index UNIQUE(_parent_oid,m_serialNumber,m_channel,m_start,m_start_ms);
-ALTER TABLE AuxStream ADD m_start_ms INTEGER;
-ALTER TABLE AuxStream ADD m_end_ms INTEGER;
-ALTER TABLE AuxStream DROP CONSTRAINT auxstream__parent_oid_m_code_m_start_key;
-ALTER TABLE AuxStream ADD CONSTRAINT auxstream_composite_index UNIQUE(_parent_oid,m_code,m_start,m_start_ms);
-ALTER TABLE Stream ADD m_start_ms INTEGER;
-ALTER TABLE Stream ADD m_end_ms INTEGER;
-ALTER TABLE Stream DROP CONSTRAINT stream__parent_oid_m_code_m_start_key;
-ALTER TABLE Stream ADD CONSTRAINT stream_composite_index UNIQUE(_parent_oid,m_code,m_start,m_start_ms);
-ALTER TABLE SensorLocation ADD m_start_ms INTEGER;
-ALTER TABLE SensorLocation ADD m_end_ms INTEGER;
-ALTER TABLE SensorLocation DROP CONSTRAINT sensorlocation__parent_oid_m_code_m_start_key;
-ALTER TABLE SensorLocation ADD CONSTRAINT sensorlocation_composite_index UNIQUE(_parent_oid,m_code,m_start,m_start_ms);
-ALTER TABLE Station ADD m_start_ms INTEGER;
-ALTER TABLE Station ADD m_end_ms INTEGER;
-ALTER TABLE Station DROP CONSTRAINT station__parent_oid_m_code_m_start_key;
-ALTER TABLE Station ADD CONSTRAINT station_composite_index UNIQUE(_parent_oid,m_code,m_start,m_start_ms);
-ALTER TABLE Network ADD m_start_ms INTEGER;
-ALTER TABLE Network ADD m_end_ms INTEGER;
-ALTER TABLE Network DROP CONSTRAINT network__parent_oid_m_code_m_start_key;
-ALTER TABLE Network ADD CONSTRAINT network_composite_index UNIQUE(_parent_oid,m_code,m_start,m_start_ms);
-ALTER TABLE ResponseFIR ADD m_gainFrequency DOUBLE PRECISION;
-ALTER TABLE ResponsePAZ ADD m_decimationFactor SMALLINT UNSIGNED;
-ALTER TABLE ResponsePAZ ADD m_delay DOUBLE UNSIGNED;
-ALTER TABLE ResponsePAZ ADD m_correction DOUBLE;
-ALTER TABLE StationGroup MODIFY m_code VARCHAR(20);
-ALTER TABLE StationGroup MODIFY m_description VARCHAR(255);
-ALTER TABLE AuxSource MODIFY m_name VARCHAR(255);
-ALTER TABLE AuxSource MODIFY m_description VARCHAR(255);
-ALTER TABLE AuxDevice MODIFY m_name VARCHAR(255);
-ALTER TABLE AuxDevice MODIFY m_description VARCHAR(255);
-ALTER TABLE Sensor MODIFY m_name VARCHAR(255);
-ALTER TABLE Datalogger MODIFY m_description VARCHAR(255);
-ALTER TABLE Station MODIFY m_description VARCHAR(255);
-ALTER TABLE Network MODIFY m_description VARCHAR(255);
-
-UPDATE Meta SET value='0.10' WHERE name='Schema-Version';
+```
+seiscomp3=> \i /home/sysop/seiscomp3/share/db/migrations/mysql/0_9_to_0_10.sql;
 ```
 
 **Rationale**
@@ -184,7 +65,12 @@ have been added. Furthermore the ResponseIIR type has been added to correctly
 store SEED response coefficients (blockette 54) without the need to convert IIR
 filters to poles and zeros.
 
+Furthermore a description of a pdf (probability density function) has been added
+to the RealQuantity and TimeQuantity type.
+
 **Important API changes**
+
+***MagnitudeProcessor***
 
 The MagnitudeProcessor interface has changed to support regionalized
 magnitude computations. The method ```computeMagnitude``` receives additionally
@@ -211,10 +97,73 @@ Status computeMagnitude(double amplitude, double period,
 Furthermore a new enumeration has been added to return the status of
 the magnitude processing: ```EpicenterOutOfRegions```.
 
-----
+***RecordStream***
+
+The RecordStream interface has changed considerably. All ```std::string```
+parameters that were passed by value have changed to be passed by const
+reference. Due to the rather complicated structure of the RecordStream
+interface and its usage in RecordInput, the following methods were removed:
+
+* std::istream& stream()
+* Record *createRecord(Array::DataType, Record::Hint)
+* void recordStored(Record*)
+* bool filterRecord(Record*)
+
+The new interface does deal directly with records and therefore only provides
+the single method ```Record *next()```. Iteration stops when a NULL record will
+be returned. The advantage is, that an implementation which would route requests
+to several backends in parallel such as the balanced recordstream do not need
+to deserialize and serialize a record additionally to the application
+deserialization. This improves performance and makes it easier to develop more
+complex implementations such as a router (which is available as extension from
+gempa).
+
+The Python API with respect to RecordInput did not change. You can still use
+your old code. Anyone with custom recordstream implementations will have to
+port their code.
+
+***Python***
+
+The API changed with respect to exceptions. Rather than throwing wrapped
+SC3 exceptions either the Python *ValueError* exception which corresponds to
+the C++ *Seiscomp::Core::ValueException* and replaces the old Python
+*seiscomp3.Core.ValueException* or the Python *RuntimeError*, which corresponds
+to all other C++ exceptions, is raised. See the following example:
+
+```python
+# Old code
+try:
+    print station.latitude()
+except seiscomp3.Core.ValueException e:
+    print >> sys.stderr, "Station latitude is not set"
+
+# New code
+try:
+    print station.latitude()
+except ValueError e:
+    print >> sys.stderr, "Station latitude is not set"
+```
+
+Furthermore the *seiscomp3.Config.Exception* was replaced with the Python
+*Exception*. See the code below:
+
+```python
+# Old code
+try:
+    param = self.configGetString("param")
+except seiscomp3.Config.Exception e:
+    print >> sys.stderr, "param is not set"
+
+# New code
+try:
+    param = self.configGetString("param")
+except Exception e:
+    print >> sys.stderr, "param is not set"
+```
 
 * trunk
 
+  * The API version (```SC_API_VERSION```) is now 11.0.0
   * Set seiscomp3 database bytea encoding to 'escape' for PostgreSQL database
     servers with version >= 9 in postgres.sql script.
   * Add InventorySyncMessage which is used to enclose an inventory synchronization
@@ -224,10 +173,14 @@ the magnitude processing: ```EpicenterOutOfRegions```.
   * Changed default publicID pattern from "@classname@#@time/%Y%m%d%H%M%S.%f@.@id@"
     to "@classname@/@time/%Y%m%d%H%M%S.%f@.@id@". The hash was removed due to
     possible conflicts with QuakeML publicID constraints.
+  * FDSNWS recordstream sets default URL path to /fdsnws/dataselect/1/query which
+    makes it more easy to use e.g. fdsnws://geofon.gfz-potsdam.de
+  * Removed obsolete recordstream **isoarchive**.
+  * Removed obsolete Greens function access via Arclink.
 
 * GUI
 
-  * The event list shows status REVIEWED as V and FINAL as F
+  * The event list shows status REVIEWED as V, FINAL as F and REPORTED as R
   * Added option to allow map layer visibilities and order
   * Allow to add custom map layers via plugins to the map
   * Refactored Map API (Canvas, Layer, Legend)
@@ -238,6 +191,15 @@ the magnitude processing: ```EpicenterOutOfRegions```.
     blacklist.users = sysop1, sysop2
     blacklist.authors = sysop1@host, sysop2@host
     ```
+  * Map layer drawing properties may be additionally defined in a "map.cfg" file
+    located in the data set folder and subfolder, e.g. ```~/.seiscomp3/fep/map.cfg```,
+    ```~/.seiscomp3/bna/map.cfg```, ```~/.seiscomp3/bna/category/map.cfg```.
+  * Added support for event summary to listen to alert comments and adapt size and color
+    of time ago label accordingly.
+
+* scmm
+
+  * Added the module documentation.
 
 * scmv
 
@@ -250,16 +212,6 @@ the magnitude processing: ```EpicenterOutOfRegions```.
     ```
   * Add legend for event symbols
 
-* GUI
-
-  * All GUI applications support an author and/or user blacklist to prevent sending
-    messages to scmaster. This is not a proper secure access control implementation
-    but helps to setup read-only applications to avoid accidental commits.
-    ```
-    blacklist.users = sysop1, sysop2
-    blacklist.authors = sysop1@host, sysop2@host
-    ```
-
 * scolv
 
   * ```locator.minimumDepth``` is now deprecated in favour of ```olv.locator.minimumDepth```
@@ -267,6 +219,21 @@ the magnitude processing: ```EpicenterOutOfRegions```.
   * Add option to configure the default checkstate of the event association button and
     fix origin button of the popup for committing with additional options: ```olv.commit.forceEventAssociation```
     and ```olv.commit.fixOrigin```. Either default value is true.
+  * Add system tray icon which shows a notification if a new event
+    has been detected. This can be disabled with
+    ```
+    olv.systemTray = false
+    ```
+  * Replace single arrival usage flag with three separate usage flags: time used,
+    backazimuth used and horizontal slowness used which can also be toggled
+    separately
+
+* scrttv
+
+  * Normalize visible amplitudes (S) now toggles between normalizing amplitudes
+    of the currently visible time window (true) or the entire trace (false). The
+    old behaviour caused traces to degenerate into a straight line if the data buffer
+    runs out the time window which was used to normalize amplitudes.
 
 * scqc
 
@@ -286,24 +253,64 @@ the magnitude processing: ```EpicenterOutOfRegions```.
     *trunk* and will update the bindings database. The old behaviour has always
     confused users.
 
+* dlsv2inv
+
+  * Improve conversion to SC3. Many thanks to Arnaud Lemarchand from IPGP France
+    for his exhaustive tests and valuable advises.
+  * Add station and channel comment support
+
 * fdsnxml2inv
 
+  * Improve conversion to SC3. Many thanks to Arnaud Lemarchand from IPGP France
+    for his exhaustive tests and valuable advises.
   * Declare NumeratorCoefficient.i as optional according to the official schema. Before
     that change, a lot of responses failed to convert.
   * Do not populate NumeratorCoefficient.i when converting to FDSNXML to avoid
     bloating the XML.
+  * Add station and channel comment support
 
+* scsohlog
+
+  * Add description and documentation
+
+* scbulletin
+
+  * Add option -e for enhanced output at higher precision.
+
+* seedlink
+
+  * Removed option -C from nmxptool plugin template. This should go into the
+    additional options parameter.
+
+* arclink
+
+  * Removed ```isodir``` option
+  * Removed obsolete GREENSFUNC request type
+
+* scwfparam
+
+  * Add configuration option for the path to the processing log file
+  * Add commandline option ```--force-shakemap``` to run the ShakeMap
+    script even if no station has contributed any data
+
+* VS
+
+  * StrongMotion data model has changed. It introduces pdf descriptions for all
+    RealQuantities and TimeQuantities and adds centroidReference to Rupture
+    table. Either recreate the database from scratch with the new schema or
+    diff the new sql with the old and apply the changes manually.
+
+* Hypo71
+
+  * Fix a bug when all arrivals uncertainties where not set
+  * Fix a bug in Hypo71PC for earthquakes near longitude 0 and longitude 180
+    Thanks to M. Sylvander from IRAP/OMP France for finding and fixing this.
 
 ## Release 2017.124
 
 * seiscomp
 
   * Use symbolic links to module defaults and configurations instead of
-    copying when creating module aliases
-
-* seiscomp
-
-  * Use symbolic links to module defaults and configurations instead of 
     copying when creating module aliases
 
 * doc
@@ -409,6 +416,10 @@ the magnitude processing: ```EpicenterOutOfRegions```.
 * seedlink
 
   * Added ps2400_eth plugin configuration
+
+* sh2proc
+
+  * New Python tool to convert SeismicHandler event files to SC3XML
 
 
 ## Release 2016.333

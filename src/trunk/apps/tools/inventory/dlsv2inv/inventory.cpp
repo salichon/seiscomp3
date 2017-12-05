@@ -312,6 +312,8 @@ bool IsDummy(const ChannelIdentifier& ci, const Inventory::StageItem &item) {
 				return true;
 			}
 			break;
+		case Inventory::RT_None:
+			return true;
 		default:
 			break;
 	}
@@ -550,69 +552,33 @@ void Inventory::CleanupDatabase() {
 
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-void Inventory::GetComment(StationIdentifier& si) {
-	DataModel::WaveformStreamID *wf = new DataModel::WaveformStreamID();
-	wf->setNetworkCode(strip(si.GetNetworkCode()));
-	wf->setStationCode(strip(si.GetStationCallLetters()));
-	wf->setLocationCode("");
-	wf->setChannelCode("");
-	for(unsigned int noc=0; noc<si.sc.size(); noc++)
-		GetStationComment(*si.sc[noc], wf);
-	for(unsigned int component = 0; component < si.ci.size(); component++)
-		GetChannelComment(*si.ci[component], wf);
-	delete wf;
-}
-// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+void Inventory::GetComments(StationIdentifier &si, DataModel::Station *sta) {
+	while ( sta->commentCount() ) sta->removeComment(0);
 
+	int idx = 1;
+	for ( unsigned int c = 0; c < si.sc.size(); ++c ) {
+		Comment &sc = *si.sc[c];
+		int code_key = sc.GetCommentCodeKey();
 
+		for ( unsigned int j=0; j < adc->cd.size(); ++j ) {
+			CommentDescription &comm = *adc->cd[j];
+			if ( code_key == comm.GetCommentCodeKey() ) {
+				if ( comm.GetDescriptionOfComment().size() > 1 ) {
+					DataModel::CommentPtr comment = new DataModel::Comment;
+					bool tmp;
+					Core::Time t;
 
+					comment->setText(comm.GetDescriptionOfComment());
+					t = GetTime(sc.GetBeginningEffectiveTime(), &tmp);
+					if ( tmp )
+						comment->setStart(t);
 
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-void Inventory::GetStationComment(Comment &sc, DataModel::WaveformStreamID *wf) {
-	int code_key = sc.GetCommentCodeKey();
-	for(unsigned int j=0; j<adc->cd.size(); j++)
-	{
-		CommentDescription comm = *adc->cd[j];
-		if(code_key == comm.GetCommentCodeKey())
-		{
-			if(comm.GetDescriptionOfComment().size()>1)
-			{
-				DataModel::QCLog *log = DataModel::QCLog::Create();
-				log->setWaveformID(*wf);
-				log->setMessage(comm.GetDescriptionOfComment());
-				log->setStart(GetTime(sc.GetBeginningEffectiveTime()));
-				if ( !sc.GetEndEffectiveTime().empty() )
-					log->setEnd(GetTime(sc.GetEndEffectiveTime()));
-			}
-		}
-	}
-}
-// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+					t = GetTime(sc.GetEndEffectiveTime(), &tmp);
+					if ( tmp )
+						comment->setEnd(t);
 
-
-
-
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-void Inventory::GetChannelComment(ChannelIdentifier& ci, DataModel::WaveformStreamID *wf) {
-	wf->setLocationCode(strip(ci.GetLocation()));
-	wf->setChannelCode(strip(ci.GetChannel()));
-	for(unsigned int noc=0; noc<ci.cc.size();noc++)
-	{
-		Comment comment = *ci.cc[noc];
-		int code_key = comment.GetCommentCodeKey();
-		for(unsigned int j=0; j<adc->cd.size(); j++)
-		{
-			CommentDescription comm = *adc->cd[j];
-			if(code_key == comm.GetCommentCodeKey())
-			{
-				if(comm.GetDescriptionOfComment().size()>1)
-				{
-					DataModel::QCLog *log = DataModel::QCLog::Create();
-					log->setWaveformID(*wf);
-					log->setMessage(comm.GetDescriptionOfComment());
-					log->setStart(GetTime(comment.GetBeginningEffectiveTime()));
-					if(!comment.GetEndEffectiveTime().empty())
-						log->setEnd(GetTime(comment.GetEndEffectiveTime()));
+					comment->setId(Core::toString(idx++));
+					sta->add(comment.get());
 				}
 			}
 		}
@@ -624,8 +590,75 @@ void Inventory::GetChannelComment(ChannelIdentifier& ci, DataModel::WaveformStre
 
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+void Inventory::GetComments(ChannelIdentifier &ci, DataModel::Stream *stream) {
+	while ( stream->commentCount() ) stream->removeComment(0);
+
+	int idx = 1;
+	for ( unsigned int c = 0; c < ci.cc.size(); ++c ) {
+		Comment &sc = *ci.cc[c];
+		int code_key = sc.GetCommentCodeKey();
+
+		for ( unsigned int j = 0; j < adc->cd.size(); ++j ) {
+			CommentDescription &comm = *adc->cd[j];
+			if ( code_key == comm.GetCommentCodeKey() ) {
+				if ( comm.GetDescriptionOfComment().size() > 1 ) {
+					DataModel::CommentPtr comment = new DataModel::Comment;
+					bool tmp;
+					Core::Time t;
+
+					comment->setText(comm.GetDescriptionOfComment());
+					t = GetTime(sc.GetBeginningEffectiveTime(), &tmp);
+					if ( tmp )
+						comment->setStart(t);
+
+					t = GetTime(sc.GetEndEffectiveTime(), &tmp);
+					if ( tmp )
+						comment->setEnd(t);
+
+					comment->setId(Core::toString(idx++));
+					stream->add(comment.get());
+				}
+			}
+		}
+	}
+}
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+/*
+void Inventory::GetChannelComment(ChannelIdentifier& ci, DataModel::WaveformStreamID *wf) {
+	wf->setLocationCode(strip(ci.GetLocation()));
+	wf->setChannelCode(strip(ci.GetChannel()));
+	for ( unsigned int noc = 0; noc < ci.cc.size(); ++noc ) {
+		Comment comment = *ci.cc[noc];
+		int code_key = comment.GetCommentCodeKey();
+		for ( unsigned int j = 0; j < adc->cd.size(); ++j ) {
+			CommentDescription comm = *adc->cd[j];
+			if ( code_key == comm.GetCommentCodeKey() ) {
+				if ( comm.GetDescriptionOfComment().size() > 1 ) {
+					DataModel::QCLog *log = DataModel::QCLog::Create();
+					log->setWaveformID(*wf);
+					log->setMessage(comm.GetDescriptionOfComment());
+					log->setStart(GetTime(comment.GetBeginningEffectiveTime()));
+					if ( !comment.GetEndEffectiveTime().empty() )
+						log->setEnd(GetTime(comment.GetEndEffectiveTime()));
+				}
+			}
+		}
+	}
+}
+*/
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 Core::Time Inventory::GetTime(string strTime, bool *ok) {
-	int year=0, yday=0, month=0, day=0, hour=0, minute=0, second=0;
+	int year=0, yday=0, month=0, day=0, hour=0, minute=0, second=0, fraction=0;
 	int ondergrens, bovengrens;
 	std::vector<std::string> date, time;
 	stringstream ss;
@@ -634,18 +667,15 @@ Core::Time Inventory::GetTime(string strTime, bool *ok) {
 
 	Core::split(date, strip(strTime).c_str(), ",", false);
 
-	if(date.size() > 0)
+	if ( date.size() > 0 )
 		sscanf(date[0].c_str(), "%d", &year);
 
-	if(date.size() > 1)
-	{
+	if ( date.size() > 1 ) {
 		sscanf(date[1].c_str(), "%d", &yday);
-		for(int m=0;m<12;m++)
-		{
+		for ( int m = 0; m < 12; ++m ) {
 			ondergrens = _ldoy(year, m);
 			bovengrens = _ldoy(year, m+1);
-			if(ondergrens < yday && yday <= bovengrens)
-			{
+			if ( ondergrens < yday && yday <= bovengrens ) {
 				month = m+1;
 				day = yday - _ldoy(year, m);
 				m = 12;
@@ -653,24 +683,25 @@ Core::Time Inventory::GetTime(string strTime, bool *ok) {
 		}
 	}
 
-	if(date.size() > 2)
+	if ( date.size() > 2 )
 		Seiscomp::Core::split(time, date[2].c_str(), ":", false);
 
-	if(time.size() > 0)
+	if ( time.size() > 0 )
 		sscanf(time[0].c_str(), "%d", &hour);
 
-	if(time.size() > 1)
+	if ( time.size() > 1 )
 		sscanf(time[1].c_str(), "%d", &minute);
 
-	if(time.size() > 2)
-		sscanf(time[2].c_str(), "%d", &second);
+	if ( time.size() > 2 )
+		sscanf(time[2].c_str(), "%d.%d", &second, &fraction);
+	fraction *= 100;
 
 	if ( year <= 1970 || year > 2037 ) {
 		if ( ok ) *ok = false;
 		return Core::Time();
 	}
 
-	return Core::Time(year, month, day, hour, minute, second);
+	return Core::Time(year, month, day, hour, minute, second, fraction);
 }
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -710,14 +741,13 @@ void Inventory::ProcessStation() {
 		}
 	}
 
-	for(unsigned int i=0; i<sc->si.size(); i++)
-	{
+	for ( unsigned int i = 0; i < sc->si.size(); ++i ) {
 		string net_code = strip(sc->si[i]->GetNetworkCode());
 		string sta_code = strip(sc->si[i]->GetStationCallLetters());
 		string sta_start = strip(sc->si[i]->GetStartDate());
 
 		int net_year = 0;
-		if(_temporary)
+		if ( _temporary )
 			_net_start.get(&net_year);
 
 		SEISCOMP_INFO("Processing station %s %s %s", net_code.c_str(), sta_code.c_str(), sta_start.c_str());
@@ -726,13 +756,11 @@ void Inventory::ProcessStation() {
 
 		DataModel::NetworkPtr net;
 
-		if(net_it != networks.end())
-		{
+		if ( net_it != networks.end() ) {
 			net = net_it->second;
 			net->update();
 		}
-		else
-		{
+		else {
  			net = DataModel::Network::Create();
  			net->setCode(net_code);
 			net->setStart(_net_start);
@@ -759,11 +787,9 @@ void Inventory::ProcessStation() {
 		map<pair<pair<string, string>, Core::Time>, DataModel::StationPtr>::iterator sta_it = \
 			stations.find(make_pair(make_pair(net_code, sta_code), GetTime(sta_start)));
 
-		if(sta_it != stations.end())
-		{
+		if ( sta_it != stations.end() ) {
 			DataModel::StationPtr sta = sta_it->second;
-			if(sta->archive() != _dcid)
-			{
+			if ( sta->archive() != _dcid ) {
 				SEISCOMP_WARNING("station %s (%s) belongs to datacenter %s, ignoring station %s",
 					sta_code.c_str(), sta_start.c_str(), sta->archive().c_str(), sta_code.c_str());
 				continue;
@@ -809,7 +835,7 @@ DataModel::StationPtr Inventory::InsertStation(StationIdentifier& si, DataModel:
 	station->setRestricted(network->restricted());
 	station->setShared(network->shared());
 	station->setArchive(_dcid);
-	GetComment(si);
+	GetComments(si, station.get());
 
 	network->add(station.get());
 	return station;
@@ -824,7 +850,7 @@ void Inventory::UpdateStation(StationIdentifier& si, DataModel::StationPtr stati
 	SEISCOMP_DEBUG("Update station");
 
 	string desc = si.GetSiteName();
-	if(desc.empty())
+	if ( desc.empty() )
 		desc = si.GetStationCallLetters();
 
 	station->setDescription(desc);
@@ -836,7 +862,7 @@ void Inventory::UpdateStation(StationIdentifier& si, DataModel::StationPtr stati
 	station->setPlace(si.GetCity());
 	station->setCountry(si.GetCountry());
 	station->setRemark(Core::None);
-	GetComment(si);
+	GetComments(si, station.get());
 
 	station->update();
 }
@@ -1107,7 +1133,7 @@ Inventory::InsertStream(ChannelIdentifier& ci, DataModel::SensorLocationPtr loc,
 	if(strm_start < loc->start())
 		strm_start = loc->start();
 
-	DataModel::StreamPtr strm = new DataModel::Stream();
+	DataModel::StreamPtr strm = DataModel::Stream::Create();
 	strm->setCode(ci.GetChannel());
 	strm->setStart(strm_start);
 	strm->setEnd(GetOptTime(ci.GetEndDate()));
@@ -1188,6 +1214,8 @@ Inventory::InsertStream(ChannelIdentifier& ci, DataModel::SensorLocationPtr loc,
 	strm->setRestricted(restricted);
 	strm->setShared(shared);
 
+	GetComments(ci, strm.get());
+
 	loc->add(strm.get());
 	return strm;
 }
@@ -1263,6 +1291,8 @@ void Inventory::UpdateStream(ChannelIdentifier& ci, DataModel::StreamPtr strm,
 	strm->setShared(shared);
 
 	strm->update();
+
+	GetComments(ci, strm.get());
 }
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -2041,6 +2071,17 @@ DataModel::ResponsePAZPtr Inventory::InsertResponsePAZ(ChannelIdentifier& ci, co
 	DataModel::ResponsePAZPtr rp = DataModel::ResponsePAZ::Create();
 
 	rp->setName(name);
+	rp->setDecimationFactor(Core::None);
+	rp->setDelay(Core::None);
+	rp->setCorrection(Core::None);
+
+	for ( size_t i = 0; i < ci.dec.size(); ++i ) {
+		if ( ci.dec[i]->GetStageSequenceNumber() == seqnum ) {
+			rp->setDecimationFactor(ci.dec[i]->GetDecimationFactor());
+			rp->setDelay(ci.dec[i]->GetEstimatedDelay() * ci.dec[i]->GetInputSampleRate());
+			rp->setCorrection(ci.dec[i]->GetCorrectionApplied() * ci.dec[i]->GetInputSampleRate());
+		}
+	}
 
 	char c = ci.rpz[seq]->GetTransferFunctionType();
 	rp->setType(string(&c, 1));
@@ -2114,6 +2155,17 @@ void Inventory::UpdateResponsePAZ(ChannelIdentifier& ci, DataModel::ResponsePAZP
 	rp->setType(string(&c, 1));
 	rp->setGain(stageGain);
 	rp->setGainFrequency(Core::None);
+	rp->setDecimationFactor(Core::None);
+	rp->setDelay(Core::None);
+	rp->setCorrection(Core::None);
+
+	for ( size_t i = 0; i < ci.dec.size(); ++i ) {
+		if ( ci.dec[i]->GetStageSequenceNumber() == seqnum ) {
+			rp->setDecimationFactor(ci.dec[i]->GetDecimationFactor());
+			rp->setDelay(ci.dec[i]->GetEstimatedDelay() * ci.dec[i]->GetInputSampleRate());
+			rp->setCorrection(ci.dec[i]->GetCorrectionApplied() * ci.dec[i]->GetInputSampleRate());
+		}
+	}
 
 	for ( size_t i = 0; i < ci.csg.size(); ++i ) {
 		if ( ci.csg[i]->GetStageSequenceNumber() == seqnum ) {

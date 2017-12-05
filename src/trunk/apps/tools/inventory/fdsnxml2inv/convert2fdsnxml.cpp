@@ -18,6 +18,7 @@
 #include <fdsnxml/network.h>
 #include <fdsnxml/station.h>
 #include <fdsnxml/channel.h>
+#include <fdsnxml/comment.h>
 #include <fdsnxml/response.h>
 #include <fdsnxml/responsestage.h>
 #include <fdsnxml/coefficients.h>
@@ -51,6 +52,8 @@ using namespace std;
 #define DIGITAL     "COUNTS"
 #define TEMPERATURE "C"
 #define PRESSURE    "PA"
+
+#define NO_DESC     ""
 
 
 namespace Seiscomp {
@@ -124,6 +127,7 @@ void populateStageGain(FDSNXML::ResponseStage *stage, T *resp) {
 // request with the penalty of resolving the symmetry here.
 FDSNXML::ResponseStagePtr convert(const DataModel::ResponseFIR *fir,
                                   const std::string &inputUnit,
+                                  const std::string &inputUnitDescription,
                                   const std::string &outputUnit) {
 	FDSNXML::FrequencyType freq;
 	FDSNXML::FloatType ft;
@@ -170,7 +174,7 @@ FDSNXML::ResponseStagePtr convert(const DataModel::ResponseFIR *fir,
 	else if ( fir->symmetry() == "C" )
 		sx_fir.setSymmetry(FDSNXML::SymmetryType(FDSNXML::ST_EVEN));
 
-	sx_fir.setInputUnits(inputUnit);
+	sx_fir.setInputUnits(FDSNXML::UnitsType(inputUnit, inputUnitDescription));
 	sx_fir.setOutputUnits(outputUnit);
 
 	try {
@@ -189,6 +193,7 @@ FDSNXML::ResponseStagePtr convert(const DataModel::ResponseFIR *fir,
 
 FDSNXML::ResponseStagePtr convert(const DataModel::ResponseIIR *iir,
                                   const std::string &inputUnit,
+                                  const std::string &inputUnitDescription,
                                   const std::string &outputUnit) {
 	FDSNXML::FrequencyType freq;
 	FDSNXML::FloatType ft;
@@ -228,7 +233,7 @@ FDSNXML::ResponseStagePtr convert(const DataModel::ResponseIIR *iir,
 	sx_iir.setResourceId(iir->publicID());
 	sx_iir.setName(iir->name());
 
-	sx_iir.setInputUnits(inputUnit);
+	sx_iir.setInputUnits(FDSNXML::UnitsType(inputUnit, inputUnitDescription));
 	sx_iir.setOutputUnits(outputUnit);
 
 	if ( iir->type() == "A" )
@@ -268,6 +273,7 @@ FDSNXML::ResponseStagePtr convert(const DataModel::ResponseIIR *iir,
 
 FDSNXML::ResponseStagePtr convert(const DataModel::ResponsePAZ *paz,
                                   const std::string &inputUnit,
+                                  const std::string &inputUnitDescription,
                                   const std::string &outputUnit) {
 	FDSNXML::FrequencyType freq;
 	FDSNXML::ResponseStagePtr sx_resp = new FDSNXML::ResponseStage;
@@ -286,7 +292,7 @@ FDSNXML::ResponseStagePtr convert(const DataModel::ResponsePAZ *paz,
 	catch ( ... ) { freq.setValue(0); }
 	sx_paz.setNormalizationFrequency(freq);
 
-	sx_paz.setInputUnits(FDSNXML::UnitsType(inputUnit));
+	sx_paz.setInputUnits(FDSNXML::UnitsType(inputUnit, inputUnitDescription));
 	sx_paz.setOutputUnits(FDSNXML::UnitsType(outputUnit));
 
 	OPT(int) decimationFactor;
@@ -360,6 +366,7 @@ FDSNXML::ResponseStagePtr convert(const DataModel::ResponsePAZ *paz,
 
 FDSNXML::ResponseStagePtr convert(const DataModel::ResponseFAP *fap,
                                   const std::string &inputUnit,
+                                  const std::string &inputUnitDescription,
                                   const std::string &outputUnit) {
 	FDSNXML::ResponseStagePtr sx_resp = new FDSNXML::ResponseStage;
 	populateStageGain(sx_resp.get(), fap);
@@ -369,7 +376,7 @@ FDSNXML::ResponseStagePtr convert(const DataModel::ResponseFAP *fap,
 	sx_fap.setResourceId(fap->publicID());
 	sx_fap.setName(fap->name());
 
-	sx_fap.setInputUnits(FDSNXML::UnitsType(inputUnit));
+	sx_fap.setInputUnits(FDSNXML::UnitsType(inputUnit, inputUnitDescription));
 	sx_fap.setOutputUnits(FDSNXML::UnitsType(outputUnit));
 
 	try {
@@ -390,6 +397,7 @@ FDSNXML::ResponseStagePtr convert(const DataModel::ResponseFAP *fap,
 
 FDSNXML::ResponseStagePtr convert(const DataModel::ResponsePolynomial *poly,
                                   const std::string &inputUnit,
+                                  const std::string &inputUnitDescription,
                                   const std::string &outputUnit) {
 	// Insert poly response
 	FDSNXML::ResponseStagePtr sx_resp = new FDSNXML::ResponseStage;
@@ -400,7 +408,7 @@ FDSNXML::ResponseStagePtr convert(const DataModel::ResponsePolynomial *poly,
 	sx_poly.setResourceId(poly->publicID());
 	sx_poly.setName(poly->name());
 
-	sx_poly.setInputUnits(FDSNXML::UnitsType(inputUnit));
+	sx_poly.setInputUnits(FDSNXML::UnitsType(inputUnit, inputUnitDescription));
 	sx_poly.setOutputUnits(FDSNXML::UnitsType(outputUnit));
 
 	FDSNXML::ApproximationType at;
@@ -525,6 +533,22 @@ bool Convert2FDSNStaXML::push(const DataModel::Inventory *inv) {
 		// SelectedNumberOfStations is updated at the end to reflect the
 		// numbers of stations added to this network in this run
 
+		for ( size_t c = 0; c < net->commentCount(); ++c ) {
+			DataModel::Comment *comment = net->comment(c);
+			FDSNXML::CommentPtr sx_comment = new FDSNXML::Comment;
+			int id;
+			if ( Core::fromString(id, comment->id()) )
+				sx_comment->setId(id);
+			else
+				sx_comment->setId(c+1);
+			sx_comment->setValue(comment->text());
+			try { sx_comment->setBeginEffectiveTime(FDSNXML::DateTime(comment->start())); }
+			catch ( ... ) {}
+			try { sx_comment->setEndEffectiveTime(FDSNXML::DateTime(comment->end())); }
+			catch ( ... ) {}
+			sx_net->addComment(sx_comment.get());
+		}
+
 		for ( size_t s = 0; s < net->stationCount(); ++s ) {
 			DataModel::Station *sta = net->station(s);
 			process(sx_net.get(), sta);
@@ -586,6 +610,22 @@ bool Convert2FDSNStaXML::process(FDSNXML::Network *sx_net,
 	else
 		site.setName(sta->description());
 	sx_sta->setSite(site);
+
+	for ( size_t c = 0; c < sta->commentCount(); ++c ) {
+		DataModel::Comment *comment = sta->comment(c);
+		FDSNXML::CommentPtr sx_comment = new FDSNXML::Comment;
+		int id;
+		if ( Core::fromString(id, comment->id()) )
+			sx_comment->setId(id);
+		else
+			sx_comment->setId(c+1);
+		sx_comment->setValue(comment->text());
+		try { sx_comment->setBeginEffectiveTime(FDSNXML::DateTime(comment->start())); }
+		catch ( ... ) {}
+		try { sx_comment->setEndEffectiveTime(FDSNXML::DateTime(comment->end())); }
+		catch ( ... ) {}
+		sx_sta->addComment(sx_comment.get());
+	}
 
 	for ( size_t l = 0; l < sta->sensorLocationCount(); ++l ) {
 		if ( _interrupted ) break;
@@ -815,6 +855,22 @@ bool Convert2FDSNStaXML::process(FDSNXML::Station *sx_sta,
 	}
 	catch ( ... ) {}
 
+	for ( size_t c = 0; c < stream->commentCount(); ++c ) {
+		DataModel::Comment *comment = stream->comment(c);
+		FDSNXML::CommentPtr sx_comment = new FDSNXML::Comment;
+		int id;
+		if ( Core::fromString(id, comment->id()) )
+			sx_comment->setId(id);
+		else
+			sx_comment->setId(c+1);
+		sx_comment->setValue(comment->text());
+		try { sx_comment->setBeginEffectiveTime(FDSNXML::DateTime(comment->start())); }
+		catch ( ... ) {}
+		try { sx_comment->setEndEffectiveTime(FDSNXML::DateTime(comment->end())); }
+		catch ( ... ) {}
+		sx_chan->addComment(sx_comment.get());
+	}
+
 	return true;
 }
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -873,23 +929,23 @@ bool Convert2FDSNStaXML::process(FDSNXML::Channel *sx_chan,
 
 				const DataModel::ResponsePAZ *paz = findPAZ(filters[i]);
 				if ( paz != NULL )
-					sx_stage = convert(paz, CURRENT, CURRENT);
+					sx_stage = convert(paz, CURRENT, NO_DESC, CURRENT);
 				else {
 					const DataModel::ResponseFAP *fap = findFAP(filters[i]);
 					if ( fap != NULL )
-						sx_stage = convert(fap, CURRENT, CURRENT);
+						sx_stage = convert(fap, CURRENT, NO_DESC, CURRENT);
 					else {
 						const DataModel::ResponsePolynomial *poly = findPoly(filters[i]);
 						if ( poly != NULL )
-							sx_stage = convert(poly, CURRENT, CURRENT);
+							sx_stage = convert(poly, CURRENT, NO_DESC, CURRENT);
 						else {
 							const DataModel::ResponseFIR *fir = findFIR(filters[i]);
 							if ( fir != NULL )
-								sx_stage = convert(fir, CURRENT, CURRENT);
+								sx_stage = convert(fir, CURRENT, NO_DESC, CURRENT);
 							else {
 								const DataModel::ResponseIIR *iir = findIIR(filters[i]);
 								if ( iir != NULL )
-									sx_stage = convert(iir, CURRENT, CURRENT);
+									sx_stage = convert(iir, CURRENT, NO_DESC, CURRENT);
 								else {
 									SEISCOMP_WARNING("Response not found in inventory: %s",
 									                 filters[i].c_str());
@@ -948,23 +1004,23 @@ bool Convert2FDSNStaXML::process(FDSNXML::Channel *sx_chan,
 
 				const DataModel::ResponseFIR *fir = findFIR(filters[i]);
 				if ( fir != NULL )
-					sx_stage = convert(fir, DIGITAL, DIGITAL);
+					sx_stage = convert(fir, DIGITAL, NO_DESC, DIGITAL);
 				else {
 					const DataModel::ResponseIIR *iir = findIIR(filters[i]);
 					if ( iir != NULL )
-						sx_stage = convert(iir, DIGITAL, DIGITAL);
+						sx_stage = convert(iir, DIGITAL, NO_DESC, DIGITAL);
 					else {
 						const DataModel::ResponsePAZ *paz = findPAZ(filters[i]);
 						if ( paz != NULL )
-							sx_stage = convert(paz, DIGITAL, DIGITAL);
+							sx_stage = convert(paz, DIGITAL, NO_DESC, DIGITAL);
 						else {
 							const DataModel::ResponseFAP *fap = findFAP(filters[i]);
 							if ( fap != NULL )
-								sx_stage = convert(fap, DIGITAL, DIGITAL);
+								sx_stage = convert(fap, DIGITAL, NO_DESC, DIGITAL);
 							else {
 								const DataModel::ResponsePolynomial *poly = findPoly(filters[i]);
 								if ( poly != NULL )
-									sx_stage = convert(poly, DIGITAL, DIGITAL);
+									sx_stage = convert(poly, DIGITAL, NO_DESC, DIGITAL);
 								else {
 									SEISCOMP_WARNING("FIR response not found in inventory: %s",
 									                 filters[i].c_str());
@@ -1030,6 +1086,20 @@ bool Convert2FDSNStaXML::process(FDSNXML::Channel *sx_chan,
 		unit = "M/S";
 	}
 
+	string unitDescription;
+	try {
+		const DataModel::Blob &blob = sensor->remark();
+		rapidjson::Document json;
+		if ( !json.Parse(blob.content().c_str()).HasParseError() ) {
+			rapidjson::Value::ConstMemberIterator jit = json.FindMember("unit");
+			if ( jit != json.MemberEnd() && jit->value.IsString() )
+				unitDescription = jit->value.GetString();
+		}
+	}
+	catch ( ... ) {}
+
+	FDSNXML::ResponseStagePtr sx_stage;
+
 	const DataModel::ResponsePAZ *paz = findPAZ(sensor->response());
 	if ( paz == NULL ) {
 		const DataModel::ResponsePolynomial *poly = findPoly(sensor->response());
@@ -1039,7 +1109,7 @@ bool Convert2FDSNStaXML::process(FDSNXML::Channel *sx_chan,
 				return false;
 
 			// Insert ResponseList response
-			FDSNXML::ResponseStagePtr sx_stage = convert(fap, unit, CURRENT);
+			sx_stage = convert(fap, unit, unitDescription, CURRENT);
 			FDSNXML::CounterType cnt;
 			cnt.setValue(resp->stageCount()+1);
 			sx_stage->setNumber(cnt);
@@ -1047,7 +1117,7 @@ bool Convert2FDSNStaXML::process(FDSNXML::Channel *sx_chan,
 		}
 		else {
 			// Insert ResponseList response
-			FDSNXML::ResponseStagePtr sx_stage = convert(poly, unit, CURRENT);
+			sx_stage = convert(poly, unit, unitDescription, CURRENT);
 
 			// Set lower and upper frequency bound
 			FDSNXML::FrequencyType freq;
@@ -1078,7 +1148,7 @@ bool Convert2FDSNStaXML::process(FDSNXML::Channel *sx_chan,
 	}
 	else {
 		// Insert PAZ response
-		FDSNXML::ResponseStagePtr sx_stage = convert(paz, unit, CURRENT);
+		sx_stage = convert(paz, unit, unitDescription, CURRENT);
 		FDSNXML::CounterType cnt;
 		cnt.setValue(resp->stageCount()+1);
 		sx_stage->setNumber(cnt);

@@ -90,6 +90,9 @@ AmpTool::AmpTool(int argc, char **argv) : StreamApplication(argc, argv) {
 
 	setAutoAcquisitionStart(false);
 
+	_initialAcquisitionTimeout = 30;
+	_runningAcquisitionTimeout = 2;
+
 	_amplitudeTypes.insert("MLv");
 	_amplitudeTypes.insert("mb");
 	_amplitudeTypes.insert("mB");
@@ -172,6 +175,12 @@ bool AmpTool::initConfiguration() {
 	catch (...) {}
 
 	try { _minWeight = configGetDouble("amptool.minimumPickWeight"); }
+	catch ( ... ) {}
+
+	try { _initialAcquisitionTimeout = configGetDouble("amptool.initialAcquisitionTimeout"); }
+	catch ( ... ) {}
+
+	try { _runningAcquisitionTimeout = configGetDouble("amptool.runningAcquisitionTimeout"); }
 	catch ( ... ) {}
 
 	_dumpRecords = commandline().hasOption("dump-records");
@@ -597,6 +606,38 @@ void AmpTool::updateObject(const std::string &parentID, Object* object) {
 
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+void AmpTool::removeObject(const std::string &parentID, Object* object) {
+	Pick *pick = Pick::Cast(object);
+	if ( pick ) {
+		logObject(_inputPicks, Time::GMT());
+		Pick *cachedPick = Pick::Find(pick->publicID());
+		if ( cachedPick )
+			_cache.remove(cachedPick);
+		return;
+	}
+
+	Amplitude *amp = Amplitude::Cast(object);
+	if ( amp && !amp->pickID().empty() ) {
+		logObject(_inputAmps, Time::GMT());
+		Amplitude *cachedAmplitude = Amplitude::Find(amp->publicID());
+		if ( cachedAmplitude ) {
+			AmplitudeRange range = _pickAmplitudes.equal_range(cachedAmplitude->pickID());
+			for ( AmplitudeMap::iterator it = range.first; it != range.second; ) {
+				if ( it->second == cachedAmplitude )
+					_pickAmplitudes.erase(it++);
+				else
+					++it;
+			}
+		}
+		return;
+	}
+}
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 void AmpTool::process(Origin *origin) {
 	if ( !origin ) return;
 
@@ -635,6 +676,9 @@ void AmpTool::process(Origin *origin) {
 	_report << "-----------------------------------------------------------------" << std::endl;
 
 	_report << " + Arrivals" << endl;
+
+	if ( (origin->arrivalCount() == 0) && query() )
+		query()->loadArrivals(origin);
 
 	for ( size_t i = 0; i < origin->arrivalCount(); ++i ) {
 		Arrival *arr = origin->arrival(i);
@@ -751,7 +795,7 @@ void AmpTool::process(Origin *origin) {
 	}
 
 	SEISCOMP_INFO("set stream timeout to 30 seconds");
-	_acquisitionTimeout = 30;
+	_acquisitionTimeout = _initialAcquisitionTimeout;
 	_firstRecord = true;
 
 	_result << " + Processing" << std::endl;
@@ -1240,7 +1284,7 @@ bool AmpTool::storeRecord(Record *rec) {
 	if ( _firstRecord ) {
 		SEISCOMP_INFO("Data request: got first record, set timeout to 2 seconds");
 		_noDataTimer.restart();
-		_acquisitionTimeout = 2;
+		_acquisitionTimeout = _runningAcquisitionTimeout;
 		_firstRecord = false;
 	}
 

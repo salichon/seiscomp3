@@ -272,10 +272,34 @@ class SC_GUI_API Canvas : public QObject {
 		//! This slot was added in API 11
 		void hideLegends();
 
+		/**
+		 * @brief Enables/disables legend stacking.
+		 *
+		 * If legend stacking is enabled then two toggle buttons will be
+		 * rendered in the legends title bar to swap the visible legend. If
+		 * stacking is disabled then all legends of a particular edge will
+		 * be rendered next to each other. This slot was added in API 11.
+		 */
+		void setLegendStacking(bool);
+
 		void bringToFront(Seiscomp::Gui::Map::Legend*);
-		void onObjectDestroyed(QObject *object);
 		void setLegendEnabled(Seiscomp::Gui::Map::Legend*, bool);
 
+		/**
+		 * @brief This handler is called when a new legend is
+		 * added to a layer.
+		 * This slot was introduced with API XX
+		 * @param legend The legend
+		 */
+		void onLegendAdded(Legend *legend);
+
+		/**
+		 * @brief This handler is called when a legend is removed
+		 * from a layer.
+		 * This slot was introduced with API XX
+		 * @param legend
+		 */
+		void onLegendRemoved(Legend *legend);
 
 	signals:
 		//! This signal is emitted if draw() caused asynchronous data requests
@@ -357,6 +381,7 @@ class SC_GUI_API Canvas : public QObject {
 		bool                          _dirtyImage;
 		bool                          _dirtyLayers;
 		bool                          _previewMode;
+		bool                          _stackLegends;
 
 		DefaultSymbolCollection       _mapSymbolCollection;
 

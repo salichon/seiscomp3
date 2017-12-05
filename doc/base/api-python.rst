@@ -46,11 +46,15 @@ Classes
   * :ref:`PickReference <api-python-datamodel-pickreference>`
   * :ref:`PrincipalAxes <api-python-datamodel-principalaxes>`
   * :ref:`Reading <api-python-datamodel-reading>`
+  * :ref:`RealArray <api-python-datamodel-realarray>`
+  * :ref:`RealPDF1D <api-python-datamodel-realpdf1d>`
   * :ref:`RealQuantity <api-python-datamodel-realquantity>`
   * :ref:`SourceTimeFunction <api-python-datamodel-sourcetimefunction>`
   * :ref:`StationMagnitude <api-python-datamodel-stationmagnitude>`
   * :ref:`StationMagnitudeContribution <api-python-datamodel-stationmagnitudecontribution>`
   * :ref:`Tensor <api-python-datamodel-tensor>`
+  * :ref:`TimeArray <api-python-datamodel-timearray>`
+  * :ref:`TimePDF1D <api-python-datamodel-timepdf1d>`
   * :ref:`TimeQuantity <api-python-datamodel-timequantity>`
   * :ref:`TimeWindow <api-python-datamodel-timewindow>`
   * :ref:`WaveformStreamID <api-python-datamodel-waveformstreamid>`
@@ -69,7 +73,7 @@ Classes
         edge [color="#000000"]
         layout="dot"
         Pick [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Pick</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="time"><font color="#8b0000">+ time: TimeQuantity</font></td></tr><tr><td align="left" port="waveformID"><font color="#8b0000">+ waveformID: WaveformStreamID</font></td></tr><tr><td align="left" port="filterID"><font color="#8b0000">+ filterID: string</font></td></tr><tr><td align="left" port="methodID"><font color="#8b0000">+ methodID: string</font></td></tr><tr><td align="left" port="horizontalSlowness"><font color="#8b0000">+ horizontalSlowness: RealQuantity  [0..1]</font></td></tr><tr><td align="left" port="backazimuth"><font color="#8b0000">+ backazimuth: RealQuantity  [0..1]</font></td></tr><tr><td align="left" port="slownessMethodID"><font color="#8b0000">+ slownessMethodID: string</font></td></tr><tr><td align="left" port="onset"><font color="#8b0000">+ onset: PickOnset  [0..1]</font></td></tr><tr><td align="left" port="phaseHint"><font color="#8b0000">+ phaseHint: Phase  [0..1]</font></td></tr><tr><td align="left" port="polarity"><font color="#8b0000">+ polarity: PickPolarity  [0..1]</font></td></tr><tr><td align="left" port="evaluationMode"><font color="#8b0000">+ evaluationMode: EvaluationMode  [0..1]</font></td></tr><tr><td align="left" port="evaluationStatus"><font color="#8b0000">+ evaluationStatus: EvaluationStatus  [0..1]</font></td></tr><tr><td align="left" port="creationInfo"><font color="#8b0000">+ creationInfo: CreationInfo  [0..1]</font></td></tr><tr><td align="left"><font color="#8b0000">+ comment: Comment [0..*]</font></td></tr></table>>]
-        Comment [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Comment</td></tr><tr><td align="left" port="text"><font color="#8b0000">+ text: string</font></td></tr><tr><td align="left" port="id"><font color="#8b0000">+ id: string</font></td></tr><tr><td align="left" port="creationInfo"><font color="#8b0000">+ creationInfo: CreationInfo  [0..1]</font></td></tr></table>>]
+        Comment [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Comment</td></tr><tr><td align="left" port="text"><font color="#8b0000">+ text: string</font></td></tr><tr><td align="left" port="id"><font color="#8b0000">+ id: string</font></td></tr><tr><td align="left" port="start"><font color="#8b0000">+ start: datetime  [0..1]</font></td></tr><tr><td align="left" port="end"><font color="#8b0000">+ end: datetime  [0..1]</font></td></tr><tr><td align="left" port="creationInfo"><font color="#8b0000">+ creationInfo: CreationInfo  [0..1]</font></td></tr></table>>]
         Amplitude [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Amplitude</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="type"><font color="#8b0000">+ type: string</font></td></tr><tr><td align="left" port="amplitude"><font color="#8b0000">+ amplitude: RealQuantity  [0..1]</font></td></tr><tr><td align="left" port="timeWindow"><font color="#8b0000">+ timeWindow: TimeWindow  [0..1]</font></td></tr><tr><td align="left" port="period"><font color="#8b0000">+ period: RealQuantity  [0..1]</font></td></tr><tr><td align="left" port="snr"><font color="#8b0000">+ snr: float  [0..1]</font></td></tr><tr><td align="left" port="unit"><font color="#8b0000">+ unit: string</font></td></tr><tr><td align="left" port="pickID"><font color="#8b0000">+ pickID: string</font></td></tr><tr><td align="left" port="waveformID"><font color="#8b0000">+ waveformID: WaveformStreamID  [0..1]</font></td></tr><tr><td align="left" port="filterID"><font color="#8b0000">+ filterID: string</font></td></tr><tr><td align="left" port="methodID"><font color="#8b0000">+ methodID: string</font></td></tr><tr><td align="left" port="scalingTime"><font color="#8b0000">+ scalingTime: TimeQuantity  [0..1]</font></td></tr><tr><td align="left" port="magnitudeHint"><font color="#8b0000">+ magnitudeHint: string</font></td></tr><tr><td align="left" port="evaluationMode"><font color="#8b0000">+ evaluationMode: EvaluationMode  [0..1]</font></td></tr><tr><td align="left" port="creationInfo"><font color="#8b0000">+ creationInfo: CreationInfo  [0..1]</font></td></tr><tr><td align="left"><font color="#8b0000">+ comment: Comment [0..*]</font></td></tr></table>>]
         Reading [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Reading</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left"><font color="#8b0000">+ pickReference: PickReference [0..*]</font></td></tr><tr><td align="left"><font color="#8b0000">+ amplitudeReference: AmplitudeReference [0..*]</font></td></tr></table>>]
         PickReference [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>PickReference</td></tr><tr><td align="left" port="pickID"><font color="#8b0000">+ pickID: string</font></td></tr></table>>]
@@ -146,7 +150,7 @@ Classes
         layout="dot"
         ParameterSet [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>ParameterSet</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="baseID"><font color="#8b0000">+ baseID: string</font></td></tr><tr><td align="left" port="moduleID"><font color="#8b0000">+ moduleID: string</font></td></tr><tr><td align="left" port="created"><font color="#8b0000">+ created: datetime  [0..1]</font></td></tr><tr><td align="left"><font color="#8b0000">+ parameter: Parameter [0..*]</font></td></tr><tr><td align="left"><font color="#8b0000">+ comment: Comment [0..*]</font></td></tr></table>>]
         Parameter [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Parameter</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="name"><font color="#8b0000">+ name: string</font></td></tr><tr><td align="left" port="value"><font color="#8b0000">+ value: string</font></td></tr><tr><td align="left"><font color="#8b0000">+ comment: Comment [0..*]</font></td></tr></table>>]
-        Comment [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Comment</td></tr><tr><td align="left" port="text"><font color="#8b0000">+ text: string</font></td></tr><tr><td align="left" port="id"><font color="#8b0000">+ id: string</font></td></tr><tr><td align="left" port="creationInfo"><font color="#8b0000">+ creationInfo: CreationInfo  [0..1]</font></td></tr></table>>]
+        Comment [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Comment</td></tr><tr><td align="left" port="text"><font color="#8b0000">+ text: string</font></td></tr><tr><td align="left" port="id"><font color="#8b0000">+ id: string</font></td></tr><tr><td align="left" port="start"><font color="#8b0000">+ start: datetime  [0..1]</font></td></tr><tr><td align="left" port="end"><font color="#8b0000">+ end: datetime  [0..1]</font></td></tr><tr><td align="left" port="creationInfo"><font color="#8b0000">+ creationInfo: CreationInfo  [0..1]</font></td></tr></table>>]
         ConfigModule [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>ConfigModule</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="name"><font color="#8b0000">+ name: string</font></td></tr><tr><td align="left" port="parameterSetID"><font color="#8b0000">+ parameterSetID: string</font></td></tr><tr><td align="left" port="enabled"><font color="#8b0000">+ enabled: boolean</font></td></tr><tr><td align="left"><font color="#8b0000">+ configStation: ConfigStation [0..*]</font></td></tr></table>>]
         ConfigStation [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>ConfigStation</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="networkCode"><font color="#8b0000">+ networkCode: string</font></td></tr><tr><td align="left" port="stationCode"><font color="#8b0000">+ stationCode: string</font></td></tr><tr><td align="left" port="enabled"><font color="#8b0000">+ enabled: boolean</font></td></tr><tr><td align="left" port="creationInfo"><font color="#8b0000">+ creationInfo: CreationInfo  [0..1]</font></td></tr><tr><td align="left"><font color="#8b0000">+ setup: Setup [0..*]</font></td></tr></table>>]
         Setup [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Setup</td></tr><tr><td align="left" port="name"><font color="#8b0000">+ name: string</font></td></tr><tr><td align="left" port="parameterSetID"><font color="#8b0000">+ parameterSetID: string</font></td></tr><tr><td align="left" port="enabled"><font color="#8b0000">+ enabled: boolean</font></td></tr></table>>]
@@ -193,7 +197,9 @@ Classes
   * :ref:`AuxSource <api-python-datamodel-auxsource>`
   * :ref:`AuxStream <api-python-datamodel-auxstream>`
   * :ref:`Blob <api-python-datamodel-blob>`
+  * :ref:`Comment <api-python-datamodel-comment>`
   * :ref:`ComplexArray <api-python-datamodel-complexarray>`
+  * :ref:`CreationInfo <api-python-datamodel-creationinfo>`
   * :ref:`Datalogger <api-python-datamodel-datalogger>`
   * :ref:`DataloggerCalibration <api-python-datamodel-dataloggercalibration>`
   * :ref:`Decimation <api-python-datamodel-decimation>`
@@ -239,11 +245,12 @@ Classes
         ResponseIIR [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>ResponseIIR</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="name"><font color="#8b0000">+ name: string</font></td></tr><tr><td align="left" port="type"><font color="#8b0000">+ type: string</font></td></tr><tr><td align="left" port="gain"><font color="#8b0000">+ gain: float  [0..1]</font></td></tr><tr><td align="left" port="gainFrequency"><font color="#8b0000">+ gainFrequency: float  [0..1]</font></td></tr><tr><td align="left" port="decimationFactor"><font color="#8b0000">+ decimationFactor: int  [0..1]</font></td></tr><tr><td align="left" port="delay"><font color="#8b0000">+ delay: float  [0..1]</font></td></tr><tr><td align="left" port="correction"><font color="#8b0000">+ correction: float  [0..1]</font></td></tr><tr><td align="left" port="numberOfNumerators"><font color="#8b0000">+ numberOfNumerators: int  [0..1]</font></td></tr><tr><td align="left" port="numberOfDenominators"><font color="#8b0000">+ numberOfDenominators: int  [0..1]</font></td></tr><tr><td align="left" port="numerators"><font color="#8b0000">+ numerators: RealArray  [0..1]</font></td></tr><tr><td align="left" port="denominators"><font color="#8b0000">+ denominators: RealArray  [0..1]</font></td></tr><tr><td align="left" port="remark"><font color="#8b0000">+ remark: Blob  [0..1]</font></td></tr></table>>]
         ResponsePolynomial [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>ResponsePolynomial</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="name"><font color="#8b0000">+ name: string</font></td></tr><tr><td align="left" port="gain"><font color="#8b0000">+ gain: float  [0..1]</font></td></tr><tr><td align="left" port="gainFrequency"><font color="#8b0000">+ gainFrequency: float  [0..1]</font></td></tr><tr><td align="left" port="frequencyUnit"><font color="#8b0000">+ frequencyUnit: string</font></td></tr><tr><td align="left" port="approximationType"><font color="#8b0000">+ approximationType: string</font></td></tr><tr><td align="left" port="approximationLowerBound"><font color="#8b0000">+ approximationLowerBound: float  [0..1]</font></td></tr><tr><td align="left" port="approximationUpperBound"><font color="#8b0000">+ approximationUpperBound: float  [0..1]</font></td></tr><tr><td align="left" port="approximationError"><font color="#8b0000">+ approximationError: float  [0..1]</font></td></tr><tr><td align="left" port="numberOfCoefficients"><font color="#8b0000">+ numberOfCoefficients: int  [0..1]</font></td></tr><tr><td align="left" port="coefficients"><font color="#8b0000">+ coefficients: RealArray  [0..1]</font></td></tr><tr><td align="left" port="remark"><font color="#8b0000">+ remark: Blob  [0..1]</font></td></tr></table>>]
         ResponseFAP [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>ResponseFAP</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="name"><font color="#8b0000">+ name: string</font></td></tr><tr><td align="left" port="gain"><font color="#8b0000">+ gain: float  [0..1]</font></td></tr><tr><td align="left" port="gainFrequency"><font color="#8b0000">+ gainFrequency: float  [0..1]</font></td></tr><tr><td align="left" port="numberOfTuples"><font color="#8b0000">+ numberOfTuples: int  [0..1]</font></td></tr><tr><td align="left" port="tuples"><font color="#8b0000">+ tuples: RealArray  [0..1]</font></td></tr><tr><td align="left" port="remark"><font color="#8b0000">+ remark: Blob  [0..1]</font></td></tr></table>>]
-        Network [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Network</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="code"><font color="#8b0000">+ code: string</font></td></tr><tr><td align="left" port="start"><font color="#8b0000">+ start: datetime</font></td></tr><tr><td align="left" port="end"><font color="#8b0000">+ end: datetime  [0..1]</font></td></tr><tr><td align="left" port="description"><font color="#8b0000">+ description: string</font></td></tr><tr><td align="left" port="institutions"><font color="#8b0000">+ institutions: string</font></td></tr><tr><td align="left" port="region"><font color="#8b0000">+ region: string</font></td></tr><tr><td align="left" port="type"><font color="#8b0000">+ type: string</font></td></tr><tr><td align="left" port="netClass"><font color="#8b0000">+ netClass: string</font></td></tr><tr><td align="left" port="archive"><font color="#8b0000">+ archive: string</font></td></tr><tr><td align="left" port="restricted"><font color="#8b0000">+ restricted: boolean  [0..1]</font></td></tr><tr><td align="left" port="shared"><font color="#8b0000">+ shared: boolean  [0..1]</font></td></tr><tr><td align="left" port="remark"><font color="#8b0000">+ remark: Blob  [0..1]</font></td></tr><tr><td align="left"><font color="#8b0000">+ station: Station [0..*]</font></td></tr></table>>]
-        Station [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Station</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="code"><font color="#8b0000">+ code: string</font></td></tr><tr><td align="left" port="start"><font color="#8b0000">+ start: datetime</font></td></tr><tr><td align="left" port="end"><font color="#8b0000">+ end: datetime  [0..1]</font></td></tr><tr><td align="left" port="description"><font color="#8b0000">+ description: string</font></td></tr><tr><td align="left" port="latitude"><font color="#8b0000">+ latitude: float  [0..1]</font></td></tr><tr><td align="left" port="longitude"><font color="#8b0000">+ longitude: float  [0..1]</font></td></tr><tr><td align="left" port="elevation"><font color="#8b0000">+ elevation: float  [0..1]</font></td></tr><tr><td align="left" port="place"><font color="#8b0000">+ place: string</font></td></tr><tr><td align="left" port="country"><font color="#8b0000">+ country: string</font></td></tr><tr><td align="left" port="affiliation"><font color="#8b0000">+ affiliation: string</font></td></tr><tr><td align="left" port="type"><font color="#8b0000">+ type: string</font></td></tr><tr><td align="left" port="archive"><font color="#8b0000">+ archive: string</font></td></tr><tr><td align="left" port="archiveNetworkCode"><font color="#8b0000">+ archiveNetworkCode: string</font></td></tr><tr><td align="left" port="restricted"><font color="#8b0000">+ restricted: boolean  [0..1]</font></td></tr><tr><td align="left" port="shared"><font color="#8b0000">+ shared: boolean  [0..1]</font></td></tr><tr><td align="left" port="remark"><font color="#8b0000">+ remark: Blob  [0..1]</font></td></tr><tr><td align="left"><font color="#8b0000">+ sensorLocation: SensorLocation [0..*]</font></td></tr></table>>]
-        SensorLocation [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>SensorLocation</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="code"><font color="#8b0000">+ code: string</font></td></tr><tr><td align="left" port="start"><font color="#8b0000">+ start: datetime</font></td></tr><tr><td align="left" port="end"><font color="#8b0000">+ end: datetime  [0..1]</font></td></tr><tr><td align="left" port="latitude"><font color="#8b0000">+ latitude: float  [0..1]</font></td></tr><tr><td align="left" port="longitude"><font color="#8b0000">+ longitude: float  [0..1]</font></td></tr><tr><td align="left" port="elevation"><font color="#8b0000">+ elevation: float  [0..1]</font></td></tr><tr><td align="left"><font color="#8b0000">+ auxStream: AuxStream [0..*]</font></td></tr><tr><td align="left"><font color="#8b0000">+ stream: Stream [0..*]</font></td></tr></table>>]
+        Network [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Network</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="code"><font color="#8b0000">+ code: string</font></td></tr><tr><td align="left" port="start"><font color="#8b0000">+ start: datetime</font></td></tr><tr><td align="left" port="end"><font color="#8b0000">+ end: datetime  [0..1]</font></td></tr><tr><td align="left" port="description"><font color="#8b0000">+ description: string</font></td></tr><tr><td align="left" port="institutions"><font color="#8b0000">+ institutions: string</font></td></tr><tr><td align="left" port="region"><font color="#8b0000">+ region: string</font></td></tr><tr><td align="left" port="type"><font color="#8b0000">+ type: string</font></td></tr><tr><td align="left" port="netClass"><font color="#8b0000">+ netClass: string</font></td></tr><tr><td align="left" port="archive"><font color="#8b0000">+ archive: string</font></td></tr><tr><td align="left" port="restricted"><font color="#8b0000">+ restricted: boolean  [0..1]</font></td></tr><tr><td align="left" port="shared"><font color="#8b0000">+ shared: boolean  [0..1]</font></td></tr><tr><td align="left" port="remark"><font color="#8b0000">+ remark: Blob  [0..1]</font></td></tr><tr><td align="left"><font color="#8b0000">+ comment: Comment [0..*]</font></td></tr><tr><td align="left"><font color="#8b0000">+ station: Station [0..*]</font></td></tr></table>>]
+        Comment [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Comment</td></tr><tr><td align="left" port="text"><font color="#8b0000">+ text: string</font></td></tr><tr><td align="left" port="id"><font color="#8b0000">+ id: string</font></td></tr><tr><td align="left" port="start"><font color="#8b0000">+ start: datetime  [0..1]</font></td></tr><tr><td align="left" port="end"><font color="#8b0000">+ end: datetime  [0..1]</font></td></tr><tr><td align="left" port="creationInfo"><font color="#8b0000">+ creationInfo: CreationInfo  [0..1]</font></td></tr></table>>]
+        Station [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Station</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="code"><font color="#8b0000">+ code: string</font></td></tr><tr><td align="left" port="start"><font color="#8b0000">+ start: datetime</font></td></tr><tr><td align="left" port="end"><font color="#8b0000">+ end: datetime  [0..1]</font></td></tr><tr><td align="left" port="description"><font color="#8b0000">+ description: string</font></td></tr><tr><td align="left" port="latitude"><font color="#8b0000">+ latitude: float  [0..1]</font></td></tr><tr><td align="left" port="longitude"><font color="#8b0000">+ longitude: float  [0..1]</font></td></tr><tr><td align="left" port="elevation"><font color="#8b0000">+ elevation: float  [0..1]</font></td></tr><tr><td align="left" port="place"><font color="#8b0000">+ place: string</font></td></tr><tr><td align="left" port="country"><font color="#8b0000">+ country: string</font></td></tr><tr><td align="left" port="affiliation"><font color="#8b0000">+ affiliation: string</font></td></tr><tr><td align="left" port="type"><font color="#8b0000">+ type: string</font></td></tr><tr><td align="left" port="archive"><font color="#8b0000">+ archive: string</font></td></tr><tr><td align="left" port="archiveNetworkCode"><font color="#8b0000">+ archiveNetworkCode: string</font></td></tr><tr><td align="left" port="restricted"><font color="#8b0000">+ restricted: boolean  [0..1]</font></td></tr><tr><td align="left" port="shared"><font color="#8b0000">+ shared: boolean  [0..1]</font></td></tr><tr><td align="left" port="remark"><font color="#8b0000">+ remark: Blob  [0..1]</font></td></tr><tr><td align="left"><font color="#8b0000">+ comment: Comment [0..*]</font></td></tr><tr><td align="left"><font color="#8b0000">+ sensorLocation: SensorLocation [0..*]</font></td></tr></table>>]
+        SensorLocation [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>SensorLocation</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="code"><font color="#8b0000">+ code: string</font></td></tr><tr><td align="left" port="start"><font color="#8b0000">+ start: datetime</font></td></tr><tr><td align="left" port="end"><font color="#8b0000">+ end: datetime  [0..1]</font></td></tr><tr><td align="left" port="latitude"><font color="#8b0000">+ latitude: float  [0..1]</font></td></tr><tr><td align="left" port="longitude"><font color="#8b0000">+ longitude: float  [0..1]</font></td></tr><tr><td align="left" port="elevation"><font color="#8b0000">+ elevation: float  [0..1]</font></td></tr><tr><td align="left"><font color="#8b0000">+ comment: Comment [0..*]</font></td></tr><tr><td align="left"><font color="#8b0000">+ auxStream: AuxStream [0..*]</font></td></tr><tr><td align="left"><font color="#8b0000">+ stream: Stream [0..*]</font></td></tr></table>>]
         AuxStream [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>AuxStream</td></tr><tr><td align="left" port="code"><font color="#8b0000">+ code: string</font></td></tr><tr><td align="left" port="start"><font color="#8b0000">+ start: datetime</font></td></tr><tr><td align="left" port="end"><font color="#8b0000">+ end: datetime  [0..1]</font></td></tr><tr><td align="left" port="device"><font color="#8b0000">+ device: string</font></td></tr><tr><td align="left" port="deviceSerialNumber"><font color="#8b0000">+ deviceSerialNumber: string</font></td></tr><tr><td align="left" port="source"><font color="#8b0000">+ source: string</font></td></tr><tr><td align="left" port="format"><font color="#8b0000">+ format: string</font></td></tr><tr><td align="left" port="flags"><font color="#8b0000">+ flags: string</font></td></tr><tr><td align="left" port="restricted"><font color="#8b0000">+ restricted: boolean  [0..1]</font></td></tr><tr><td align="left" port="shared"><font color="#8b0000">+ shared: boolean  [0..1]</font></td></tr></table>>]
-        Stream [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Stream</td></tr><tr><td align="left" port="code"><font color="#8b0000">+ code: string</font></td></tr><tr><td align="left" port="start"><font color="#8b0000">+ start: datetime</font></td></tr><tr><td align="left" port="end"><font color="#8b0000">+ end: datetime  [0..1]</font></td></tr><tr><td align="left" port="datalogger"><font color="#8b0000">+ datalogger: string</font></td></tr><tr><td align="left" port="dataloggerSerialNumber"><font color="#8b0000">+ dataloggerSerialNumber: string</font></td></tr><tr><td align="left" port="dataloggerChannel"><font color="#8b0000">+ dataloggerChannel: int  [0..1]</font></td></tr><tr><td align="left" port="sensor"><font color="#8b0000">+ sensor: string</font></td></tr><tr><td align="left" port="sensorSerialNumber"><font color="#8b0000">+ sensorSerialNumber: string</font></td></tr><tr><td align="left" port="sensorChannel"><font color="#8b0000">+ sensorChannel: int  [0..1]</font></td></tr><tr><td align="left" port="clockSerialNumber"><font color="#8b0000">+ clockSerialNumber: string</font></td></tr><tr><td align="left" port="sampleRateNumerator"><font color="#8b0000">+ sampleRateNumerator: int  [0..1]</font></td></tr><tr><td align="left" port="sampleRateDenominator"><font color="#8b0000">+ sampleRateDenominator: int  [0..1]</font></td></tr><tr><td align="left" port="depth"><font color="#8b0000">+ depth: float  [0..1]</font></td></tr><tr><td align="left" port="azimuth"><font color="#8b0000">+ azimuth: float  [0..1]</font></td></tr><tr><td align="left" port="dip"><font color="#8b0000">+ dip: float  [0..1]</font></td></tr><tr><td align="left" port="gain"><font color="#8b0000">+ gain: float  [0..1]</font></td></tr><tr><td align="left" port="gainFrequency"><font color="#8b0000">+ gainFrequency: float  [0..1]</font></td></tr><tr><td align="left" port="gainUnit"><font color="#8b0000">+ gainUnit: string</font></td></tr><tr><td align="left" port="format"><font color="#8b0000">+ format: string</font></td></tr><tr><td align="left" port="flags"><font color="#8b0000">+ flags: string</font></td></tr><tr><td align="left" port="restricted"><font color="#8b0000">+ restricted: boolean  [0..1]</font></td></tr><tr><td align="left" port="shared"><font color="#8b0000">+ shared: boolean  [0..1]</font></td></tr></table>>]
+        Stream [label = <<table border="0" cellpadding="0" cellspacing="2"><tr><td>Stream</td></tr><tr><td align="left" port="publicID"><font color="#8b0000">+ publicID: string</font></td></tr><tr><td align="left" port="code"><font color="#8b0000">+ code: string</font></td></tr><tr><td align="left" port="start"><font color="#8b0000">+ start: datetime</font></td></tr><tr><td align="left" port="end"><font color="#8b0000">+ end: datetime  [0..1]</font></td></tr><tr><td align="left" port="datalogger"><font color="#8b0000">+ datalogger: string</font></td></tr><tr><td align="left" port="dataloggerSerialNumber"><font color="#8b0000">+ dataloggerSerialNumber: string</font></td></tr><tr><td align="left" port="dataloggerChannel"><font color="#8b0000">+ dataloggerChannel: int  [0..1]</font></td></tr><tr><td align="left" port="sensor"><font color="#8b0000">+ sensor: string</font></td></tr><tr><td align="left" port="sensorSerialNumber"><font color="#8b0000">+ sensorSerialNumber: string</font></td></tr><tr><td align="left" port="sensorChannel"><font color="#8b0000">+ sensorChannel: int  [0..1]</font></td></tr><tr><td align="left" port="clockSerialNumber"><font color="#8b0000">+ clockSerialNumber: string</font></td></tr><tr><td align="left" port="sampleRateNumerator"><font color="#8b0000">+ sampleRateNumerator: int  [0..1]</font></td></tr><tr><td align="left" port="sampleRateDenominator"><font color="#8b0000">+ sampleRateDenominator: int  [0..1]</font></td></tr><tr><td align="left" port="depth"><font color="#8b0000">+ depth: float  [0..1]</font></td></tr><tr><td align="left" port="azimuth"><font color="#8b0000">+ azimuth: float  [0..1]</font></td></tr><tr><td align="left" port="dip"><font color="#8b0000">+ dip: float  [0..1]</font></td></tr><tr><td align="left" port="gain"><font color="#8b0000">+ gain: float  [0..1]</font></td></tr><tr><td align="left" port="gainFrequency"><font color="#8b0000">+ gainFrequency: float  [0..1]</font></td></tr><tr><td align="left" port="gainUnit"><font color="#8b0000">+ gainUnit: string</font></td></tr><tr><td align="left" port="format"><font color="#8b0000">+ format: string</font></td></tr><tr><td align="left" port="flags"><font color="#8b0000">+ flags: string</font></td></tr><tr><td align="left" port="restricted"><font color="#8b0000">+ restricted: boolean  [0..1]</font></td></tr><tr><td align="left" port="shared"><font color="#8b0000">+ shared: boolean  [0..1]</font></td></tr><tr><td align="left"><font color="#8b0000">+ comment: Comment [0..*]</font></td></tr></table>>]
         Inventory -> StationGroup
         StationGroup -> StationReference
         Inventory -> AuxDevice
@@ -259,6 +266,10 @@ Classes
         Inventory -> ResponsePolynomial
         Inventory -> ResponseFAP
         Inventory -> Network
+        Stream -> Comment
+        SensorLocation -> Comment
+        Station -> Comment
+        Network -> Comment
         Network -> Station
         Station -> SensorLocation
         SensorLocation -> AuxStream
@@ -645,23 +656,23 @@ Reference
 
    .. py:method:: setStart(start)
 
-      :param start: datetime
+      :param start: seiscomp3.Core.Time
 
       Start of validity
 
    .. py:method:: start()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setEnd(end)
 
-      :param end: datetime
+      :param end: seiscomp3.Core.Time
 
       End of validity
 
    .. py:method:: end()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -1429,11 +1440,11 @@ Reference
 
    .. py:method:: setCreated(created)
 
-      :param created: datetime
+      :param created: seiscomp3.Core.Time
 
    .. py:method:: created()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setStatus(status)
 
@@ -1671,19 +1682,19 @@ Reference
 
    .. py:method:: setStart(start)
 
-      :param start: datetime
+      :param start: seiscomp3.Core.Time
 
    .. py:method:: start()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setEnd(end)
 
-      :param end: datetime
+      :param end: seiscomp3.Core.Time
 
    .. py:method:: end()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setStreamID(streamID)
 
@@ -2843,23 +2854,23 @@ Reference
 
    .. py:method:: setStart(start)
 
-      :param start: datetime
+      :param start: seiscomp3.Core.Time
 
       Start of epoch in ISO datetime format \(52.22\)
 
    .. py:method:: start()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setEnd(end)
 
-      :param end: datetime
+      :param end: seiscomp3.Core.Time
 
       End of epoch \(52.23\)
 
    .. py:method:: end()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -3152,6 +3163,36 @@ Reference
 
       :rtype: string
 
+   .. py:method:: setStart(start)
+
+      :param start: seiscomp3.Core.Time
+
+      Start of epoch in ISO datetime format
+
+   .. py:method:: start()
+
+      :rtype: seiscomp3.Core.Time
+
+      .. note::
+
+         As this attribute is optional, this method throws a ValueError if
+         the value of the attribute is not set.
+
+   .. py:method:: setEnd(end)
+
+      :param end: seiscomp3.Core.Time
+
+      End of epoch \(empty if the comment epoch is open\)
+
+   .. py:method:: end()
+
+      :rtype: seiscomp3.Core.Time
+
+      .. note::
+
+         As this attribute is optional, this method throws a ValueError if
+         the value of the attribute is not set.
+
    .. py:method:: setCreationInfo(creationInfo)
 
       :param creationInfo: :ref:`CreationInfo <api-python-datamodel-creationinfo>`
@@ -3245,6 +3286,38 @@ Reference
 
       Returns the parent ParameterSet if available. Returns None
       if the parent is not a ParameterSet. This is a convenience wrapper
+      for parent().
+
+   .. py:method:: stream()
+
+      :rtype: Stream
+
+      Returns the parent Stream if available. Returns None
+      if the parent is not a Stream. This is a convenience wrapper
+      for parent().
+
+   .. py:method:: sensorLocation()
+
+      :rtype: SensorLocation
+
+      Returns the parent SensorLocation if available. Returns None
+      if the parent is not a SensorLocation. This is a convenience wrapper
+      for parent().
+
+   .. py:method:: station()
+
+      :rtype: Station
+
+      Returns the parent Station if available. Returns None
+      if the parent is not a Station. This is a convenience wrapper
+      for parent().
+
+   .. py:method:: network()
+
+      :rtype: Network
+
+      Returns the parent Network if available. Returns None
+      if the parent is not a Network. This is a convenience wrapper
       for parent().
 
    .. py:method:: assign(other)
@@ -4218,14 +4291,14 @@ Reference
 
    .. py:method:: setCreationTime(creationTime)
 
-      :param creationTime: datetime
+      :param creationTime: seiscomp3.Core.Time
 
       Time of creation of a resource, in ISO 8601 format. It has to be given in
       UTC.
 
    .. py:method:: creationTime()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -4234,14 +4307,14 @@ Reference
 
    .. py:method:: setModificationTime(modificationTime)
 
-      :param modificationTime: datetime
+      :param modificationTime: seiscomp3.Core.Time
 
       Time of last modification of a resource, in ISO 8601 format. It has to be
       given in UTC.
 
    .. py:method:: modificationTime()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -4775,23 +4848,23 @@ Reference
 
    .. py:method:: setStart(start)
 
-      :param start: datetime
+      :param start: seiscomp3.Core.Time
 
       Start of validity
 
    .. py:method:: start()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setEnd(end)
 
-      :param end: datetime
+      :param end: seiscomp3.Core.Time
 
       End of validity
 
    .. py:method:: end()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -7007,11 +7080,11 @@ Reference
 
    .. py:method:: setCreated(created)
 
-      :param created: datetime
+      :param created: seiscomp3.Core.Time
 
    .. py:method:: created()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -8559,24 +8632,24 @@ Reference
 
    .. py:method:: setStart(start)
 
-      :param start: datetime
+      :param start: seiscomp3.Core.Time
 
       Start of network epoch in ISO datetime format. Needed primarily to
       identifytemorary networks that re\-use network codes
 
    .. py:method:: start()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setEnd(end)
 
-      :param end: datetime
+      :param end: seiscomp3.Core.Time
 
       End of station epoch. Empty string if the station is open
 
    .. py:method:: end()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -8688,6 +8761,15 @@ Reference
          As this attribute is optional, this method throws a ValueError if
          the value of the attribute is not set.
 
+   .. py:method:: add(comment)
+
+      :param comment: Object of type :ref:`Comment <api-python-datamodel-comment>`
+      :rtype: A Boolean value indicating success with True, False otherwise.
+
+      Adds a Comment object to Network. The object is not
+      copied but managed by this instance. Any change to the passed object
+      will also change the child.
+
    .. py:method:: add(station)
 
       :param station: Object of type :ref:`Station <api-python-datamodel-station>`
@@ -8697,12 +8779,29 @@ Reference
       copied but managed by this instance. Any change to the passed object
       will also change the child.
 
+   .. py:method:: remove(comment)
+
+      :param comment: Object of type :ref:`Comment <api-python-datamodel-comment>`
+      :rtype: A Boolean value indicating success with True, False otherwise.
+
+      Removes a previously added Comment object from Network.
+
    .. py:method:: remove(station)
 
       :param station: Object of type :ref:`Station <api-python-datamodel-station>`
       :rtype: A Boolean value indicating success with True, False otherwise.
 
       Removes a previously added Station object from Network.
+
+   .. py:method:: removeComment(idx)
+
+      :param idx: An integer index of the object to be removed.
+      :rtype: A Boolean value indicating success with True, False otherwise.
+
+   .. py:method:: removeComment(commentIndex);
+
+      :param commentIndex: The index of the object to be removed of type CommentIndex.
+      :rtype: A Boolean value indicating success with True, False otherwise.
 
    .. py:method:: removeStation(idx)
 
@@ -8714,11 +8813,33 @@ Reference
       :param stationIndex: The index of the object to be removed of type StationIndex.
       :rtype: A Boolean value indicating success with True, False otherwise.
 
+   .. py:method:: commentCount()
+
+      :rtype: integer value indicating the number of child objects.
+
+      Returns the number of Comment child objects.
+
    .. py:method:: stationCount()
 
       :rtype: integer value indicating the number of child objects.
 
       Returns the number of Station child objects.
+
+   .. py:method:: comment(idx)
+
+      :param idx: An integer index of the object to be returned.
+      :rtype: Object of type :ref:`Comment <api-python-datamodel-comment>`.
+
+      Returns the Comment at index idx.
+
+   .. py:method:: comment(commentIndex)
+
+      :param commentIndex: The index of the object to be removed of type CommentIndex.
+      :rtype: Object of type :ref:`Comment <api-python-datamodel-comment>`.
+
+      Returns the Comment at given index. The indexes of all child objects
+      are compared by value which makes this function slower than the direct
+      integer index look-up.
 
    .. py:method:: station(idx)
 
@@ -9961,27 +10082,27 @@ Reference
 
    .. py:method:: setCreated(created)
 
-      :param created: datetime
+      :param created: seiscomp3.Core.Time
 
    .. py:method:: created()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setStart(start)
 
-      :param start: datetime
+      :param start: seiscomp3.Core.Time
 
    .. py:method:: start()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setEnd(end)
 
-      :param end: datetime
+      :param end: seiscomp3.Core.Time
 
    .. py:method:: end()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -10245,11 +10366,11 @@ Reference
 
    .. py:method:: setCreated(created)
 
-      :param created: datetime
+      :param created: seiscomp3.Core.Time
 
    .. py:method:: created()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -10986,27 +11107,27 @@ Reference
 
    .. py:method:: setCreated(created)
 
-      :param created: datetime
+      :param created: seiscomp3.Core.Time
 
    .. py:method:: created()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setStart(start)
 
-      :param start: datetime
+      :param start: seiscomp3.Core.Time
 
    .. py:method:: start()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setEnd(end)
 
-      :param end: datetime
+      :param end: seiscomp3.Core.Time
 
    .. py:method:: end()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setMessage(message)
 
@@ -11524,6 +11645,73 @@ Reference
          As this attribute is optional, this method throws a ValueError if
          the value of the attribute is not set.
 
+.. _api-python-datamodel-realpdf1d:
+
+.. py:class:: RealPDF1D
+
+   Inherits :ref:`Object <api-python-datamodel-object>`.
+
+   A probability density function description. It can be used in three
+   different modes:
+   
+   1\) \"raw samples mode\"
+   
+   variable is a list of M values, no probability. The values represent
+   samples, no binning\/probabilities made.
+   
+   2\) \"implicitly binned PDF\"
+   
+   variable and probabilty arrays have length N. variable values to be
+   interpreted as \"bin centers\" \(or representative values\),
+   no bin edges given.
+   
+   3\) \"explicitly binned PDF\"
+   
+   variable has length N+1, probability has length N. variable values
+   describe bin edges \(upper bin edge is lower edge of next bin\).
+
+   .. py:staticmethod:: Cast(obj)
+
+      :param obj: The object to be casted.
+      :rtype: An object of type RealPDF1D if the cast was successful,
+              None otherwise.
+
+      Cast an arbitrary object to RealPDF1D if the internal wrapped
+      representation is an RealPDF1D object. The cast is important if
+      instances of type :ref:`Object <api-python-datamodel-object>`
+      are passed to methods which need access to the real type.
+
+
+
+   .. py:method:: equal(other)
+
+      :param other: :ref:`RealPDF1D <api-python-datamodel-realpdf1d>`
+      :rtype: A Boolean value indicating True if both objects are equal or
+              False otherwise.
+
+      Compares two objects without its child objects. Both objects are compared
+      by value.
+
+   .. py:method:: setVariable(variable)
+
+      :param variable: :ref:`RealArray <api-python-datamodel-realarray>`
+
+      List of values
+
+   .. py:method:: variable()
+
+      :rtype: :ref:`RealArray <api-python-datamodel-realarray>`
+
+   .. py:method:: setProbability(probability)
+
+      :param probability: :ref:`RealArray <api-python-datamodel-realarray>`
+
+      List of probabilities
+
+   .. py:method:: probability()
+
+      :rtype: :ref:`RealArray <api-python-datamodel-realarray>`
+
 .. _api-python-datamodel-realquantity:
 
 .. py:class:: RealQuantity
@@ -11630,6 +11818,21 @@ Reference
    .. py:method:: confidenceLevel()
 
       :rtype: float
+
+      .. note::
+
+         As this attribute is optional, this method throws a ValueError if
+         the value of the attribute is not set.
+
+   .. py:method:: setPdf(pdf)
+
+      :param pdf: :ref:`RealPDF1D <api-python-datamodel-realpdf1d>`
+
+      Probability density function of the quantity.
+
+   .. py:method:: pdf()
+
+      :rtype: :ref:`RealPDF1D <api-python-datamodel-realpdf1d>`
 
       .. note::
 
@@ -13225,23 +13428,23 @@ Reference
 
    .. py:method:: setStart(start)
 
-      :param start: datetime
+      :param start: seiscomp3.Core.Time
 
       Start of data
 
    .. py:method:: start()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setEnd(end)
 
-      :param end: datetime
+      :param end: seiscomp3.Core.Time
 
       End of data
 
    .. py:method:: end()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -13917,23 +14120,23 @@ Reference
 
    .. py:method:: setStart(start)
 
-      :param start: datetime
+      :param start: seiscomp3.Core.Time
 
       Start of validity
 
    .. py:method:: start()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setEnd(end)
 
-      :param end: datetime
+      :param end: seiscomp3.Core.Time
 
       End of validity
 
    .. py:method:: end()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -14090,23 +14293,23 @@ Reference
 
    .. py:method:: setStart(start)
 
-      :param start: datetime
+      :param start: seiscomp3.Core.Time
 
       Start of epoch in ISO datetime format
 
    .. py:method:: start()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setEnd(end)
 
-      :param end: datetime
+      :param end: seiscomp3.Core.Time
 
       End of epoch
 
    .. py:method:: end()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -14158,6 +14361,15 @@ Reference
          As this attribute is optional, this method throws a ValueError if
          the value of the attribute is not set.
 
+   .. py:method:: add(comment)
+
+      :param comment: Object of type :ref:`Comment <api-python-datamodel-comment>`
+      :rtype: A Boolean value indicating success with True, False otherwise.
+
+      Adds a Comment object to SensorLocation. The object is not
+      copied but managed by this instance. Any change to the passed object
+      will also change the child.
+
    .. py:method:: add(auxStream)
 
       :param auxStream: Object of type :ref:`AuxStream <api-python-datamodel-auxstream>`
@@ -14176,6 +14388,13 @@ Reference
       copied but managed by this instance. Any change to the passed object
       will also change the child.
 
+   .. py:method:: remove(comment)
+
+      :param comment: Object of type :ref:`Comment <api-python-datamodel-comment>`
+      :rtype: A Boolean value indicating success with True, False otherwise.
+
+      Removes a previously added Comment object from SensorLocation.
+
    .. py:method:: remove(auxStream)
 
       :param auxStream: Object of type :ref:`AuxStream <api-python-datamodel-auxstream>`
@@ -14189,6 +14408,16 @@ Reference
       :rtype: A Boolean value indicating success with True, False otherwise.
 
       Removes a previously added Stream object from SensorLocation.
+
+   .. py:method:: removeComment(idx)
+
+      :param idx: An integer index of the object to be removed.
+      :rtype: A Boolean value indicating success with True, False otherwise.
+
+   .. py:method:: removeComment(commentIndex);
+
+      :param commentIndex: The index of the object to be removed of type CommentIndex.
+      :rtype: A Boolean value indicating success with True, False otherwise.
 
    .. py:method:: removeAuxStream(idx)
 
@@ -14210,6 +14439,12 @@ Reference
       :param streamIndex: The index of the object to be removed of type StreamIndex.
       :rtype: A Boolean value indicating success with True, False otherwise.
 
+   .. py:method:: commentCount()
+
+      :rtype: integer value indicating the number of child objects.
+
+      Returns the number of Comment child objects.
+
    .. py:method:: auxStreamCount()
 
       :rtype: integer value indicating the number of child objects.
@@ -14221,6 +14456,22 @@ Reference
       :rtype: integer value indicating the number of child objects.
 
       Returns the number of Stream child objects.
+
+   .. py:method:: comment(idx)
+
+      :param idx: An integer index of the object to be returned.
+      :rtype: Object of type :ref:`Comment <api-python-datamodel-comment>`.
+
+      Returns the Comment at index idx.
+
+   .. py:method:: comment(commentIndex)
+
+      :param commentIndex: The index of the object to be removed of type CommentIndex.
+      :rtype: Object of type :ref:`Comment <api-python-datamodel-comment>`.
+
+      Returns the Comment at given index. The indexes of all child objects
+      are compared by value which makes this function slower than the direct
+      integer index look-up.
 
    .. py:method:: auxStream(idx)
 
@@ -14253,6 +14504,13 @@ Reference
       Returns the Stream at given index. The indexes of all child objects
       are compared by value which makes this function slower than the direct
       integer index look-up.
+
+   .. py:method:: findStream(publicID)
+
+      :param publicID: The publicID of the object to find.
+      :rtype: Object of type :ref:`Stream <api-python-datamodel-stream>`.
+
+      Returns the child object with a certain publicID, None otherwise.
 
    .. py:method:: station()
 
@@ -14559,23 +14817,23 @@ Reference
 
    .. py:method:: setStart(start)
 
-      :param start: datetime
+      :param start: seiscomp3.Core.Time
 
       Start of station epoch in ISO datetime format
 
    .. py:method:: start()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setEnd(end)
 
-      :param end: datetime
+      :param end: seiscomp3.Core.Time
 
       End of station epoch. Empty string if the station is open
 
    .. py:method:: end()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -14742,6 +15000,15 @@ Reference
          As this attribute is optional, this method throws a ValueError if
          the value of the attribute is not set.
 
+   .. py:method:: add(comment)
+
+      :param comment: Object of type :ref:`Comment <api-python-datamodel-comment>`
+      :rtype: A Boolean value indicating success with True, False otherwise.
+
+      Adds a Comment object to Station. The object is not
+      copied but managed by this instance. Any change to the passed object
+      will also change the child.
+
    .. py:method:: add(sensorLocation)
 
       :param sensorLocation: Object of type :ref:`SensorLocation <api-python-datamodel-sensorlocation>`
@@ -14751,12 +15018,29 @@ Reference
       copied but managed by this instance. Any change to the passed object
       will also change the child.
 
+   .. py:method:: remove(comment)
+
+      :param comment: Object of type :ref:`Comment <api-python-datamodel-comment>`
+      :rtype: A Boolean value indicating success with True, False otherwise.
+
+      Removes a previously added Comment object from Station.
+
    .. py:method:: remove(sensorLocation)
 
       :param sensorLocation: Object of type :ref:`SensorLocation <api-python-datamodel-sensorlocation>`
       :rtype: A Boolean value indicating success with True, False otherwise.
 
       Removes a previously added SensorLocation object from Station.
+
+   .. py:method:: removeComment(idx)
+
+      :param idx: An integer index of the object to be removed.
+      :rtype: A Boolean value indicating success with True, False otherwise.
+
+   .. py:method:: removeComment(commentIndex);
+
+      :param commentIndex: The index of the object to be removed of type CommentIndex.
+      :rtype: A Boolean value indicating success with True, False otherwise.
 
    .. py:method:: removeSensorLocation(idx)
 
@@ -14768,11 +15052,33 @@ Reference
       :param sensorLocationIndex: The index of the object to be removed of type SensorLocationIndex.
       :rtype: A Boolean value indicating success with True, False otherwise.
 
+   .. py:method:: commentCount()
+
+      :rtype: integer value indicating the number of child objects.
+
+      Returns the number of Comment child objects.
+
    .. py:method:: sensorLocationCount()
 
       :rtype: integer value indicating the number of child objects.
 
       Returns the number of SensorLocation child objects.
+
+   .. py:method:: comment(idx)
+
+      :param idx: An integer index of the object to be returned.
+      :rtype: Object of type :ref:`Comment <api-python-datamodel-comment>`.
+
+      Returns the Comment at index idx.
+
+   .. py:method:: comment(commentIndex)
+
+      :param commentIndex: The index of the object to be removed of type CommentIndex.
+      :rtype: Object of type :ref:`Comment <api-python-datamodel-comment>`.
+
+      Returns the Comment at given index. The indexes of all child objects
+      are compared by value which makes this function slower than the direct
+      integer index look-up.
 
    .. py:method:: sensorLocation(idx)
 
@@ -14932,13 +15238,13 @@ Reference
 
    .. py:method:: setStart(start)
 
-      :param start: datetime
+      :param start: seiscomp3.Core.Time
 
       Start of epoch in ISO datetime format
 
    .. py:method:: start()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -14947,13 +15253,13 @@ Reference
 
    .. py:method:: setEnd(end)
 
-      :param end: datetime
+      :param end: seiscomp3.Core.Time
 
       End of epoch \(empty string if the station is open\)
 
    .. py:method:: end()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -15566,7 +15872,7 @@ Reference
 
 .. py:class:: Stream
 
-   Inherits :ref:`Object <api-python-datamodel-object>`.
+   Inherits :ref:`PublicObject <api-python-datamodel-publicobject>`.
 
    This type describes a stream \(channel\) with defined frequency response
 
@@ -15582,6 +15888,20 @@ Reference
       are passed to methods which need access to the real type.
 
 
+
+   .. py:staticmethod:: Create()
+
+      :rtype: a new object of type Stream.
+
+      Creates and registers (if enabled) a Stream instance. The
+      publicID is auto-generated.
+
+   .. py:staticmethod:: Create(publicID)
+
+      :rtype: a new object of type Stream.
+
+      Creates and registers (if enabled) a Stream instance with
+      passed publicID.
 
    .. py:method:: equal(other)
 
@@ -15617,23 +15937,23 @@ Reference
 
    .. py:method:: setStart(start)
 
-      :param start: datetime
+      :param start: seiscomp3.Core.Time
 
       Start of epoch in ISO datetime format \(52.22\)
 
    .. py:method:: start()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setEnd(end)
 
-      :param end: datetime
+      :param end: seiscomp3.Core.Time
 
       End of epoch \(52.23\)
 
    .. py:method:: end()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 
@@ -15886,6 +16206,54 @@ Reference
          As this attribute is optional, this method throws a ValueError if
          the value of the attribute is not set.
 
+   .. py:method:: add(comment)
+
+      :param comment: Object of type :ref:`Comment <api-python-datamodel-comment>`
+      :rtype: A Boolean value indicating success with True, False otherwise.
+
+      Adds a Comment object to Stream. The object is not
+      copied but managed by this instance. Any change to the passed object
+      will also change the child.
+
+   .. py:method:: remove(comment)
+
+      :param comment: Object of type :ref:`Comment <api-python-datamodel-comment>`
+      :rtype: A Boolean value indicating success with True, False otherwise.
+
+      Removes a previously added Comment object from Stream.
+
+   .. py:method:: removeComment(idx)
+
+      :param idx: An integer index of the object to be removed.
+      :rtype: A Boolean value indicating success with True, False otherwise.
+
+   .. py:method:: removeComment(commentIndex);
+
+      :param commentIndex: The index of the object to be removed of type CommentIndex.
+      :rtype: A Boolean value indicating success with True, False otherwise.
+
+   .. py:method:: commentCount()
+
+      :rtype: integer value indicating the number of child objects.
+
+      Returns the number of Comment child objects.
+
+   .. py:method:: comment(idx)
+
+      :param idx: An integer index of the object to be returned.
+      :rtype: Object of type :ref:`Comment <api-python-datamodel-comment>`.
+
+      Returns the Comment at index idx.
+
+   .. py:method:: comment(commentIndex)
+
+      :param commentIndex: The index of the object to be removed of type CommentIndex.
+      :rtype: Object of type :ref:`Comment <api-python-datamodel-comment>`.
+
+      Returns the Comment at given index. The indexes of all child objects
+      are compared by value which makes this function slower than the direct
+      integer index look-up.
+
    .. py:method:: sensorLocation()
 
       :rtype: SensorLocation
@@ -15916,6 +16284,19 @@ Reference
 
       Returns a new instance that is a clone of the current instance. Child
       objects are being ignored.
+
+
+   .. py:method:: updateChild(ref)
+
+      :param ref: A child object derived from class Object.
+      :rtype: A Boolean flag indicating success with True, False otherwise
+
+      This method takes the passed reference object and searches for a child
+      with the same publicID (if derived from :ref:`PublicObject <api-python-datamodel-publicobject>`)
+      or the same index (if derived from :ref:`Object <api-python-datamodel-object>`).
+      The the child was found the reference objects attributes are copied to
+      the child object. Children of child are being ignored during this operation.
+      This method implements the :ref:`PublicObject <api-python-datamodel-publicobject>` interface.
 
 
    .. py:method:: accept(visitor)
@@ -16017,6 +16398,115 @@ Reference
 
       :rtype: :ref:`RealQuantity <api-python-datamodel-realquantity>`
 
+.. _api-python-datamodel-timearray:
+
+.. py:class:: TimeArray
+
+   Inherits :ref:`Object <api-python-datamodel-object>`.
+
+
+   .. py:staticmethod:: Cast(obj)
+
+      :param obj: The object to be casted.
+      :rtype: An object of type TimeArray if the cast was successful,
+              None otherwise.
+
+      Cast an arbitrary object to TimeArray if the internal wrapped
+      representation is an TimeArray object. The cast is important if
+      instances of type :ref:`Object <api-python-datamodel-object>`
+      are passed to methods which need access to the real type.
+
+
+
+   .. py:method:: equal(other)
+
+      :param other: :ref:`TimeArray <api-python-datamodel-timearray>`
+      :rtype: A Boolean value indicating True if both objects are equal or
+              False otherwise.
+
+      Compares two objects without its child objects. Both objects are compared
+      by value.
+
+   .. py:method:: setContent(content)
+
+      :param content: seiscomp3.Core.Time
+
+   .. py:method:: content()
+
+      :rtype: seiscomp3.Core.Time
+
+      .. note::
+
+         As this attribute is optional, this method throws a ValueError if
+         the value of the attribute is not set.
+
+.. _api-python-datamodel-timepdf1d:
+
+.. py:class:: TimePDF1D
+
+   Inherits :ref:`Object <api-python-datamodel-object>`.
+
+   A probability density function description. It can be used in three
+   different modes:
+   
+   1\) \"raw samples mode\"
+   
+   variable is a list of M values, no probability. The values represent
+   samples, no binning\/probabilities made.
+   
+   2\) \"implicitly binned PDF\"
+   
+   variable and probabilty arrays have length N. variable values to be
+   interpreted as \"bin centers\" \(or representative values\),
+   no bin edges given.
+   
+   3\) \"explicitly binned PDF\"
+   
+   variable has length N+1, probability has length N. variable values
+   describe bin edges \(upper bin edge is lower edge of next bin\).
+
+   .. py:staticmethod:: Cast(obj)
+
+      :param obj: The object to be casted.
+      :rtype: An object of type TimePDF1D if the cast was successful,
+              None otherwise.
+
+      Cast an arbitrary object to TimePDF1D if the internal wrapped
+      representation is an TimePDF1D object. The cast is important if
+      instances of type :ref:`Object <api-python-datamodel-object>`
+      are passed to methods which need access to the real type.
+
+
+
+   .. py:method:: equal(other)
+
+      :param other: :ref:`TimePDF1D <api-python-datamodel-timepdf1d>`
+      :rtype: A Boolean value indicating True if both objects are equal or
+              False otherwise.
+
+      Compares two objects without its child objects. Both objects are compared
+      by value.
+
+   .. py:method:: setVariable(variable)
+
+      :param variable: :ref:`TimeArray <api-python-datamodel-timearray>`
+
+      List of datetimes
+
+   .. py:method:: variable()
+
+      :rtype: :ref:`TimeArray <api-python-datamodel-timearray>`
+
+   .. py:method:: setProbability(probability)
+
+      :param probability: :ref:`RealArray <api-python-datamodel-realarray>`
+
+      List of probabilities
+
+   .. py:method:: probability()
+
+      :rtype: :ref:`RealArray <api-python-datamodel-realarray>`
+
 .. _api-python-datamodel-timequantity:
 
 .. py:class:: TimeQuantity
@@ -16051,13 +16541,13 @@ Reference
 
    .. py:method:: setValue(value)
 
-      :param value: datetime
+      :param value: seiscomp3.Core.Time
 
       Point in time \(UTC\), given in ISO 8601 format.
 
    .. py:method:: value()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setUncertainty(uncertainty)
 
@@ -16119,6 +16609,21 @@ Reference
          As this attribute is optional, this method throws a ValueError if
          the value of the attribute is not set.
 
+   .. py:method:: setPdf(pdf)
+
+      :param pdf: :ref:`TimePDF1D <api-python-datamodel-timepdf1d>`
+
+      Probability density function of the quantity.
+
+   .. py:method:: pdf()
+
+      :rtype: :ref:`TimePDF1D <api-python-datamodel-timepdf1d>`
+
+      .. note::
+
+         As this attribute is optional, this method throws a ValueError if
+         the value of the attribute is not set.
+
 .. _api-python-datamodel-timewindow:
 
 .. py:class:: TimeWindow
@@ -16154,14 +16659,14 @@ Reference
 
    .. py:method:: setReference(reference)
 
-      :param reference: datetime
+      :param reference: seiscomp3.Core.Time
 
       Reference point in time \(\"central\" point\), in ISO 8601 format. It
       has to be given in UTC.
 
    .. py:method:: reference()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setBegin(begin)
 
@@ -16245,27 +16750,27 @@ Reference
 
    .. py:method:: setCreated(created)
 
-      :param created: datetime
+      :param created: seiscomp3.Core.Time
 
    .. py:method:: created()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setStart(start)
 
-      :param start: datetime
+      :param start: seiscomp3.Core.Time
 
    .. py:method:: start()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
    .. py:method:: setEnd(end)
 
-      :param end: datetime
+      :param end: seiscomp3.Core.Time
 
    .. py:method:: end()
 
-      :rtype: datetime
+      :rtype: seiscomp3.Core.Time
 
       .. note::
 

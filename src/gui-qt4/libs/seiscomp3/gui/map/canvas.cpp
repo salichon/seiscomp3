@@ -67,6 +67,7 @@ QPoint alignmentToPos(Qt::Alignment area, int w, int h,
 	int tmpMargin = 2 * margin,
 	    height = rect.height() - tmpMargin,
 	    width = rect.width() - tmpMargin;
+
 	if ( area & Qt::AlignHCenter ) {
 		int x = std::max(width / 2 - w / 2, 0);
 		pos += QPoint(x, 0);
@@ -425,6 +426,7 @@ void Canvas::init() {
 	_zoomLevel = 1;
 
 	_grayScale = false;
+	_stackLegends = true;
 
 	_projection->setView(_center, _zoomLevel);
 
@@ -435,6 +437,7 @@ void Canvas::init() {
 		_maxZoom = MAX_ZOOM;
 
 	setDrawLayers(SCScheme.map.showLayers);
+	setDrawLegends(SCScheme.map.showLegends);
 
 	// Read custom layers
 	try {
@@ -616,7 +619,16 @@ void Canvas::hideLegends() {
 
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-const QRectF& Canvas::geoRect() const {
+void Canvas::setLegendStacking(bool enable) {
+	_stackLegends = enable;
+}
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+const QRectF &Canvas::geoRect() const {
 	return _geoReference;
 }
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -1044,14 +1056,15 @@ bool Canvas::drawGeoFeature(QPainter &painter, const Geo::GeoFeature *f,
 	// Draw the name if requested and if there is enough space
 	if ( layProp->drawName ) {
 		QPoint p1, p2;
-		_projection->project(p1, QPointF(bbox.lonMin, bbox.latMax));
-		_projection->project(p2, QPointF(bbox.lonMax, bbox.latMin));
-		QRect bboxRect = QRect(p1, p2);
-		QString name = f->name().c_str();
-		QRect textRect = painter.fontMetrics().boundingRect(name);
-		if ( textRect.width()*100 < bboxRect.width()*80 &&
-		     textRect.height()*100 < bboxRect.height()*80 )
-			painter.drawText(bboxRect, Qt::AlignCenter, name);
+		if ( _projection->project(p1, QPointF(bbox.lonMin, bbox.latMax))
+		  && _projection->project(p2, QPointF(bbox.lonMax, bbox.latMin)) ) {
+			QRect bboxRect = QRect(p1, p2);
+			QString name = f->name().c_str();
+			QRect textRect = painter.fontMetrics().boundingRect(name);
+			if ( textRect.width()*100 < bboxRect.width()*80 &&
+			     textRect.height()*100 < bboxRect.height()*80 )
+				painter.drawText(bboxRect, Qt::AlignCenter, name);
+		}
 	}
 
 	// Debug: Print the segment name and draw the bounding box
@@ -1061,21 +1074,23 @@ bool Canvas::drawGeoFeature(QPainter &painter, const Geo::GeoFeature *f,
 		// project the center of the bounding box
 		float bboxWidth = bbox.lonMax - bbox.lonMin;
 		float bboxHeight = bbox.latMax - bbox.latMin;
-		_projection->project(debugPoint, QPointF(
-		                     bbox.lonMin + bboxWidth/2,
-		                     bbox.latMin + bboxHeight/2));
-		QFont font;
-		float maxBBoxEdge = bboxWidth > bboxHeight ? bboxWidth : bboxHeight;
-		int pixelSize = (int)(_projection->pixelPerDegree() * maxBBoxEdge / 10.0);
-		font.setPixelSize(pixelSize < 1 ? 1 : pixelSize > 30 ? 30 : pixelSize);
-		QFontMetrics metrics(font);
-		QRect labelRect(metrics.boundingRect(f->name().c_str()));
-		labelRect.moveTo(debugPoint.x() - labelRect.width()/2,
-		                 debugPoint.y() - labelRect.height()/2);
 
-		painter.setFont(font);
-		painter.drawText(labelRect, Qt::AlignLeft | Qt::AlignTop,
-		                 f->name().c_str());
+		if ( _projection->project(debugPoint, QPointF(
+		                          bbox.lonMin + bboxWidth/2,
+		                          bbox.latMin + bboxHeight/2)) ) {
+			QFont font;
+			float maxBBoxEdge = bboxWidth > bboxHeight ? bboxWidth : bboxHeight;
+			int pixelSize = (int)(_projection->pixelPerDegree() * maxBBoxEdge / 10.0);
+			font.setPixelSize(pixelSize < 1 ? 1 : pixelSize > 30 ? 30 : pixelSize);
+			QFontMetrics metrics(font);
+			QRect labelRect(metrics.boundingRect(f->name().c_str()));
+			labelRect.moveTo(debugPoint.x() - labelRect.width()/2,
+			                 debugPoint.y() - labelRect.height()/2);
+
+			painter.setFont(font);
+			painter.drawText(labelRect, Qt::AlignLeft | Qt::AlignTop,
+			                 f->name().c_str());
+		}
 
 		_projection->moveTo(QPointF(bbox.lonMin, bbox.latMin));
 		_projection->lineTo(painter, QPointF(bbox.lonMax, bbox.latMin));
@@ -1285,120 +1300,221 @@ void Canvas::drawLegends(QPainter& painter) {
 		LegendArea &area = it.value();
 		Legend *legend;
 
-		if ( area.currentIndex == -1 ) {
-			area.currentIndex = area.findNext();
-			if ( area.currentIndex == -1 ) continue;
-		}
-		else {
-			legend = area[area.currentIndex];
-			if ( !legend->isEnabled() || ((legend->layer() != NULL) && !legend->layer()->isVisible()) ) {
-				if ( legend->isVisible() ) legend->setVisible(false);
+		if ( _stackLegends ) {
+
+			if ( area.currentIndex == -1 ) {
 				area.currentIndex = area.findNext();
 				if ( area.currentIndex == -1 ) continue;
 			}
-		}
+			else {
+				legend = area[area.currentIndex];
+				if ( !legend->isEnabled() || ((legend->layer() != NULL) && !legend->layer()->isVisible()) ) {
+					if ( legend->isVisible() ) legend->setVisible(false);
+					area.currentIndex = area.findNext();
+					if ( area.currentIndex == -1 ) continue;
+				}
+			}
 
-		legend = area[area.currentIndex];
+			legend = area[area.currentIndex];
 
-		if ( !legend->isVisible() ) legend->setVisible(true);
+			if ( !legend->isVisible() ) legend->setVisible(true);
 
-		QRect decorationRect(0, 0, 52, 22);
-		const QString &title = legend->title();
-		QRect textRect(0, 0, fm.width(title) + 2 * innerMargin, fm.height());
-		QSize contentSize = legend->size();
-		int contentHeight = contentSize.height(),
-		    contentWidth = contentSize.width(),
-		    headerHeight = std::max(textRect.height(), decorationRect.height());
+			QRect decorationRect(0, 0, 52, 22);
+			const QString &title = legend->title();
+			QRect textRect(0, 0, fm.width(title) + 2 * innerMargin, fm.height());
+			QSize contentSize = legend->size();
+			int contentHeight = contentSize.height(),
+			    contentWidth = contentSize.width(),
+			    headerHeight = std::max(textRect.height(), decorationRect.height());
 
-		if ( area.findNext() == -1 ) {
-			decorationRect.setSize(QSize(0, 0));
+			if ( area.findNext() == -1 ) {
+				decorationRect.setSize(QSize(0, 0));
 
-			// No title and just one legend -> no header
-			if ( title.isEmpty() ) headerHeight = 0;
-		}
+				// No title and just one legend -> no header
+				if ( title.isEmpty() ) headerHeight = 0;
+			}
 
-		int height = headerHeight + contentHeight,
-		    width = textRect.width() + decorationRect.width();
+			int height = headerHeight + contentHeight,
+			    width = textRect.width() + decorationRect.width();
 
-		if ( contentWidth > width) {
-			textRect.setWidth(textRect.width() + contentWidth - width);
-			width = contentWidth;
+			if ( contentWidth > width) {
+				textRect.setWidth(textRect.width() + contentWidth - width);
+				width = contentWidth;
+			}
+			else {
+				contentWidth = width;
+				contentSize.setWidth(contentWidth);
+			}
+
+			if ( headerHeight > textRect.height() )
+				textRect.setHeight(headerHeight);
+
+			QPoint pos = alignmentToPos(legend->alignment(), width, height,
+			                            painter.viewport(), _margin);
+
+			int x = pos.x(), y = pos.y();
+
+			QRect headerRect(x, y, width, headerHeight);
+			if ( legend->alignment() & Qt::AlignBottom )
+				headerRect.translate(0, contentHeight);
+
+			QLinearGradient gradient(headerRect.topLeft(), headerRect.bottomLeft());
+			gradient.setColorAt(0, QColor(125, 125, 125 , 192));
+			gradient.setColorAt(1, QColor(76, 76, 76, 192));
+
+			QPen pen;
+			pen.setBrush(gradient);
+
+			painter.setPen(pen);
+			painter.setBrush(gradient);
+			painter.drawRect(headerRect);
+
+			if ( legend->alignment() & Qt::AlignRight ) {
+				textRect.moveTopLeft(headerRect.topLeft());
+				decorationRect.moveTopLeft(textRect.topRight());
+			}
+			else {
+				decorationRect.moveTopLeft(headerRect.topLeft());
+				textRect.moveTopLeft(decorationRect.topRight());
+			}
+
+			QFont font = painter.font();
+
+			painter.setFont(legend->titleFont());
+			painter.setPen(Qt::white);
+			painter.drawText(textRect, Qt::AlignHCenter | Qt::AlignVCenter, title);
+
+			painter.setFont(font);
+
+			if ( !decorationRect.isNull() ) {
+				QSize size(26, 22);
+				QImage image = getDecorationSymbol(size);
+				painter.drawImage(decorationRect.topLeft(), image);
+
+				QRect rect(decorationRect.topLeft(), size);
+				it->decorationRects[0] = rect;
+				rect.translate(26, 0);
+
+				image = image.mirrored(true, false);
+				painter.drawImage(rect.topLeft(), image);
+
+				it->decorationRects[1] = rect;
+			}
+			else {
+				it->decorationRects[0] = QRect();
+				it->decorationRects[1] = QRect();
+			}
+
+			it->header = headerRect;
+
+			QRect contentRect (headerRect.bottomLeft(), contentSize);
+			if ( legend->alignment() & Qt::AlignBottom )
+				contentRect.moveTopLeft(QPoint(x,y));
+
+			painter.setPen(SCScheme.colors.legend.border);
+			painter.setBrush(SCScheme.colors.legend.background);
+			painter.drawRect(contentRect);
+
+			legend->draw(contentRect, painter);
 		}
 		else {
-			contentWidth = width;
-			contentSize.setWidth(contentWidth);
-		}
+			Qt::Alignment align = it.key();
+			int tx = 0, ty = 0;
 
-		if ( headerHeight > textRect.height() )
-			textRect.setHeight(headerHeight);
+			if ( align & Qt::AlignHCenter ) {
+				if ( align & Qt::AlignTop )
+					ty = 1;
+				else if ( align & Qt::AlignBottom )
+					ty = -1;
+			}
+			else if ( align & Qt::AlignRight )
+				tx = -1;
+			else
+				tx = 1;
 
-		QPoint pos = alignmentToPos(legend->alignment(), width, height,
-		                            painter.viewport(), _margin);
+			int cx = 0, cy = 0;
 
-		int x = pos.x(),
-		    y = pos.y();
-		QRect headerRect(x, y, width, headerHeight);
-		if ( legend->alignment() & Qt::AlignBottom )
-			headerRect.translate(0, contentHeight);
-
-		QLinearGradient gradient(headerRect.topLeft(), headerRect.bottomLeft());
-		gradient.setColorAt(0, QColor(125, 125, 125 , 192));
-		gradient.setColorAt(1, QColor(76, 76, 76, 192));
-
-		QPen pen;
-		pen.setBrush(gradient);
-
-		painter.setPen(pen);
-		painter.setBrush(gradient);
-		painter.drawRect(headerRect);
-
-		if ( legend->alignment() & Qt::AlignRight ) {
-			textRect.moveTopLeft(headerRect.topLeft());
-			decorationRect.moveTopLeft(textRect.topRight());
-		}
-		else {
-			decorationRect.moveTopLeft(headerRect.topLeft());
-			textRect.moveTopLeft(decorationRect.topRight());
-		}
-
-		QFont font = painter.font();
-
-		painter.setFont(legend->titleFont());
-		painter.setPen(Qt::white);
-		painter.drawText(textRect, Qt::AlignHCenter | Qt::AlignVCenter, title);
-
-		painter.setFont(font);
-
-		if ( !decorationRect.isNull() ) {
-			QSize size(26, 22);
-			QImage image = getDecorationSymbol(size);
-			painter.drawImage(decorationRect.topLeft(), image);
-
-			QRect rect(decorationRect.topLeft(), size);
-			it->decorationRects[0] = rect;
-			rect.translate(26, 0);
-
-			image = image.mirrored(true, false);
-			painter.drawImage(rect.topLeft(), image);
-
-			it->decorationRects[1] = rect;
-		}
-		else {
 			it->decorationRects[0] = QRect();
 			it->decorationRects[1] = QRect();
+
+			for ( LegendArea::iterator lit = area.begin(); lit != area.end(); ++lit ) {
+				legend = *lit;
+
+				if ( !legend->isEnabled() ) continue;
+				if ( !legend->isVisible() ) legend->setVisible(true);
+
+				QRect decorationRect(0, 0, 52, 22);
+				const QString &title = legend->title();
+				QRect textRect(0, 0, fm.width(title) + 2 * innerMargin, fm.height());
+				QSize contentSize = legend->size();
+				int contentHeight = contentSize.height(),
+				    contentWidth = contentSize.width(),
+				    headerHeight = std::max(textRect.height(), decorationRect.height());
+
+				// No title and just one legend -> no header
+				if ( title.isEmpty() ) headerHeight = 0;
+
+				int height = headerHeight + contentHeight,
+				    width = textRect.width() + decorationRect.width();
+
+				if ( contentWidth > width) {
+					textRect.setWidth(textRect.width() + contentWidth - width);
+					width = contentWidth;
+				}
+				else {
+					contentWidth = width;
+					contentSize.setWidth(contentWidth);
+				}
+
+				if ( headerHeight > textRect.height() )
+					textRect.setHeight(headerHeight);
+
+				QPoint pos = alignmentToPos(legend->alignment(), width, height,
+				                            painter.viewport(), _margin);
+
+				int x = cx + pos.x(), y = cy + pos.y();
+				QRect headerRect(x, y, width, headerHeight);
+
+				if ( headerHeight > 0 ) {
+					if ( legend->alignment() & Qt::AlignBottom )
+						headerRect.translate(0, contentHeight);
+
+					QLinearGradient gradient(headerRect.topLeft(), headerRect.bottomLeft());
+					gradient.setColorAt(0, QColor(125, 125, 125 , 192));
+					gradient.setColorAt(1, QColor(76, 76, 76, 192));
+
+					QPen pen;
+					pen.setBrush(gradient);
+
+					painter.setPen(pen);
+					painter.setBrush(gradient);
+					painter.drawRect(headerRect);
+
+					QFont font = painter.font();
+
+					painter.setFont(legend->titleFont());
+					painter.setPen(Qt::white);
+					painter.drawText(headerRect, Qt::AlignHCenter | Qt::AlignVCenter, title);
+
+					painter.setFont(font);
+				}
+
+				it->header = headerRect;
+
+				QRect contentRect(headerRect.bottomLeft(), contentSize);
+				if ( legend->alignment() & Qt::AlignBottom )
+					contentRect.moveTopLeft(QPoint(x,y));
+
+				painter.setPen(SCScheme.colors.legend.border);
+				painter.setBrush(SCScheme.colors.legend.background);
+				painter.drawRect(contentRect);
+
+				legend->draw(contentRect, painter);
+
+				cx += tx * (contentRect.width() + _margin);
+				cy += ty * (contentRect.height() + _margin);
+			}
 		}
-
-		it->header = headerRect;
-
-		QRect contentRect (headerRect.bottomLeft(), contentSize);
-		if ( legend->alignment() & Qt::AlignBottom )
-			contentRect.moveTopLeft(QPoint(x,y));
-
-		painter.setPen(SCScheme.colors.legend.border);
-		painter.setBrush(SCScheme.colors.legend.background);
-		painter.drawRect(contentRect);
-
-		legend->draw(contentRect, painter);
 	}
 
 	painter.setRenderHints(hints);
@@ -1461,8 +1577,31 @@ void Canvas::translate(const QPointF &delta) {
 
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-void Canvas::onObjectDestroyed(QObject *object) {
-	Legend *legend = static_cast<Legend*>(object);
+void Canvas::onLegendAdded(Legend *legend) {
+	LegendAreas::iterator it = _legendAreas.find(legend->alignment());
+	if ( it == _legendAreas.end() )
+		it = _legendAreas.insert(legend->alignment(), LegendArea());
+
+	LegendArea &area = *it;
+	area.append(legend);
+	if ( legend->layer() && legend->layer()->isVisible() &&
+	     legend->isEnabled() && area.currentIndex == -1 )
+		area.currentIndex = area.findNext();
+
+	connect(legend, SIGNAL(enabled(Seiscomp::Gui::Map::Legend*, bool)),
+	        this, SLOT(setLegendEnabled(Seiscomp::Gui::Map::Legend*, bool)));
+	connect(legend, SIGNAL(bringToFrontRequested(Seiscomp::Gui::Map::Legend*)),
+	        this, SLOT(bringToFront(Seiscomp::Gui::Map::Legend*)));
+
+	legend->contextResizeEvent(_buffer.size());
+}
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+void Canvas::onLegendRemoved(Legend *legend) {
 	LegendAreas::iterator it = _legendAreas.find(legend->alignment());
 	if ( it != _legendAreas.end() ) {
 		int index = it->indexOf(legend);
@@ -1493,28 +1632,15 @@ void Canvas::setupLayer(Layer *layer) {
 		layer->init(SCApp->configuration());
 	}
 
+	connect(layer, SIGNAL(legendAdded(Legend*)), this, SLOT(onLegendAdded(Legend*)));
+	connect(layer, SIGNAL(legendRemoved(Legend*)), this, SLOT(onLegendRemoved(Legend*)));
 	connect(layer, SIGNAL(updateRequested(const Layer::UpdateHints&)),
 	        this, SLOT(updateLayer(const Layer::UpdateHints&)));
 
+
 	foreach ( Legend *legend, layer->legends() ) {
 		if ( legend != NULL ) {
-			LegendAreas::iterator it = _legendAreas.find(legend->alignment());
-			if ( it == _legendAreas.end() )
-				it = _legendAreas.insert(legend->alignment(), LegendArea());
-
-			LegendArea &area = *it;
-			area.append(legend);
-			if ( layer->isVisible() && legend->isEnabled() && area.currentIndex == -1 )
-				area.currentIndex = area.findNext();
-
-			connect(legend, SIGNAL(enabled(Seiscomp::Gui::Map::Legend*, bool)),
-			        this, SLOT(setLegendEnabled(Seiscomp::Gui::Map::Legend*, bool)));
-			connect(legend, SIGNAL(bringToFrontRequested(Seiscomp::Gui::Map::Legend*)),
-			        this, SLOT(bringToFront(Seiscomp::Gui::Map::Legend*)));
-			connect(legend, SIGNAL(destroyed(QObject*)),
-			        this, SLOT(onObjectDestroyed(QObject*)));
-
-			legend->contextResizeEvent(_buffer.size());
+			onLegendAdded(legend);
 		}
 	}
 

@@ -667,6 +667,16 @@ class PublicObject(Object):
         return _DataModel.PublicObject_registered(self)
 
 
+    def registerMe(self):
+        """registerMe(PublicObject self) -> bool"""
+        return _DataModel.PublicObject_registerMe(self)
+
+
+    def deregisterMe(self):
+        """deregisterMe(PublicObject self) -> bool"""
+        return _DataModel.PublicObject_deregisterMe(self)
+
+
     def validId(self):
         """validId(PublicObject self) -> bool"""
         return _DataModel.PublicObject_validId(self)
@@ -1025,7 +1035,9 @@ class DatabaseArchive(Observer):
 
     def getObjects(self, *args):
         """
+        getObjects(DatabaseArchive self, std::string const & parentID, RTTI classType, bool ignorePublicObject=False) -> DatabaseIterator
         getObjects(DatabaseArchive self, std::string const & parentID, RTTI classType) -> DatabaseIterator
+        getObjects(DatabaseArchive self, PublicObject parent, RTTI classType, bool ignorePublicObject=False) -> DatabaseIterator
         getObjects(DatabaseArchive self, PublicObject parent, RTTI classType) -> DatabaseIterator
         """
         return _DataModel.DatabaseArchive_getObjects(self, *args)
@@ -1666,113 +1678,6 @@ class NotifierCreator(Visitor):
 NotifierCreator_swigregister = _DataModel.NotifierCreator_swigregister
 NotifierCreator_swigregister(NotifierCreator)
 
-class ArtificialOriginMessage(Core.Message):
-    """Proxy of C++ Seiscomp::DataModel::ArtificialOriginMessage class."""
-
-    __swig_setmethods__ = {}
-    for _s in [Core.Message]:
-        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
-    __setattr__ = lambda self, name, value: _swig_setattr(self, ArtificialOriginMessage, name, value)
-    __swig_getmethods__ = {}
-    for _s in [Core.Message]:
-        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
-    __getattr__ = lambda self, name: _swig_getattr(self, ArtificialOriginMessage, name)
-    __repr__ = _swig_repr
-
-    def ClassName():
-        """ClassName() -> char const *"""
-        return _DataModel.ArtificialOriginMessage_ClassName()
-
-    ClassName = staticmethod(ClassName)
-
-    def TypeInfo():
-        """TypeInfo() -> RTTI"""
-        return _DataModel.ArtificialOriginMessage_TypeInfo()
-
-    TypeInfo = staticmethod(TypeInfo)
-
-    def className(self):
-        """className(ArtificialOriginMessage self) -> char const *"""
-        return _DataModel.ArtificialOriginMessage_className(self)
-
-
-    def typeInfo(self):
-        """typeInfo(ArtificialOriginMessage self) -> RTTI"""
-        return _DataModel.ArtificialOriginMessage_typeInfo(self)
-
-
-    def Cast(*args):
-        """
-        Cast(BaseObject o) -> ArtificialOriginMessage
-        Cast(Seiscomp::Core::BaseObjectPtr o) -> ArtificialOriginMessage
-        """
-        return _DataModel.ArtificialOriginMessage_Cast(*args)
-
-    Cast = staticmethod(Cast)
-
-    def ConstCast(*args):
-        """
-        ConstCast(BaseObject o) -> ArtificialOriginMessage
-        ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> ArtificialOriginMessage
-        """
-        return _DataModel.ArtificialOriginMessage_ConstCast(*args)
-
-    ConstCast = staticmethod(ConstCast)
-
-    def serialize(self, ar):
-        """serialize(ArtificialOriginMessage self, GenericArchive ar)"""
-        return _DataModel.ArtificialOriginMessage_serialize(self, ar)
-
-
-    def __init__(self, origin):
-        """__init__(Seiscomp::DataModel::ArtificialOriginMessage self, Origin origin) -> ArtificialOriginMessage"""
-        this = _DataModel.new_ArtificialOriginMessage(origin)
-        try:
-            self.this.append(this)
-        except __builtin__.Exception:
-            self.this = this
-
-    def origin(self):
-        """origin(ArtificialOriginMessage self) -> Origin"""
-        return _DataModel.ArtificialOriginMessage_origin(self)
-
-
-    def setOrigin(self, origin):
-        """setOrigin(ArtificialOriginMessage self, Origin origin)"""
-        return _DataModel.ArtificialOriginMessage_setOrigin(self, origin)
-
-
-    def empty(self):
-        """empty(ArtificialOriginMessage self) -> bool"""
-        return _DataModel.ArtificialOriginMessage_empty(self)
-
-    __swig_destroy__ = _DataModel.delete_ArtificialOriginMessage
-    __del__ = lambda self: None
-ArtificialOriginMessage_swigregister = _DataModel.ArtificialOriginMessage_swigregister
-ArtificialOriginMessage_swigregister(ArtificialOriginMessage)
-
-def ArtificialOriginMessage_ClassName():
-    """ArtificialOriginMessage_ClassName() -> char const *"""
-    return _DataModel.ArtificialOriginMessage_ClassName()
-
-def ArtificialOriginMessage_TypeInfo():
-    """ArtificialOriginMessage_TypeInfo() -> RTTI"""
-    return _DataModel.ArtificialOriginMessage_TypeInfo()
-
-def ArtificialOriginMessage_Cast(*args):
-    """
-    Cast(BaseObject o) -> ArtificialOriginMessage
-    ArtificialOriginMessage_Cast(Seiscomp::Core::BaseObjectPtr o) -> ArtificialOriginMessage
-    """
-    return _DataModel.ArtificialOriginMessage_Cast(*args)
-
-def ArtificialOriginMessage_ConstCast(*args):
-    """
-    ConstCast(BaseObject o) -> ArtificialOriginMessage
-    ArtificialOriginMessage_ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> ArtificialOriginMessage
-    """
-    return _DataModel.ArtificialOriginMessage_ConstCast(*args)
-
 
 def eventRegion(arg1):
     """eventRegion(Event arg1) -> std::string"""
@@ -2397,6 +2302,34 @@ PLANE_CRASH = _DataModel.PLANE_CRASH
 SONIC_BOOM = _DataModel.SONIC_BOOM
 DUPLICATE = _DataModel.DUPLICATE
 OTHER_EVENT = _DataModel.OTHER_EVENT
+NOT_REPORTED = _DataModel.NOT_REPORTED
+ANTHROPOGENIC_EVENT = _DataModel.ANTHROPOGENIC_EVENT
+COLLAPSE = _DataModel.COLLAPSE
+CAVITY_COLLAPSE = _DataModel.CAVITY_COLLAPSE
+ACCIDENTAL_EXPLOSION = _DataModel.ACCIDENTAL_EXPLOSION
+CONTROLLED_EXPLOSION = _DataModel.CONTROLLED_EXPLOSION
+EXPERIMENTAL_EXPLOSION = _DataModel.EXPERIMENTAL_EXPLOSION
+INDUSTRIAL_EXPLOSION = _DataModel.INDUSTRIAL_EXPLOSION
+MINING_EXPLOSION = _DataModel.MINING_EXPLOSION
+ROAD_CUT = _DataModel.ROAD_CUT
+BLASTING_LEVEE = _DataModel.BLASTING_LEVEE
+INDUCED_OR_TRIGGERED_EVENT = _DataModel.INDUCED_OR_TRIGGERED_EVENT
+ROCK_BURST = _DataModel.ROCK_BURST
+RESERVOIR_LOADING = _DataModel.RESERVOIR_LOADING
+FLUID_INJECTION = _DataModel.FLUID_INJECTION
+FLUID_EXTRACTION = _DataModel.FLUID_EXTRACTION
+CRASH = _DataModel.CRASH
+TRAIN_CRASH = _DataModel.TRAIN_CRASH
+BOAT_CRASH = _DataModel.BOAT_CRASH
+ATMOSPHERIC_EVENT = _DataModel.ATMOSPHERIC_EVENT
+SONIC_BLAST = _DataModel.SONIC_BLAST
+ACOUSTIC_NOISE = _DataModel.ACOUSTIC_NOISE
+THUNDER = _DataModel.THUNDER
+AVALANCHE = _DataModel.AVALANCHE
+HYDROACOUSTIC_EVENT = _DataModel.HYDROACOUSTIC_EVENT
+ICE_QUAKE = _DataModel.ICE_QUAKE
+SLIDE = _DataModel.SLIDE
+METEORITE = _DataModel.METEORITE
 EEventTypeQuantity = _DataModel.EEventTypeQuantity
 class EEventTypeNames(_object):
     """Proxy of C++ Seiscomp::DataModel::EEventTypeNames class."""
@@ -2568,6 +2501,388 @@ def EStationGroupTypeNames_name(i):
     """EStationGroupTypeNames_name(int i) -> char const *"""
     return _DataModel.EStationGroupTypeNames_name(i)
 
+class RealArray(Core.BaseObject):
+    """Proxy of C++ Seiscomp::DataModel::RealArray class."""
+
+    __swig_setmethods__ = {}
+    for _s in [Core.BaseObject]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, RealArray, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Core.BaseObject]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, RealArray, name)
+    __repr__ = _swig_repr
+
+    def ClassName():
+        """ClassName() -> char const *"""
+        return _DataModel.RealArray_ClassName()
+
+    ClassName = staticmethod(ClassName)
+
+    def TypeInfo():
+        """TypeInfo() -> RTTI"""
+        return _DataModel.RealArray_TypeInfo()
+
+    TypeInfo = staticmethod(TypeInfo)
+
+    def className(self):
+        """className(RealArray self) -> char const *"""
+        return _DataModel.RealArray_className(self)
+
+
+    def typeInfo(self):
+        """typeInfo(RealArray self) -> RTTI"""
+        return _DataModel.RealArray_typeInfo(self)
+
+
+    def Cast(*args):
+        """
+        Cast(BaseObject o) -> RealArray
+        Cast(Seiscomp::Core::BaseObjectPtr o) -> RealArray
+        """
+        return _DataModel.RealArray_Cast(*args)
+
+    Cast = staticmethod(Cast)
+
+    def ConstCast(*args):
+        """
+        ConstCast(BaseObject o) -> RealArray
+        ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> RealArray
+        """
+        return _DataModel.RealArray_ConstCast(*args)
+
+    ConstCast = staticmethod(ConstCast)
+
+    def serialize(self, ar):
+        """serialize(RealArray self, GenericArchive ar)"""
+        return _DataModel.RealArray_serialize(self, ar)
+
+
+    def __init__(self, *args):
+        """
+        __init__(Seiscomp::DataModel::RealArray self) -> RealArray
+        __init__(Seiscomp::DataModel::RealArray self, RealArray other) -> RealArray
+        """
+        this = _DataModel.new_RealArray(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _DataModel.delete_RealArray
+    __del__ = lambda self: None
+
+    def __eq__(self, other):
+        """__eq__(RealArray self, RealArray other) -> bool"""
+        return _DataModel.RealArray___eq__(self, other)
+
+
+    def __ne__(self, other):
+        """__ne__(RealArray self, RealArray other) -> bool"""
+        return _DataModel.RealArray___ne__(self, other)
+
+
+    def equal(self, other):
+        """equal(RealArray self, RealArray other) -> bool"""
+        return _DataModel.RealArray_equal(self, other)
+
+
+    def setContent(self, arg2):
+        """setContent(RealArray self, vectord arg2)"""
+        return _DataModel.RealArray_setContent(self, arg2)
+
+
+    def content(self, *args):
+        """
+        content(RealArray self) -> vectord
+        content(RealArray self) -> vectord
+        """
+        return _DataModel.RealArray_content(self, *args)
+
+RealArray_swigregister = _DataModel.RealArray_swigregister
+RealArray_swigregister(RealArray)
+
+def RealArray_ClassName():
+    """RealArray_ClassName() -> char const *"""
+    return _DataModel.RealArray_ClassName()
+
+def RealArray_TypeInfo():
+    """RealArray_TypeInfo() -> RTTI"""
+    return _DataModel.RealArray_TypeInfo()
+
+def RealArray_Cast(*args):
+    """
+    Cast(BaseObject o) -> RealArray
+    RealArray_Cast(Seiscomp::Core::BaseObjectPtr o) -> RealArray
+    """
+    return _DataModel.RealArray_Cast(*args)
+
+def RealArray_ConstCast(*args):
+    """
+    ConstCast(BaseObject o) -> RealArray
+    RealArray_ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> RealArray
+    """
+    return _DataModel.RealArray_ConstCast(*args)
+
+class TimeArray(Core.BaseObject):
+    """Proxy of C++ Seiscomp::DataModel::TimeArray class."""
+
+    __swig_setmethods__ = {}
+    for _s in [Core.BaseObject]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, TimeArray, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Core.BaseObject]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, TimeArray, name)
+    __repr__ = _swig_repr
+
+    def ClassName():
+        """ClassName() -> char const *"""
+        return _DataModel.TimeArray_ClassName()
+
+    ClassName = staticmethod(ClassName)
+
+    def TypeInfo():
+        """TypeInfo() -> RTTI"""
+        return _DataModel.TimeArray_TypeInfo()
+
+    TypeInfo = staticmethod(TypeInfo)
+
+    def className(self):
+        """className(TimeArray self) -> char const *"""
+        return _DataModel.TimeArray_className(self)
+
+
+    def typeInfo(self):
+        """typeInfo(TimeArray self) -> RTTI"""
+        return _DataModel.TimeArray_typeInfo(self)
+
+
+    def Cast(*args):
+        """
+        Cast(BaseObject o) -> TimeArray
+        Cast(Seiscomp::Core::BaseObjectPtr o) -> TimeArray
+        """
+        return _DataModel.TimeArray_Cast(*args)
+
+    Cast = staticmethod(Cast)
+
+    def ConstCast(*args):
+        """
+        ConstCast(BaseObject o) -> TimeArray
+        ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> TimeArray
+        """
+        return _DataModel.TimeArray_ConstCast(*args)
+
+    ConstCast = staticmethod(ConstCast)
+
+    def serialize(self, ar):
+        """serialize(TimeArray self, GenericArchive ar)"""
+        return _DataModel.TimeArray_serialize(self, ar)
+
+
+    def __init__(self, *args):
+        """
+        __init__(Seiscomp::DataModel::TimeArray self) -> TimeArray
+        __init__(Seiscomp::DataModel::TimeArray self, TimeArray other) -> TimeArray
+        """
+        this = _DataModel.new_TimeArray(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _DataModel.delete_TimeArray
+    __del__ = lambda self: None
+
+    def __eq__(self, other):
+        """__eq__(TimeArray self, TimeArray other) -> bool"""
+        return _DataModel.TimeArray___eq__(self, other)
+
+
+    def __ne__(self, other):
+        """__ne__(TimeArray self, TimeArray other) -> bool"""
+        return _DataModel.TimeArray___ne__(self, other)
+
+
+    def equal(self, other):
+        """equal(TimeArray self, TimeArray other) -> bool"""
+        return _DataModel.TimeArray_equal(self, other)
+
+
+    def setContent(self, arg2):
+        """setContent(TimeArray self, std::vector< Seiscomp::Core::Time,std::allocator< Seiscomp::Core::Time > > const & arg2)"""
+        return _DataModel.TimeArray_setContent(self, arg2)
+
+
+    def content(self, *args):
+        """
+        content(TimeArray self) -> std::vector< Seiscomp::Core::Time,std::allocator< Seiscomp::Core::Time > > const
+        content(TimeArray self) -> std::vector< Seiscomp::Core::Time,std::allocator< Seiscomp::Core::Time > > &
+        """
+        return _DataModel.TimeArray_content(self, *args)
+
+TimeArray_swigregister = _DataModel.TimeArray_swigregister
+TimeArray_swigregister(TimeArray)
+
+def TimeArray_ClassName():
+    """TimeArray_ClassName() -> char const *"""
+    return _DataModel.TimeArray_ClassName()
+
+def TimeArray_TypeInfo():
+    """TimeArray_TypeInfo() -> RTTI"""
+    return _DataModel.TimeArray_TypeInfo()
+
+def TimeArray_Cast(*args):
+    """
+    Cast(BaseObject o) -> TimeArray
+    TimeArray_Cast(Seiscomp::Core::BaseObjectPtr o) -> TimeArray
+    """
+    return _DataModel.TimeArray_Cast(*args)
+
+def TimeArray_ConstCast(*args):
+    """
+    ConstCast(BaseObject o) -> TimeArray
+    TimeArray_ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> TimeArray
+    """
+    return _DataModel.TimeArray_ConstCast(*args)
+
+class TimePDF1D(Core.BaseObject):
+    """Proxy of C++ Seiscomp::DataModel::TimePDF1D class."""
+
+    __swig_setmethods__ = {}
+    for _s in [Core.BaseObject]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, TimePDF1D, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Core.BaseObject]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, TimePDF1D, name)
+    __repr__ = _swig_repr
+
+    def ClassName():
+        """ClassName() -> char const *"""
+        return _DataModel.TimePDF1D_ClassName()
+
+    ClassName = staticmethod(ClassName)
+
+    def TypeInfo():
+        """TypeInfo() -> RTTI"""
+        return _DataModel.TimePDF1D_TypeInfo()
+
+    TypeInfo = staticmethod(TypeInfo)
+
+    def className(self):
+        """className(TimePDF1D self) -> char const *"""
+        return _DataModel.TimePDF1D_className(self)
+
+
+    def typeInfo(self):
+        """typeInfo(TimePDF1D self) -> RTTI"""
+        return _DataModel.TimePDF1D_typeInfo(self)
+
+
+    def Cast(*args):
+        """
+        Cast(BaseObject o) -> TimePDF1D
+        Cast(Seiscomp::Core::BaseObjectPtr o) -> TimePDF1D
+        """
+        return _DataModel.TimePDF1D_Cast(*args)
+
+    Cast = staticmethod(Cast)
+
+    def ConstCast(*args):
+        """
+        ConstCast(BaseObject o) -> TimePDF1D
+        ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> TimePDF1D
+        """
+        return _DataModel.TimePDF1D_ConstCast(*args)
+
+    ConstCast = staticmethod(ConstCast)
+
+    def serialize(self, ar):
+        """serialize(TimePDF1D self, GenericArchive ar)"""
+        return _DataModel.TimePDF1D_serialize(self, ar)
+
+
+    def __init__(self, *args):
+        """
+        __init__(Seiscomp::DataModel::TimePDF1D self) -> TimePDF1D
+        __init__(Seiscomp::DataModel::TimePDF1D self, TimePDF1D other) -> TimePDF1D
+        """
+        this = _DataModel.new_TimePDF1D(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _DataModel.delete_TimePDF1D
+    __del__ = lambda self: None
+
+    def __eq__(self, other):
+        """__eq__(TimePDF1D self, TimePDF1D other) -> bool"""
+        return _DataModel.TimePDF1D___eq__(self, other)
+
+
+    def __ne__(self, other):
+        """__ne__(TimePDF1D self, TimePDF1D other) -> bool"""
+        return _DataModel.TimePDF1D___ne__(self, other)
+
+
+    def equal(self, other):
+        """equal(TimePDF1D self, TimePDF1D other) -> bool"""
+        return _DataModel.TimePDF1D_equal(self, other)
+
+
+    def setVariable(self, variable):
+        """setVariable(TimePDF1D self, TimeArray variable)"""
+        return _DataModel.TimePDF1D_setVariable(self, variable)
+
+
+    def variable(self, *args):
+        """
+        variable(TimePDF1D self) -> TimeArray
+        variable(TimePDF1D self) -> TimeArray
+        """
+        return _DataModel.TimePDF1D_variable(self, *args)
+
+
+    def setProbability(self, probability):
+        """setProbability(TimePDF1D self, RealArray probability)"""
+        return _DataModel.TimePDF1D_setProbability(self, probability)
+
+
+    def probability(self, *args):
+        """
+        probability(TimePDF1D self) -> RealArray
+        probability(TimePDF1D self) -> RealArray
+        """
+        return _DataModel.TimePDF1D_probability(self, *args)
+
+TimePDF1D_swigregister = _DataModel.TimePDF1D_swigregister
+TimePDF1D_swigregister(TimePDF1D)
+
+def TimePDF1D_ClassName():
+    """TimePDF1D_ClassName() -> char const *"""
+    return _DataModel.TimePDF1D_ClassName()
+
+def TimePDF1D_TypeInfo():
+    """TimePDF1D_TypeInfo() -> RTTI"""
+    return _DataModel.TimePDF1D_TypeInfo()
+
+def TimePDF1D_Cast(*args):
+    """
+    Cast(BaseObject o) -> TimePDF1D
+    TimePDF1D_Cast(Seiscomp::Core::BaseObjectPtr o) -> TimePDF1D
+    """
+    return _DataModel.TimePDF1D_Cast(*args)
+
+def TimePDF1D_ConstCast(*args):
+    """
+    ConstCast(BaseObject o) -> TimePDF1D
+    TimePDF1D_ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> TimePDF1D
+    """
+    return _DataModel.TimePDF1D_ConstCast(*args)
+
 class TimeQuantity(Core.BaseObject):
     """Proxy of C++ Seiscomp::DataModel::TimeQuantity class."""
 
@@ -2630,8 +2945,12 @@ class TimeQuantity(Core.BaseObject):
         """
         __init__(Seiscomp::DataModel::TimeQuantity self) -> TimeQuantity
         __init__(Seiscomp::DataModel::TimeQuantity self, TimeQuantity other) -> TimeQuantity
-        __init__(Seiscomp::DataModel::TimeQuantity self, Time value) -> TimeQuantity
+        __init__(Seiscomp::DataModel::TimeQuantity self, Time value, Seiscomp::Core::Optional< double >::Impl const & uncertainty, Seiscomp::Core::Optional< double >::Impl const & lowerUncertainty, Seiscomp::Core::Optional< double >::Impl const & upperUncertainty, Seiscomp::Core::Optional< double >::Impl const & confidenceLevel, Seiscomp::Core::Optional< Seiscomp::DataModel::TimePDF1D >::Impl const & pdf) -> TimeQuantity
         __init__(Seiscomp::DataModel::TimeQuantity self, Time value, Seiscomp::Core::Optional< double >::Impl const & uncertainty, Seiscomp::Core::Optional< double >::Impl const & lowerUncertainty, Seiscomp::Core::Optional< double >::Impl const & upperUncertainty, Seiscomp::Core::Optional< double >::Impl const & confidenceLevel) -> TimeQuantity
+        __init__(Seiscomp::DataModel::TimeQuantity self, Time value, Seiscomp::Core::Optional< double >::Impl const & uncertainty, Seiscomp::Core::Optional< double >::Impl const & lowerUncertainty, Seiscomp::Core::Optional< double >::Impl const & upperUncertainty) -> TimeQuantity
+        __init__(Seiscomp::DataModel::TimeQuantity self, Time value, Seiscomp::Core::Optional< double >::Impl const & uncertainty, Seiscomp::Core::Optional< double >::Impl const & lowerUncertainty) -> TimeQuantity
+        __init__(Seiscomp::DataModel::TimeQuantity self, Time value, Seiscomp::Core::Optional< double >::Impl const & uncertainty) -> TimeQuantity
+        __init__(Seiscomp::DataModel::TimeQuantity self, Time value) -> TimeQuantity
         """
         this = _DataModel.new_TimeQuantity(*args)
         try:
@@ -2704,6 +3023,19 @@ class TimeQuantity(Core.BaseObject):
     def confidenceLevel(self):
         """confidenceLevel(TimeQuantity self) -> double"""
         return _DataModel.TimeQuantity_confidenceLevel(self)
+
+
+    def setPdf(self, pdf):
+        """setPdf(TimeQuantity self, Seiscomp::Core::Optional< Seiscomp::DataModel::TimePDF1D >::Impl const & pdf)"""
+        return _DataModel.TimeQuantity_setPdf(self, pdf)
+
+
+    def pdf(self, *args):
+        """
+        pdf(TimeQuantity self) -> TimePDF1D
+        pdf(TimeQuantity self) -> TimePDF1D
+        """
+        return _DataModel.TimeQuantity_pdf(self, *args)
 
 TimeQuantity_swigregister = _DataModel.TimeQuantity_swigregister
 TimeQuantity_swigregister(TimeQuantity)
@@ -3176,6 +3508,26 @@ class Comment(Object):
         return _DataModel.Comment_id(self)
 
 
+    def setStart(self, start):
+        """setStart(Comment self, Seiscomp::Core::Optional< Seiscomp::Core::Time >::Impl const & start)"""
+        return _DataModel.Comment_setStart(self, start)
+
+
+    def start(self):
+        """start(Comment self) -> Time"""
+        return _DataModel.Comment_start(self)
+
+
+    def setEnd(self, end):
+        """setEnd(Comment self, Seiscomp::Core::Optional< Seiscomp::Core::Time >::Impl const & end)"""
+        return _DataModel.Comment_setEnd(self, end)
+
+
+    def end(self):
+        """end(Comment self) -> Time"""
+        return _DataModel.Comment_end(self)
+
+
     def setCreationInfo(self, creationInfo):
         """setCreationInfo(Comment self, Seiscomp::Core::Optional< Seiscomp::DataModel::CreationInfo >::Impl const & creationInfo)"""
         return _DataModel.Comment_setCreationInfo(self, creationInfo)
@@ -3249,6 +3601,26 @@ class Comment(Object):
         return _DataModel.Comment_parameterSet(self)
 
 
+    def stream(self):
+        """stream(Comment self) -> Stream"""
+        return _DataModel.Comment_stream(self)
+
+
+    def sensorLocation(self):
+        """sensorLocation(Comment self) -> SensorLocation"""
+        return _DataModel.Comment_sensorLocation(self)
+
+
+    def station(self):
+        """station(Comment self) -> Station"""
+        return _DataModel.Comment_station(self)
+
+
+    def network(self):
+        """network(Comment self) -> Network"""
+        return _DataModel.Comment_network(self)
+
+
     def assign(self, other):
         """assign(Comment self, Object other) -> bool"""
         return _DataModel.Comment_assign(self, other)
@@ -3302,6 +3674,265 @@ def Comment_ConstCast(*args):
     Comment_ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> Comment
     """
     return _DataModel.Comment_ConstCast(*args)
+
+class ComplexArray(Core.BaseObject):
+    """Proxy of C++ Seiscomp::DataModel::ComplexArray class."""
+
+    __swig_setmethods__ = {}
+    for _s in [Core.BaseObject]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, ComplexArray, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Core.BaseObject]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, ComplexArray, name)
+    __repr__ = _swig_repr
+
+    def ClassName():
+        """ClassName() -> char const *"""
+        return _DataModel.ComplexArray_ClassName()
+
+    ClassName = staticmethod(ClassName)
+
+    def TypeInfo():
+        """TypeInfo() -> RTTI"""
+        return _DataModel.ComplexArray_TypeInfo()
+
+    TypeInfo = staticmethod(TypeInfo)
+
+    def className(self):
+        """className(ComplexArray self) -> char const *"""
+        return _DataModel.ComplexArray_className(self)
+
+
+    def typeInfo(self):
+        """typeInfo(ComplexArray self) -> RTTI"""
+        return _DataModel.ComplexArray_typeInfo(self)
+
+
+    def Cast(*args):
+        """
+        Cast(BaseObject o) -> ComplexArray
+        Cast(Seiscomp::Core::BaseObjectPtr o) -> ComplexArray
+        """
+        return _DataModel.ComplexArray_Cast(*args)
+
+    Cast = staticmethod(Cast)
+
+    def ConstCast(*args):
+        """
+        ConstCast(BaseObject o) -> ComplexArray
+        ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> ComplexArray
+        """
+        return _DataModel.ComplexArray_ConstCast(*args)
+
+    ConstCast = staticmethod(ConstCast)
+
+    def serialize(self, ar):
+        """serialize(ComplexArray self, GenericArchive ar)"""
+        return _DataModel.ComplexArray_serialize(self, ar)
+
+
+    def __init__(self, *args):
+        """
+        __init__(Seiscomp::DataModel::ComplexArray self) -> ComplexArray
+        __init__(Seiscomp::DataModel::ComplexArray self, ComplexArray other) -> ComplexArray
+        """
+        this = _DataModel.new_ComplexArray(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _DataModel.delete_ComplexArray
+    __del__ = lambda self: None
+
+    def __eq__(self, other):
+        """__eq__(ComplexArray self, ComplexArray other) -> bool"""
+        return _DataModel.ComplexArray___eq__(self, other)
+
+
+    def __ne__(self, other):
+        """__ne__(ComplexArray self, ComplexArray other) -> bool"""
+        return _DataModel.ComplexArray___ne__(self, other)
+
+
+    def equal(self, other):
+        """equal(ComplexArray self, ComplexArray other) -> bool"""
+        return _DataModel.ComplexArray_equal(self, other)
+
+
+    def setContent(self, arg2):
+        """setContent(ComplexArray self,  arg2)"""
+        return _DataModel.ComplexArray_setContent(self, arg2)
+
+
+    def content(self, *args):
+        """
+        content(ComplexArray self)
+        content(ComplexArray self)
+        """
+        return _DataModel.ComplexArray_content(self, *args)
+
+ComplexArray_swigregister = _DataModel.ComplexArray_swigregister
+ComplexArray_swigregister(ComplexArray)
+
+def ComplexArray_ClassName():
+    """ComplexArray_ClassName() -> char const *"""
+    return _DataModel.ComplexArray_ClassName()
+
+def ComplexArray_TypeInfo():
+    """ComplexArray_TypeInfo() -> RTTI"""
+    return _DataModel.ComplexArray_TypeInfo()
+
+def ComplexArray_Cast(*args):
+    """
+    Cast(BaseObject o) -> ComplexArray
+    ComplexArray_Cast(Seiscomp::Core::BaseObjectPtr o) -> ComplexArray
+    """
+    return _DataModel.ComplexArray_Cast(*args)
+
+def ComplexArray_ConstCast(*args):
+    """
+    ConstCast(BaseObject o) -> ComplexArray
+    ComplexArray_ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> ComplexArray
+    """
+    return _DataModel.ComplexArray_ConstCast(*args)
+
+class RealPDF1D(Core.BaseObject):
+    """Proxy of C++ Seiscomp::DataModel::RealPDF1D class."""
+
+    __swig_setmethods__ = {}
+    for _s in [Core.BaseObject]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, RealPDF1D, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Core.BaseObject]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, RealPDF1D, name)
+    __repr__ = _swig_repr
+
+    def ClassName():
+        """ClassName() -> char const *"""
+        return _DataModel.RealPDF1D_ClassName()
+
+    ClassName = staticmethod(ClassName)
+
+    def TypeInfo():
+        """TypeInfo() -> RTTI"""
+        return _DataModel.RealPDF1D_TypeInfo()
+
+    TypeInfo = staticmethod(TypeInfo)
+
+    def className(self):
+        """className(RealPDF1D self) -> char const *"""
+        return _DataModel.RealPDF1D_className(self)
+
+
+    def typeInfo(self):
+        """typeInfo(RealPDF1D self) -> RTTI"""
+        return _DataModel.RealPDF1D_typeInfo(self)
+
+
+    def Cast(*args):
+        """
+        Cast(BaseObject o) -> RealPDF1D
+        Cast(Seiscomp::Core::BaseObjectPtr o) -> RealPDF1D
+        """
+        return _DataModel.RealPDF1D_Cast(*args)
+
+    Cast = staticmethod(Cast)
+
+    def ConstCast(*args):
+        """
+        ConstCast(BaseObject o) -> RealPDF1D
+        ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> RealPDF1D
+        """
+        return _DataModel.RealPDF1D_ConstCast(*args)
+
+    ConstCast = staticmethod(ConstCast)
+
+    def serialize(self, ar):
+        """serialize(RealPDF1D self, GenericArchive ar)"""
+        return _DataModel.RealPDF1D_serialize(self, ar)
+
+
+    def __init__(self, *args):
+        """
+        __init__(Seiscomp::DataModel::RealPDF1D self) -> RealPDF1D
+        __init__(Seiscomp::DataModel::RealPDF1D self, RealPDF1D other) -> RealPDF1D
+        """
+        this = _DataModel.new_RealPDF1D(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _DataModel.delete_RealPDF1D
+    __del__ = lambda self: None
+
+    def __eq__(self, other):
+        """__eq__(RealPDF1D self, RealPDF1D other) -> bool"""
+        return _DataModel.RealPDF1D___eq__(self, other)
+
+
+    def __ne__(self, other):
+        """__ne__(RealPDF1D self, RealPDF1D other) -> bool"""
+        return _DataModel.RealPDF1D___ne__(self, other)
+
+
+    def equal(self, other):
+        """equal(RealPDF1D self, RealPDF1D other) -> bool"""
+        return _DataModel.RealPDF1D_equal(self, other)
+
+
+    def setVariable(self, variable):
+        """setVariable(RealPDF1D self, RealArray variable)"""
+        return _DataModel.RealPDF1D_setVariable(self, variable)
+
+
+    def variable(self, *args):
+        """
+        variable(RealPDF1D self) -> RealArray
+        variable(RealPDF1D self) -> RealArray
+        """
+        return _DataModel.RealPDF1D_variable(self, *args)
+
+
+    def setProbability(self, probability):
+        """setProbability(RealPDF1D self, RealArray probability)"""
+        return _DataModel.RealPDF1D_setProbability(self, probability)
+
+
+    def probability(self, *args):
+        """
+        probability(RealPDF1D self) -> RealArray
+        probability(RealPDF1D self) -> RealArray
+        """
+        return _DataModel.RealPDF1D_probability(self, *args)
+
+RealPDF1D_swigregister = _DataModel.RealPDF1D_swigregister
+RealPDF1D_swigregister(RealPDF1D)
+
+def RealPDF1D_ClassName():
+    """RealPDF1D_ClassName() -> char const *"""
+    return _DataModel.RealPDF1D_ClassName()
+
+def RealPDF1D_TypeInfo():
+    """RealPDF1D_TypeInfo() -> RTTI"""
+    return _DataModel.RealPDF1D_TypeInfo()
+
+def RealPDF1D_Cast(*args):
+    """
+    Cast(BaseObject o) -> RealPDF1D
+    RealPDF1D_Cast(Seiscomp::Core::BaseObjectPtr o) -> RealPDF1D
+    """
+    return _DataModel.RealPDF1D_Cast(*args)
+
+def RealPDF1D_ConstCast(*args):
+    """
+    ConstCast(BaseObject o) -> RealPDF1D
+    RealPDF1D_ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> RealPDF1D
+    """
+    return _DataModel.RealPDF1D_ConstCast(*args)
 
 class RealQuantity(Core.BaseObject):
     """Proxy of C++ Seiscomp::DataModel::RealQuantity class."""
@@ -3365,8 +3996,12 @@ class RealQuantity(Core.BaseObject):
         """
         __init__(Seiscomp::DataModel::RealQuantity self) -> RealQuantity
         __init__(Seiscomp::DataModel::RealQuantity self, RealQuantity other) -> RealQuantity
-        __init__(Seiscomp::DataModel::RealQuantity self, double value) -> RealQuantity
+        __init__(Seiscomp::DataModel::RealQuantity self, double value, Seiscomp::Core::Optional< double >::Impl const & uncertainty, Seiscomp::Core::Optional< double >::Impl const & lowerUncertainty, Seiscomp::Core::Optional< double >::Impl const & upperUncertainty, Seiscomp::Core::Optional< double >::Impl const & confidenceLevel, Seiscomp::Core::Optional< Seiscomp::DataModel::RealPDF1D >::Impl const & pdf) -> RealQuantity
         __init__(Seiscomp::DataModel::RealQuantity self, double value, Seiscomp::Core::Optional< double >::Impl const & uncertainty, Seiscomp::Core::Optional< double >::Impl const & lowerUncertainty, Seiscomp::Core::Optional< double >::Impl const & upperUncertainty, Seiscomp::Core::Optional< double >::Impl const & confidenceLevel) -> RealQuantity
+        __init__(Seiscomp::DataModel::RealQuantity self, double value, Seiscomp::Core::Optional< double >::Impl const & uncertainty, Seiscomp::Core::Optional< double >::Impl const & lowerUncertainty, Seiscomp::Core::Optional< double >::Impl const & upperUncertainty) -> RealQuantity
+        __init__(Seiscomp::DataModel::RealQuantity self, double value, Seiscomp::Core::Optional< double >::Impl const & uncertainty, Seiscomp::Core::Optional< double >::Impl const & lowerUncertainty) -> RealQuantity
+        __init__(Seiscomp::DataModel::RealQuantity self, double value, Seiscomp::Core::Optional< double >::Impl const & uncertainty) -> RealQuantity
+        __init__(Seiscomp::DataModel::RealQuantity self, double value) -> RealQuantity
         """
         this = _DataModel.new_RealQuantity(*args)
         try:
@@ -3439,6 +4074,19 @@ class RealQuantity(Core.BaseObject):
     def confidenceLevel(self):
         """confidenceLevel(RealQuantity self) -> double"""
         return _DataModel.RealQuantity_confidenceLevel(self)
+
+
+    def setPdf(self, pdf):
+        """setPdf(RealQuantity self, Seiscomp::Core::Optional< Seiscomp::DataModel::RealPDF1D >::Impl const & pdf)"""
+        return _DataModel.RealQuantity_setPdf(self, pdf)
+
+
+    def pdf(self, *args):
+        """
+        pdf(RealQuantity self) -> RealPDF1D
+        pdf(RealQuantity self) -> RealPDF1D
+        """
+        return _DataModel.RealQuantity_pdf(self, *args)
 
 RealQuantity_swigregister = _DataModel.RealQuantity_swigregister
 RealQuantity_swigregister(RealQuantity)
@@ -3527,8 +4175,11 @@ class IntegerQuantity(Core.BaseObject):
         """
         __init__(Seiscomp::DataModel::IntegerQuantity self) -> IntegerQuantity
         __init__(Seiscomp::DataModel::IntegerQuantity self, IntegerQuantity other) -> IntegerQuantity
-        __init__(Seiscomp::DataModel::IntegerQuantity self, int value) -> IntegerQuantity
         __init__(Seiscomp::DataModel::IntegerQuantity self, int value, Seiscomp::Core::Optional< int >::Impl const & uncertainty, Seiscomp::Core::Optional< int >::Impl const & lowerUncertainty, Seiscomp::Core::Optional< int >::Impl const & upperUncertainty, Seiscomp::Core::Optional< double >::Impl const & confidenceLevel) -> IntegerQuantity
+        __init__(Seiscomp::DataModel::IntegerQuantity self, int value, Seiscomp::Core::Optional< int >::Impl const & uncertainty, Seiscomp::Core::Optional< int >::Impl const & lowerUncertainty, Seiscomp::Core::Optional< int >::Impl const & upperUncertainty) -> IntegerQuantity
+        __init__(Seiscomp::DataModel::IntegerQuantity self, int value, Seiscomp::Core::Optional< int >::Impl const & uncertainty, Seiscomp::Core::Optional< int >::Impl const & lowerUncertainty) -> IntegerQuantity
+        __init__(Seiscomp::DataModel::IntegerQuantity self, int value, Seiscomp::Core::Optional< int >::Impl const & uncertainty) -> IntegerQuantity
+        __init__(Seiscomp::DataModel::IntegerQuantity self, int value) -> IntegerQuantity
         """
         this = _DataModel.new_IntegerQuantity(*args)
         try:
@@ -5554,252 +6205,6 @@ def Blob_ConstCast(*args):
     Blob_ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> Blob
     """
     return _DataModel.Blob_ConstCast(*args)
-
-class RealArray(Core.BaseObject):
-    """Proxy of C++ Seiscomp::DataModel::RealArray class."""
-
-    __swig_setmethods__ = {}
-    for _s in [Core.BaseObject]:
-        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
-    __setattr__ = lambda self, name, value: _swig_setattr(self, RealArray, name, value)
-    __swig_getmethods__ = {}
-    for _s in [Core.BaseObject]:
-        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
-    __getattr__ = lambda self, name: _swig_getattr(self, RealArray, name)
-    __repr__ = _swig_repr
-
-    def ClassName():
-        """ClassName() -> char const *"""
-        return _DataModel.RealArray_ClassName()
-
-    ClassName = staticmethod(ClassName)
-
-    def TypeInfo():
-        """TypeInfo() -> RTTI"""
-        return _DataModel.RealArray_TypeInfo()
-
-    TypeInfo = staticmethod(TypeInfo)
-
-    def className(self):
-        """className(RealArray self) -> char const *"""
-        return _DataModel.RealArray_className(self)
-
-
-    def typeInfo(self):
-        """typeInfo(RealArray self) -> RTTI"""
-        return _DataModel.RealArray_typeInfo(self)
-
-
-    def Cast(*args):
-        """
-        Cast(BaseObject o) -> RealArray
-        Cast(Seiscomp::Core::BaseObjectPtr o) -> RealArray
-        """
-        return _DataModel.RealArray_Cast(*args)
-
-    Cast = staticmethod(Cast)
-
-    def ConstCast(*args):
-        """
-        ConstCast(BaseObject o) -> RealArray
-        ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> RealArray
-        """
-        return _DataModel.RealArray_ConstCast(*args)
-
-    ConstCast = staticmethod(ConstCast)
-
-    def serialize(self, ar):
-        """serialize(RealArray self, GenericArchive ar)"""
-        return _DataModel.RealArray_serialize(self, ar)
-
-
-    def __init__(self, *args):
-        """
-        __init__(Seiscomp::DataModel::RealArray self) -> RealArray
-        __init__(Seiscomp::DataModel::RealArray self, RealArray other) -> RealArray
-        """
-        this = _DataModel.new_RealArray(*args)
-        try:
-            self.this.append(this)
-        except __builtin__.Exception:
-            self.this = this
-    __swig_destroy__ = _DataModel.delete_RealArray
-    __del__ = lambda self: None
-
-    def __eq__(self, other):
-        """__eq__(RealArray self, RealArray other) -> bool"""
-        return _DataModel.RealArray___eq__(self, other)
-
-
-    def __ne__(self, other):
-        """__ne__(RealArray self, RealArray other) -> bool"""
-        return _DataModel.RealArray___ne__(self, other)
-
-
-    def equal(self, other):
-        """equal(RealArray self, RealArray other) -> bool"""
-        return _DataModel.RealArray_equal(self, other)
-
-
-    def setContent(self, arg2):
-        """setContent(RealArray self, vectord arg2)"""
-        return _DataModel.RealArray_setContent(self, arg2)
-
-
-    def content(self, *args):
-        """
-        content(RealArray self) -> vectord
-        content(RealArray self) -> vectord
-        """
-        return _DataModel.RealArray_content(self, *args)
-
-RealArray_swigregister = _DataModel.RealArray_swigregister
-RealArray_swigregister(RealArray)
-
-def RealArray_ClassName():
-    """RealArray_ClassName() -> char const *"""
-    return _DataModel.RealArray_ClassName()
-
-def RealArray_TypeInfo():
-    """RealArray_TypeInfo() -> RTTI"""
-    return _DataModel.RealArray_TypeInfo()
-
-def RealArray_Cast(*args):
-    """
-    Cast(BaseObject o) -> RealArray
-    RealArray_Cast(Seiscomp::Core::BaseObjectPtr o) -> RealArray
-    """
-    return _DataModel.RealArray_Cast(*args)
-
-def RealArray_ConstCast(*args):
-    """
-    ConstCast(BaseObject o) -> RealArray
-    RealArray_ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> RealArray
-    """
-    return _DataModel.RealArray_ConstCast(*args)
-
-class ComplexArray(Core.BaseObject):
-    """Proxy of C++ Seiscomp::DataModel::ComplexArray class."""
-
-    __swig_setmethods__ = {}
-    for _s in [Core.BaseObject]:
-        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
-    __setattr__ = lambda self, name, value: _swig_setattr(self, ComplexArray, name, value)
-    __swig_getmethods__ = {}
-    for _s in [Core.BaseObject]:
-        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
-    __getattr__ = lambda self, name: _swig_getattr(self, ComplexArray, name)
-    __repr__ = _swig_repr
-
-    def ClassName():
-        """ClassName() -> char const *"""
-        return _DataModel.ComplexArray_ClassName()
-
-    ClassName = staticmethod(ClassName)
-
-    def TypeInfo():
-        """TypeInfo() -> RTTI"""
-        return _DataModel.ComplexArray_TypeInfo()
-
-    TypeInfo = staticmethod(TypeInfo)
-
-    def className(self):
-        """className(ComplexArray self) -> char const *"""
-        return _DataModel.ComplexArray_className(self)
-
-
-    def typeInfo(self):
-        """typeInfo(ComplexArray self) -> RTTI"""
-        return _DataModel.ComplexArray_typeInfo(self)
-
-
-    def Cast(*args):
-        """
-        Cast(BaseObject o) -> ComplexArray
-        Cast(Seiscomp::Core::BaseObjectPtr o) -> ComplexArray
-        """
-        return _DataModel.ComplexArray_Cast(*args)
-
-    Cast = staticmethod(Cast)
-
-    def ConstCast(*args):
-        """
-        ConstCast(BaseObject o) -> ComplexArray
-        ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> ComplexArray
-        """
-        return _DataModel.ComplexArray_ConstCast(*args)
-
-    ConstCast = staticmethod(ConstCast)
-
-    def serialize(self, ar):
-        """serialize(ComplexArray self, GenericArchive ar)"""
-        return _DataModel.ComplexArray_serialize(self, ar)
-
-
-    def __init__(self, *args):
-        """
-        __init__(Seiscomp::DataModel::ComplexArray self) -> ComplexArray
-        __init__(Seiscomp::DataModel::ComplexArray self, ComplexArray other) -> ComplexArray
-        """
-        this = _DataModel.new_ComplexArray(*args)
-        try:
-            self.this.append(this)
-        except __builtin__.Exception:
-            self.this = this
-    __swig_destroy__ = _DataModel.delete_ComplexArray
-    __del__ = lambda self: None
-
-    def __eq__(self, other):
-        """__eq__(ComplexArray self, ComplexArray other) -> bool"""
-        return _DataModel.ComplexArray___eq__(self, other)
-
-
-    def __ne__(self, other):
-        """__ne__(ComplexArray self, ComplexArray other) -> bool"""
-        return _DataModel.ComplexArray___ne__(self, other)
-
-
-    def equal(self, other):
-        """equal(ComplexArray self, ComplexArray other) -> bool"""
-        return _DataModel.ComplexArray_equal(self, other)
-
-
-    def setContent(self, arg2):
-        """setContent(ComplexArray self,  arg2)"""
-        return _DataModel.ComplexArray_setContent(self, arg2)
-
-
-    def content(self, *args):
-        """
-        content(ComplexArray self)
-        content(ComplexArray self)
-        """
-        return _DataModel.ComplexArray_content(self, *args)
-
-ComplexArray_swigregister = _DataModel.ComplexArray_swigregister
-ComplexArray_swigregister(ComplexArray)
-
-def ComplexArray_ClassName():
-    """ComplexArray_ClassName() -> char const *"""
-    return _DataModel.ComplexArray_ClassName()
-
-def ComplexArray_TypeInfo():
-    """ComplexArray_TypeInfo() -> RTTI"""
-    return _DataModel.ComplexArray_TypeInfo()
-
-def ComplexArray_Cast(*args):
-    """
-    Cast(BaseObject o) -> ComplexArray
-    ComplexArray_Cast(Seiscomp::Core::BaseObjectPtr o) -> ComplexArray
-    """
-    return _DataModel.ComplexArray_Cast(*args)
-
-def ComplexArray_ConstCast(*args):
-    """
-    ConstCast(BaseObject o) -> ComplexArray
-    ComplexArray_ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> ComplexArray
-    """
-    return _DataModel.ComplexArray_ConstCast(*args)
 
 class ArclinkRequestSummary(Core.BaseObject):
     """Proxy of C++ Seiscomp::DataModel::ArclinkRequestSummary class."""
@@ -9474,6 +9879,9 @@ class AuxSource(Object):
         __init__(Seiscomp::DataModel::AuxSource self, AuxSource other) -> AuxSource
         __init__(Seiscomp::DataModel::AuxSource self, std::string const & name) -> AuxSource
         __init__(Seiscomp::DataModel::AuxSource self, std::string const & name, std::string const & description, std::string const & unit, std::string const & conversion, Seiscomp::Core::Optional< int >::Impl const & sampleRateNumerator, Seiscomp::Core::Optional< int >::Impl const & sampleRateDenominator, Seiscomp::Core::Optional< Seiscomp::DataModel::Blob >::Impl const & remark) -> AuxSource
+        __init__(Seiscomp::DataModel::AuxSource self, std::string const & name, std::string const & description, std::string const & unit, std::string const & conversion, Seiscomp::Core::Optional< int >::Impl const & sampleRateNumerator, Seiscomp::Core::Optional< int >::Impl const & sampleRateDenominator) -> AuxSource
+        __init__(Seiscomp::DataModel::AuxSource self, std::string const & name, std::string const & description, std::string const & unit, std::string const & conversion, Seiscomp::Core::Optional< int >::Impl const & sampleRateNumerator) -> AuxSource
+        __init__(Seiscomp::DataModel::AuxSource self, std::string const & name, std::string const & description, std::string const & unit, std::string const & conversion) -> AuxSource
         """
         this = _DataModel.new_AuxSource(*args)
         try:
@@ -13540,15 +13948,15 @@ class StreamIndex(_object):
 StreamIndex_swigregister = _DataModel.StreamIndex_swigregister
 StreamIndex_swigregister(StreamIndex)
 
-class Stream(Object):
+class Stream(PublicObject):
     """Proxy of C++ Seiscomp::DataModel::Stream class."""
 
     __swig_setmethods__ = {}
-    for _s in [Object]:
+    for _s in [PublicObject]:
         __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
     __setattr__ = lambda self, name, value: _swig_setattr(self, Stream, name, value)
     __swig_getmethods__ = {}
-    for _s in [Object]:
+    for _s in [PublicObject]:
         __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
     __getattr__ = lambda self, name: _swig_getattr(self, Stream, name)
     __repr__ = _swig_repr
@@ -13600,8 +14008,8 @@ class Stream(Object):
 
     def __init__(self, *args):
         """
-        __init__(Seiscomp::DataModel::Stream self) -> Stream
         __init__(Seiscomp::DataModel::Stream self, Stream other) -> Stream
+        __init__(Seiscomp::DataModel::Stream self, std::string const & publicID) -> Stream
         """
         this = _DataModel.new_Stream(*args)
         try:
@@ -13610,6 +14018,21 @@ class Stream(Object):
             self.this = this
     __swig_destroy__ = _DataModel.delete_Stream
     __del__ = lambda self: None
+
+    def Create(*args):
+        """
+        Create() -> Stream
+        Create(std::string const & publicID) -> Stream
+        """
+        return _DataModel.Stream_Create(*args)
+
+    Create = staticmethod(Create)
+
+    def Find(publicID):
+        """Find(std::string const & publicID) -> Stream"""
+        return _DataModel.Stream_Find(publicID)
+
+    Find = staticmethod(Find)
 
     def __eq__(self, other):
         """__eq__(Stream self, Stream other) -> bool"""
@@ -13856,6 +14279,37 @@ class Stream(Object):
         return _DataModel.Stream_equalIndex(self, lhs)
 
 
+    def add(self, obj):
+        """add(Stream self, Comment obj) -> bool"""
+        return _DataModel.Stream_add(self, obj)
+
+
+    def remove(self, obj):
+        """remove(Stream self, Comment obj) -> bool"""
+        return _DataModel.Stream_remove(self, obj)
+
+
+    def removeComment(self, *args):
+        """
+        removeComment(Stream self, size_t i) -> bool
+        removeComment(Stream self, CommentIndex i) -> bool
+        """
+        return _DataModel.Stream_removeComment(self, *args)
+
+
+    def commentCount(self):
+        """commentCount(Stream self) -> size_t"""
+        return _DataModel.Stream_commentCount(self)
+
+
+    def comment(self, *args):
+        """
+        comment(Stream self, size_t i) -> Comment
+        comment(Stream self, CommentIndex i) -> Comment
+        """
+        return _DataModel.Stream_comment(self, *args)
+
+
     def sensorLocation(self):
         """sensorLocation(Stream self) -> SensorLocation"""
         return _DataModel.Stream_sensorLocation(self)
@@ -13886,6 +14340,11 @@ class Stream(Object):
         return _DataModel.Stream_clone(self)
 
 
+    def updateChild(self, child):
+        """updateChild(Stream self, Object child) -> bool"""
+        return _DataModel.Stream_updateChild(self, child)
+
+
     def accept(self, arg2):
         """accept(Stream self, Visitor arg2)"""
         return _DataModel.Stream_accept(self, arg2)
@@ -13914,6 +14373,17 @@ def Stream_ConstCast(*args):
     Stream_ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> Stream
     """
     return _DataModel.Stream_ConstCast(*args)
+
+def Stream_Create(*args):
+    """
+    Create() -> Stream
+    Stream_Create(std::string const & publicID) -> Stream
+    """
+    return _DataModel.Stream_Create(*args)
+
+def Stream_Find(publicID):
+    """Stream_Find(std::string const & publicID) -> Stream"""
+    return _DataModel.Stream_Find(publicID)
 
 class SensorLocationIndex(_object):
     """Proxy of C++ Seiscomp::DataModel::SensorLocationIndex class."""
@@ -14131,6 +14601,7 @@ class SensorLocation(PublicObject):
 
     def add(self, *args):
         """
+        add(SensorLocation self, Comment obj) -> bool
         add(SensorLocation self, AuxStream obj) -> bool
         add(SensorLocation self, Stream obj) -> bool
         """
@@ -14139,10 +14610,19 @@ class SensorLocation(PublicObject):
 
     def remove(self, *args):
         """
+        remove(SensorLocation self, Comment obj) -> bool
         remove(SensorLocation self, AuxStream obj) -> bool
         remove(SensorLocation self, Stream obj) -> bool
         """
         return _DataModel.SensorLocation_remove(self, *args)
+
+
+    def removeComment(self, *args):
+        """
+        removeComment(SensorLocation self, size_t i) -> bool
+        removeComment(SensorLocation self, CommentIndex i) -> bool
+        """
+        return _DataModel.SensorLocation_removeComment(self, *args)
 
 
     def removeAuxStream(self, *args):
@@ -14161,6 +14641,11 @@ class SensorLocation(PublicObject):
         return _DataModel.SensorLocation_removeStream(self, *args)
 
 
+    def commentCount(self):
+        """commentCount(SensorLocation self) -> size_t"""
+        return _DataModel.SensorLocation_commentCount(self)
+
+
     def auxStreamCount(self):
         """auxStreamCount(SensorLocation self) -> size_t"""
         return _DataModel.SensorLocation_auxStreamCount(self)
@@ -14169,6 +14654,14 @@ class SensorLocation(PublicObject):
     def streamCount(self):
         """streamCount(SensorLocation self) -> size_t"""
         return _DataModel.SensorLocation_streamCount(self)
+
+
+    def comment(self, *args):
+        """
+        comment(SensorLocation self, size_t i) -> Comment
+        comment(SensorLocation self, CommentIndex i) -> Comment
+        """
+        return _DataModel.SensorLocation_comment(self, *args)
 
 
     def auxStream(self, *args):
@@ -14185,6 +14678,11 @@ class SensorLocation(PublicObject):
         stream(SensorLocation self, StreamIndex i) -> Stream
         """
         return _DataModel.SensorLocation_stream(self, *args)
+
+
+    def findStream(self, publicID):
+        """findStream(SensorLocation self, std::string const & publicID) -> Stream"""
+        return _DataModel.SensorLocation_findStream(self, publicID)
 
 
     def station(self):
@@ -14579,14 +15077,28 @@ class Station(PublicObject):
         return _DataModel.Station_equalIndex(self, lhs)
 
 
-    def add(self, obj):
-        """add(Station self, SensorLocation obj) -> bool"""
-        return _DataModel.Station_add(self, obj)
+    def add(self, *args):
+        """
+        add(Station self, Comment obj) -> bool
+        add(Station self, SensorLocation obj) -> bool
+        """
+        return _DataModel.Station_add(self, *args)
 
 
-    def remove(self, obj):
-        """remove(Station self, SensorLocation obj) -> bool"""
-        return _DataModel.Station_remove(self, obj)
+    def remove(self, *args):
+        """
+        remove(Station self, Comment obj) -> bool
+        remove(Station self, SensorLocation obj) -> bool
+        """
+        return _DataModel.Station_remove(self, *args)
+
+
+    def removeComment(self, *args):
+        """
+        removeComment(Station self, size_t i) -> bool
+        removeComment(Station self, CommentIndex i) -> bool
+        """
+        return _DataModel.Station_removeComment(self, *args)
 
 
     def removeSensorLocation(self, *args):
@@ -14597,9 +15109,22 @@ class Station(PublicObject):
         return _DataModel.Station_removeSensorLocation(self, *args)
 
 
+    def commentCount(self):
+        """commentCount(Station self) -> size_t"""
+        return _DataModel.Station_commentCount(self)
+
+
     def sensorLocationCount(self):
         """sensorLocationCount(Station self) -> size_t"""
         return _DataModel.Station_sensorLocationCount(self)
+
+
+    def comment(self, *args):
+        """
+        comment(Station self, size_t i) -> Comment
+        comment(Station self, CommentIndex i) -> Comment
+        """
+        return _DataModel.Station_comment(self, *args)
 
 
     def sensorLocation(self, *args):
@@ -14967,14 +15492,28 @@ class Network(PublicObject):
         return _DataModel.Network_equalIndex(self, lhs)
 
 
-    def add(self, obj):
-        """add(Network self, Station obj) -> bool"""
-        return _DataModel.Network_add(self, obj)
+    def add(self, *args):
+        """
+        add(Network self, Comment obj) -> bool
+        add(Network self, Station obj) -> bool
+        """
+        return _DataModel.Network_add(self, *args)
 
 
-    def remove(self, obj):
-        """remove(Network self, Station obj) -> bool"""
-        return _DataModel.Network_remove(self, obj)
+    def remove(self, *args):
+        """
+        remove(Network self, Comment obj) -> bool
+        remove(Network self, Station obj) -> bool
+        """
+        return _DataModel.Network_remove(self, *args)
+
+
+    def removeComment(self, *args):
+        """
+        removeComment(Network self, size_t i) -> bool
+        removeComment(Network self, CommentIndex i) -> bool
+        """
+        return _DataModel.Network_removeComment(self, *args)
 
 
     def removeStation(self, *args):
@@ -14985,9 +15524,22 @@ class Network(PublicObject):
         return _DataModel.Network_removeStation(self, *args)
 
 
+    def commentCount(self):
+        """commentCount(Network self) -> size_t"""
+        return _DataModel.Network_commentCount(self)
+
+
     def stationCount(self):
         """stationCount(Network self) -> size_t"""
         return _DataModel.Network_stationCount(self)
+
+
+    def comment(self, *args):
+        """
+        comment(Network self, size_t i) -> Comment
+        comment(Network self, CommentIndex i) -> Comment
+        """
+        return _DataModel.Network_comment(self, *args)
 
 
     def station(self, *args):
@@ -16890,6 +17442,8 @@ class MomentTensorComponentContribution(Object):
         __init__(Seiscomp::DataModel::MomentTensorComponentContribution self, MomentTensorComponentContribution other) -> MomentTensorComponentContribution
         __init__(Seiscomp::DataModel::MomentTensorComponentContribution self, std::string const & phaseCode) -> MomentTensorComponentContribution
         __init__(Seiscomp::DataModel::MomentTensorComponentContribution self, std::string const & phaseCode, int component, bool active, double weight, double timeShift, double dataTimeWindow, Seiscomp::Core::Optional< double >::Impl const & misfit, Seiscomp::Core::Optional< double >::Impl const & snr) -> MomentTensorComponentContribution
+        __init__(Seiscomp::DataModel::MomentTensorComponentContribution self, std::string const & phaseCode, int component, bool active, double weight, double timeShift, double dataTimeWindow, Seiscomp::Core::Optional< double >::Impl const & misfit) -> MomentTensorComponentContribution
+        __init__(Seiscomp::DataModel::MomentTensorComponentContribution self, std::string const & phaseCode, int component, bool active, double weight, double timeShift, double dataTimeWindow) -> MomentTensorComponentContribution
         """
         this = _DataModel.new_MomentTensorComponentContribution(*args)
         try:
@@ -17419,6 +17973,8 @@ class MomentTensorPhaseSetting(Object):
         __init__(Seiscomp::DataModel::MomentTensorPhaseSetting self, MomentTensorPhaseSetting other) -> MomentTensorPhaseSetting
         __init__(Seiscomp::DataModel::MomentTensorPhaseSetting self, std::string const & code) -> MomentTensorPhaseSetting
         __init__(Seiscomp::DataModel::MomentTensorPhaseSetting self, std::string const & code, double lowerPeriod, double upperPeriod, Seiscomp::Core::Optional< double >::Impl const & minimumSNR, Seiscomp::Core::Optional< double >::Impl const & maximumTimeShift) -> MomentTensorPhaseSetting
+        __init__(Seiscomp::DataModel::MomentTensorPhaseSetting self, std::string const & code, double lowerPeriod, double upperPeriod, Seiscomp::Core::Optional< double >::Impl const & minimumSNR) -> MomentTensorPhaseSetting
+        __init__(Seiscomp::DataModel::MomentTensorPhaseSetting self, std::string const & code, double lowerPeriod, double upperPeriod) -> MomentTensorPhaseSetting
         """
         this = _DataModel.new_MomentTensorPhaseSetting(*args)
         try:
@@ -18850,8 +19406,9 @@ class StationMagnitudeContribution(Object):
         """
         __init__(Seiscomp::DataModel::StationMagnitudeContribution self) -> StationMagnitudeContribution
         __init__(Seiscomp::DataModel::StationMagnitudeContribution self, StationMagnitudeContribution other) -> StationMagnitudeContribution
-        __init__(Seiscomp::DataModel::StationMagnitudeContribution self, std::string const & stationMagnitudeID) -> StationMagnitudeContribution
         __init__(Seiscomp::DataModel::StationMagnitudeContribution self, std::string const & stationMagnitudeID, Seiscomp::Core::Optional< double >::Impl const & residual, Seiscomp::Core::Optional< double >::Impl const & weight) -> StationMagnitudeContribution
+        __init__(Seiscomp::DataModel::StationMagnitudeContribution self, std::string const & stationMagnitudeID, Seiscomp::Core::Optional< double >::Impl const & residual) -> StationMagnitudeContribution
+        __init__(Seiscomp::DataModel::StationMagnitudeContribution self, std::string const & stationMagnitudeID) -> StationMagnitudeContribution
         """
         this = _DataModel.new_StationMagnitudeContribution(*args)
         try:
@@ -24716,22 +25273,6 @@ class DatabaseReader(DatabaseArchive):
         return _DataModel.DatabaseReader_loadParameters(self, arg2)
 
 
-    def loadComments(self, *args):
-        """
-        loadComments(DatabaseReader self, Pick arg2) -> int
-        loadComments(DatabaseReader self, Amplitude arg2) -> int
-        loadComments(DatabaseReader self, Origin arg2) -> int
-        loadComments(DatabaseReader self, StationMagnitude arg2) -> int
-        loadComments(DatabaseReader self, Magnitude arg2) -> int
-        loadComments(DatabaseReader self, FocalMechanism arg2) -> int
-        loadComments(DatabaseReader self, MomentTensor arg2) -> int
-        loadComments(DatabaseReader self, Event arg2) -> int
-        loadComments(DatabaseReader self, ParameterSet arg2) -> int
-        loadComments(DatabaseReader self, Parameter arg2) -> int
-        """
-        return _DataModel.DatabaseReader_loadComments(self, *args)
-
-
     def loadConfigStations(self, arg2):
         """loadConfigStations(DatabaseReader self, ConfigModule arg2) -> int"""
         return _DataModel.DatabaseReader_loadConfigStations(self, arg2)
@@ -24862,6 +25403,26 @@ class DatabaseReader(DatabaseArchive):
         return _DataModel.DatabaseReader_loadStreams(self, arg2)
 
 
+    def loadComments(self, *args):
+        """
+        loadComments(DatabaseReader self, Pick arg2) -> int
+        loadComments(DatabaseReader self, Amplitude arg2) -> int
+        loadComments(DatabaseReader self, Origin arg2) -> int
+        loadComments(DatabaseReader self, StationMagnitude arg2) -> int
+        loadComments(DatabaseReader self, Magnitude arg2) -> int
+        loadComments(DatabaseReader self, FocalMechanism arg2) -> int
+        loadComments(DatabaseReader self, MomentTensor arg2) -> int
+        loadComments(DatabaseReader self, Event arg2) -> int
+        loadComments(DatabaseReader self, ParameterSet arg2) -> int
+        loadComments(DatabaseReader self, Parameter arg2) -> int
+        loadComments(DatabaseReader self, Network arg2) -> int
+        loadComments(DatabaseReader self, Station arg2) -> int
+        loadComments(DatabaseReader self, SensorLocation arg2) -> int
+        loadComments(DatabaseReader self, Stream arg2) -> int
+        """
+        return _DataModel.DatabaseReader_loadComments(self, *args)
+
+
     def loadRouting(self):
         """loadRouting(DatabaseReader self) -> Routing"""
         return _DataModel.DatabaseReader_loadRouting(self)
@@ -24939,6 +25500,7 @@ class DatabaseReader(DatabaseArchive):
         load(DatabaseReader self, Network arg2) -> int
         load(DatabaseReader self, Station arg2) -> int
         load(DatabaseReader self, SensorLocation arg2) -> int
+        load(DatabaseReader self, Stream arg2) -> int
         load(DatabaseReader self, Routing arg2) -> int
         load(DatabaseReader self, Route arg2) -> int
         load(DatabaseReader self, Journaling arg2) -> int
@@ -24982,11 +25544,6 @@ class DatabaseQuery(DatabaseReader):
             self.this = this
     __swig_destroy__ = _DataModel.delete_DatabaseQuery
     __del__ = lambda self: None
-
-    def getComponentGain(self, network_code, station_code, location_code, stream_code, time):
-        """getComponentGain(DatabaseQuery self, std::string const & network_code, std::string const & station_code, std::string const & location_code, std::string const & stream_code, Time time) -> Seiscomp::Core::Optional< double >::Impl"""
-        return _DataModel.DatabaseQuery_getComponentGain(self, network_code, station_code, location_code, stream_code, time)
-
 
     def getStation(self, network_code, station_code, time):
         """getStation(DatabaseQuery self, std::string const & network_code, std::string const & station_code, Time time) -> Station"""
@@ -25178,6 +25735,221 @@ class DatabaseQuery(DatabaseReader):
 
 DatabaseQuery_swigregister = _DataModel.DatabaseQuery_swigregister
 DatabaseQuery_swigregister(DatabaseQuery)
+
+class InventorySyncMessage(Core.Message):
+    """Proxy of C++ Seiscomp::DataModel::InventorySyncMessage class."""
+
+    __swig_setmethods__ = {}
+    for _s in [Core.Message]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, InventorySyncMessage, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Core.Message]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, InventorySyncMessage, name)
+    __repr__ = _swig_repr
+
+    def ClassName():
+        """ClassName() -> char const *"""
+        return _DataModel.InventorySyncMessage_ClassName()
+
+    ClassName = staticmethod(ClassName)
+
+    def TypeInfo():
+        """TypeInfo() -> RTTI"""
+        return _DataModel.InventorySyncMessage_TypeInfo()
+
+    TypeInfo = staticmethod(TypeInfo)
+
+    def className(self):
+        """className(InventorySyncMessage self) -> char const *"""
+        return _DataModel.InventorySyncMessage_className(self)
+
+
+    def typeInfo(self):
+        """typeInfo(InventorySyncMessage self) -> RTTI"""
+        return _DataModel.InventorySyncMessage_typeInfo(self)
+
+
+    def Cast(*args):
+        """
+        Cast(BaseObject o) -> InventorySyncMessage
+        Cast(Seiscomp::Core::BaseObjectPtr o) -> InventorySyncMessage
+        """
+        return _DataModel.InventorySyncMessage_Cast(*args)
+
+    Cast = staticmethod(Cast)
+
+    def ConstCast(*args):
+        """
+        ConstCast(BaseObject o) -> InventorySyncMessage
+        ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> InventorySyncMessage
+        """
+        return _DataModel.InventorySyncMessage_ConstCast(*args)
+
+    ConstCast = staticmethod(ConstCast)
+
+    def serialize(self, ar):
+        """serialize(InventorySyncMessage self, GenericArchive ar)"""
+        return _DataModel.InventorySyncMessage_serialize(self, ar)
+
+
+    def __init__(self, *args):
+        """
+        __init__(Seiscomp::DataModel::InventorySyncMessage self) -> InventorySyncMessage
+        __init__(Seiscomp::DataModel::InventorySyncMessage self, bool finished) -> InventorySyncMessage
+        """
+        this = _DataModel.new_InventorySyncMessage(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def empty(self):
+        """empty(InventorySyncMessage self) -> bool"""
+        return _DataModel.InventorySyncMessage_empty(self)
+
+    __swig_setmethods__["isFinished"] = _DataModel.InventorySyncMessage_isFinished_set
+    __swig_getmethods__["isFinished"] = _DataModel.InventorySyncMessage_isFinished_get
+    if _newclass:
+        isFinished = _swig_property(_DataModel.InventorySyncMessage_isFinished_get, _DataModel.InventorySyncMessage_isFinished_set)
+    __swig_setmethods__["creationInfo"] = _DataModel.InventorySyncMessage_creationInfo_set
+    __swig_getmethods__["creationInfo"] = _DataModel.InventorySyncMessage_creationInfo_get
+    if _newclass:
+        creationInfo = _swig_property(_DataModel.InventorySyncMessage_creationInfo_get, _DataModel.InventorySyncMessage_creationInfo_set)
+    __swig_destroy__ = _DataModel.delete_InventorySyncMessage
+    __del__ = lambda self: None
+InventorySyncMessage_swigregister = _DataModel.InventorySyncMessage_swigregister
+InventorySyncMessage_swigregister(InventorySyncMessage)
+
+def InventorySyncMessage_ClassName():
+    """InventorySyncMessage_ClassName() -> char const *"""
+    return _DataModel.InventorySyncMessage_ClassName()
+
+def InventorySyncMessage_TypeInfo():
+    """InventorySyncMessage_TypeInfo() -> RTTI"""
+    return _DataModel.InventorySyncMessage_TypeInfo()
+
+def InventorySyncMessage_Cast(*args):
+    """
+    Cast(BaseObject o) -> InventorySyncMessage
+    InventorySyncMessage_Cast(Seiscomp::Core::BaseObjectPtr o) -> InventorySyncMessage
+    """
+    return _DataModel.InventorySyncMessage_Cast(*args)
+
+def InventorySyncMessage_ConstCast(*args):
+    """
+    ConstCast(BaseObject o) -> InventorySyncMessage
+    InventorySyncMessage_ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> InventorySyncMessage
+    """
+    return _DataModel.InventorySyncMessage_ConstCast(*args)
+
+class ArtificialOriginMessage(Core.Message):
+    """Proxy of C++ Seiscomp::DataModel::ArtificialOriginMessage class."""
+
+    __swig_setmethods__ = {}
+    for _s in [Core.Message]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, ArtificialOriginMessage, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Core.Message]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, ArtificialOriginMessage, name)
+    __repr__ = _swig_repr
+
+    def ClassName():
+        """ClassName() -> char const *"""
+        return _DataModel.ArtificialOriginMessage_ClassName()
+
+    ClassName = staticmethod(ClassName)
+
+    def TypeInfo():
+        """TypeInfo() -> RTTI"""
+        return _DataModel.ArtificialOriginMessage_TypeInfo()
+
+    TypeInfo = staticmethod(TypeInfo)
+
+    def className(self):
+        """className(ArtificialOriginMessage self) -> char const *"""
+        return _DataModel.ArtificialOriginMessage_className(self)
+
+
+    def typeInfo(self):
+        """typeInfo(ArtificialOriginMessage self) -> RTTI"""
+        return _DataModel.ArtificialOriginMessage_typeInfo(self)
+
+
+    def Cast(*args):
+        """
+        Cast(BaseObject o) -> ArtificialOriginMessage
+        Cast(Seiscomp::Core::BaseObjectPtr o) -> ArtificialOriginMessage
+        """
+        return _DataModel.ArtificialOriginMessage_Cast(*args)
+
+    Cast = staticmethod(Cast)
+
+    def ConstCast(*args):
+        """
+        ConstCast(BaseObject o) -> ArtificialOriginMessage
+        ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> ArtificialOriginMessage
+        """
+        return _DataModel.ArtificialOriginMessage_ConstCast(*args)
+
+    ConstCast = staticmethod(ConstCast)
+
+    def serialize(self, ar):
+        """serialize(ArtificialOriginMessage self, GenericArchive ar)"""
+        return _DataModel.ArtificialOriginMessage_serialize(self, ar)
+
+
+    def __init__(self, origin):
+        """__init__(Seiscomp::DataModel::ArtificialOriginMessage self, Origin origin) -> ArtificialOriginMessage"""
+        this = _DataModel.new_ArtificialOriginMessage(origin)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def origin(self):
+        """origin(ArtificialOriginMessage self) -> Origin"""
+        return _DataModel.ArtificialOriginMessage_origin(self)
+
+
+    def setOrigin(self, origin):
+        """setOrigin(ArtificialOriginMessage self, Origin origin)"""
+        return _DataModel.ArtificialOriginMessage_setOrigin(self, origin)
+
+
+    def empty(self):
+        """empty(ArtificialOriginMessage self) -> bool"""
+        return _DataModel.ArtificialOriginMessage_empty(self)
+
+    __swig_destroy__ = _DataModel.delete_ArtificialOriginMessage
+    __del__ = lambda self: None
+ArtificialOriginMessage_swigregister = _DataModel.ArtificialOriginMessage_swigregister
+ArtificialOriginMessage_swigregister(ArtificialOriginMessage)
+
+def ArtificialOriginMessage_ClassName():
+    """ArtificialOriginMessage_ClassName() -> char const *"""
+    return _DataModel.ArtificialOriginMessage_ClassName()
+
+def ArtificialOriginMessage_TypeInfo():
+    """ArtificialOriginMessage_TypeInfo() -> RTTI"""
+    return _DataModel.ArtificialOriginMessage_TypeInfo()
+
+def ArtificialOriginMessage_Cast(*args):
+    """
+    Cast(BaseObject o) -> ArtificialOriginMessage
+    ArtificialOriginMessage_Cast(Seiscomp::Core::BaseObjectPtr o) -> ArtificialOriginMessage
+    """
+    return _DataModel.ArtificialOriginMessage_Cast(*args)
+
+def ArtificialOriginMessage_ConstCast(*args):
+    """
+    ConstCast(BaseObject o) -> ArtificialOriginMessage
+    ArtificialOriginMessage_ConstCast(Seiscomp::Core::BaseObjectCPtr o) -> ArtificialOriginMessage
+    """
+    return _DataModel.ArtificialOriginMessage_ConstCast(*args)
 
 # This file is compatible with both classic and new-style classes.
 

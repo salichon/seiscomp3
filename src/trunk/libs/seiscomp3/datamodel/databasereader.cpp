@@ -186,6 +186,12 @@ PublicObject* DatabaseReader::loadObject(const Seiscomp::Core::RTTI& classType,
 		return sensorLocation;
 	}
 
+	Stream* stream = Stream::Cast(publicObject);
+	if ( stream ) {
+		load(stream);
+		return stream;
+	}
+
 	Route* route = Route::Cast(publicObject);
 	if ( route ) {
 		load(route);
@@ -2344,12 +2350,45 @@ int DatabaseReader::loadDecimations(Datalogger* datalogger) {
 int DatabaseReader::load(Network* network) {
 	size_t count = 0;
 
+	if ( supportsVersion<0,10>() )
+		count += loadComments(network);
+
 	count += loadStations(network);
 	{
 		size_t elementCount = network->stationCount();
 		for ( size_t i = 0; i < elementCount; ++i )
 			load(network->station(i));
 	}
+
+	return count;
+}
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+int DatabaseReader::loadComments(Network* network) {
+	if ( !validInterface() || network == NULL ) return 0;
+
+	bool saveState = Notifier::IsEnabled();
+	Notifier::Disable();
+
+	DatabaseIterator it;
+	size_t count = 0;
+	it = getObjects(network, Comment::TypeInfo());
+	while ( *it ) {
+		if ( (*it)->parent() == NULL ) {
+			network->add(Comment::Cast(*it));
+			++count;
+		}
+		else
+			SEISCOMP_INFO("Network::add(Comment) -> Comment has already another parent");
+		++it;
+	}
+	it.close();
+
+	Notifier::SetEnabled(saveState);
 
 	return count;
 }
@@ -2392,12 +2431,45 @@ int DatabaseReader::loadStations(Network* network) {
 int DatabaseReader::load(Station* station) {
 	size_t count = 0;
 
+	if ( supportsVersion<0,10>() )
+		count += loadComments(station);
+
 	count += loadSensorLocations(station);
 	{
 		size_t elementCount = station->sensorLocationCount();
 		for ( size_t i = 0; i < elementCount; ++i )
 			load(station->sensorLocation(i));
 	}
+
+	return count;
+}
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+int DatabaseReader::loadComments(Station* station) {
+	if ( !validInterface() || station == NULL ) return 0;
+
+	bool saveState = Notifier::IsEnabled();
+	Notifier::Disable();
+
+	DatabaseIterator it;
+	size_t count = 0;
+	it = getObjects(station, Comment::TypeInfo());
+	while ( *it ) {
+		if ( (*it)->parent() == NULL ) {
+			station->add(Comment::Cast(*it));
+			++count;
+		}
+		else
+			SEISCOMP_INFO("Station::add(Comment) -> Comment has already another parent");
+		++it;
+	}
+	it.close();
+
+	Notifier::SetEnabled(saveState);
 
 	return count;
 }
@@ -2440,9 +2512,47 @@ int DatabaseReader::loadSensorLocations(Station* station) {
 int DatabaseReader::load(SensorLocation* sensorLocation) {
 	size_t count = 0;
 
+	if ( supportsVersion<0,10>() )
+		count += loadComments(sensorLocation);
+
 	count += loadAuxStreams(sensorLocation);
 
 	count += loadStreams(sensorLocation);
+	{
+		size_t elementCount = sensorLocation->streamCount();
+		for ( size_t i = 0; i < elementCount; ++i )
+			load(sensorLocation->stream(i));
+	}
+
+	return count;
+}
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+int DatabaseReader::loadComments(SensorLocation* sensorLocation) {
+	if ( !validInterface() || sensorLocation == NULL ) return 0;
+
+	bool saveState = Notifier::IsEnabled();
+	Notifier::Disable();
+
+	DatabaseIterator it;
+	size_t count = 0;
+	it = getObjects(sensorLocation, Comment::TypeInfo());
+	while ( *it ) {
+		if ( (*it)->parent() == NULL ) {
+			sensorLocation->add(Comment::Cast(*it));
+			++count;
+		}
+		else
+			SEISCOMP_INFO("SensorLocation::add(Comment) -> Comment has already another parent");
+		++it;
+	}
+	it.close();
+
+	Notifier::SetEnabled(saveState);
 
 	return count;
 }
@@ -2490,7 +2600,7 @@ int DatabaseReader::loadStreams(SensorLocation* sensorLocation) {
 
 	DatabaseIterator it;
 	size_t count = 0;
-	it = getObjects(sensorLocation, Stream::TypeInfo());
+	it = getObjects(sensorLocation, Stream::TypeInfo(), isLowerVersion<0,10>());
 	while ( *it ) {
 		if ( (*it)->parent() == NULL ) {
 			sensorLocation->add(Stream::Cast(*it));
@@ -2498,6 +2608,50 @@ int DatabaseReader::loadStreams(SensorLocation* sensorLocation) {
 		}
 		else
 			SEISCOMP_INFO("SensorLocation::add(Stream) -> Stream has already another parent");
+		++it;
+	}
+	it.close();
+
+	Notifier::SetEnabled(saveState);
+
+	return count;
+}
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+int DatabaseReader::load(Stream* stream) {
+	size_t count = 0;
+
+	if ( supportsVersion<0,10>() )
+		count += loadComments(stream);
+
+	return count;
+}
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+int DatabaseReader::loadComments(Stream* stream) {
+	if ( !validInterface() || stream == NULL ) return 0;
+
+	bool saveState = Notifier::IsEnabled();
+	Notifier::Disable();
+
+	DatabaseIterator it;
+	size_t count = 0;
+	it = getObjects(stream, Comment::TypeInfo());
+	while ( *it ) {
+		if ( (*it)->parent() == NULL ) {
+			stream->add(Comment::Cast(*it));
+			++count;
+		}
+		else
+			SEISCOMP_INFO("Stream::add(Comment) -> Comment has already another parent");
 		++it;
 	}
 	it.close();

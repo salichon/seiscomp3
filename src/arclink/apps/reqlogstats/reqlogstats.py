@@ -290,13 +290,20 @@ class ReportDataResif(ReportData):
         except ValueError:
             byte_size = 0  # I don't want to accept floats + units
 
+        reqs = summary['requests']
+        lines = summary['lines']
+        errs = summary['error_count']
         self.user = (
             ('User', 'Requests', 'Lines', 'Nodata/Errors', 'Size'),
-            (who, summary['requests'], summary['lines'], summary['error_count'], byte_size),
+            (who, reqs, lines, errs, byte_size),
         )
         self.network = (
             ('Network', 'Requests', 'Lines', 'Nodata', 'Errors', 'Size'),
-            ('unknown', summary['requests'], summary['lines'], 0, summary['error_count'], byte_size),
+            ('unknown', reqs, lines, 0, errs, byte_size),
+        )
+        self.volume = (
+            ('Type', 'Lines',  'Nodata', 'Errors', 'Size'),
+            ('fdsnws', lines, 0, errs, byte_size),
         )
         return
 
@@ -740,7 +747,7 @@ parser.add_option('-y', '--year', dest='year', type='int', default=year,
 parser.add_option('-v', '--verbose', dest='verbose', help='increase verbosity',
                   action='store_true')
 parser.add_option('-q', '--quiet', dest='verbose',
-                  action='store_false', default=True)
+                  action='store_false')
 parser.add_option('-d', '--dcid', dest='dcid', type='str')
 
 (options, args) = parser.parse_args()
@@ -749,8 +756,8 @@ verbose = options.verbose
 default_dcid = options.dcid
 
 db = os.path.join(reqlogstats_db_dir, 'reqlogstats-%4i.db' % (year))
-scores = 4 * [0]  # [0, 0]
-scores_labels = ("rejected", "inserted", "not found", "unparseable")
+scores_labels = ('rejected', 'inserted', 'not found', 'unparseable')
+scores = len(scores_labels) * [0]
 unparsed_list = []
 
 if verbose:
@@ -764,7 +771,7 @@ if os.path.exists(db):
     # Only works if the tables exist:
     #print summary_data(db)
 else:
-    print "Creating new database file", db
+    print 'Creating new database file', db
     con = sqlite3.connect(db)
     new_table(con)
 

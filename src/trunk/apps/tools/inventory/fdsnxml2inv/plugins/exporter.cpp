@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) by GFZ Potsdam                                          *
+ *   Copyright (C) by gempa GmbH                                           *
  *                                                                         *
  *   You can redistribute and/or modify this program under the             *
  *   terms of the SeisComP Public License.                                 *
@@ -14,7 +14,6 @@
 #include <seiscomp3/io/exporter.h>
 #include <seiscomp3/datamodel/inventory.h>
 #include <seiscomp3/client/application.h>
-#include <seiscomp3/core/plugin.h>
 #include <fdsnxml/xml.h>
 #include <fdsnxml/fdsnstationxml.h>
 #include "convert2fdsnxml.h"
@@ -22,9 +21,6 @@
 
 using namespace Seiscomp;
 using namespace Seiscomp::IO;
-
-
-ADD_SC_PLUGIN("FDSN StationXML export plugin", "gempa GmbH <info@gempa.de>", 1, 0, 0)
 
 
 class ExporterFDSNStaXML : public Exporter {

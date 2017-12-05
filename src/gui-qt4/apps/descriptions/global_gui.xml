@@ -793,10 +793,17 @@
 							Should the map display the custom layers?
 						</description>
 					</parameter>
+					<parameter name="showLegends" type="boolean" default="false">
+						<description>
+							Show map legends initially. Some applications provide
+							controls to toggle the visibility in addition to this
+							option.
+						</description>
+					</parameter>
 					<parameter name="projection" type="string" default="Rectangular">
 						<description>
-							SeisComP ships with the rectangular projection build in.
-							Other projections may be provided through plug-ins.
+							SeisComP ships with the rectangular projection built-in.
+							Other projections may be provided through plugins.
 						</description>
 					</parameter>
 					<parameter name="toBGR" type="boolean" default="false">
@@ -1131,6 +1138,35 @@
 							</parameter>
 						</struct>
 					</group>
+				</group>
+			</group>
+			<group name="eventsummary">
+				<description>
+				Parameters controlling the event summary view used e.g. in scolv.
+				</description>
+				<group name="alertTimer">
+					<parameter name="commentId" type="string">
+						<description>
+						Set an alert for every event comment that ID matches
+						the specified regular expression, e.g. "alert_.*".
+						</description>
+					</parameter>
+					<parameter name="commentBlacklist" type="list:string">
+						<description>
+						List of comments to ignore, e.g. "nil".
+						</description>
+					</parameter>
+					<parameter name="alertGradient" type="list:string" unit="s:color">
+						<description>
+						Discrete mapping of time values in seconds to colors used as
+						text color in case of an active alert. E.g. "0:00FF00,900:FF0000".
+						</description>
+					</parameter>
+					<parameter name="textSize" type="int" unit="pt">
+						<description>
+						The text size of the time ago label in case of an active alert.
+						</description>
+					</parameter>
 				</group>
 			</group>
 		</configuration>
