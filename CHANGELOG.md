@@ -1,11 +1,69 @@
 # Jakarta
 
-## Release YYYY.ddd
+## Release 2017.334 patch3
+
+* scvsmag
+
+  * Catch exception when origin.quality.azimuthalGap is not set
+
+* arclink
+
+  * Avoid leaking file descriptors when connections close unexpectedly
+
+* scm
+
+  * Fix keyboard handling of ncurses plugin. Prior to that fix, keyboard input
+    was ignored in combination with some Linux distributions.
+
+* fdsnws
+
+  * Allow combination of simple and window time in station requests
 
 * trunk
 
-  * fix crash in FDSNWS recordstream if server cannot be reached
+  * Fix SDK implementation of Seiscomp::DataModel::DiffMerge
+  * Use processed gainUnit (converted to uppercase) rather than Sensor.unit to
+    prepare data in AmplitudeProcessor. This affect amplitude computation
+    for inventories where the gainUnit is given in lowercase characters, e.g. "m/s"
+    rather than "M/S".
+
+* key2inv
+
+  * Fix stream creation API call with respect to latest API version
+
+
+## Release 2017.334 patch2
+
+```SC_API_VERSION 11.1.0```
+
+* doc
+
+  * Add amplitude units expected by each magnitude implementation to glossary
+  * Add to data model API documentation for Origin::latitude and Origin::longitude
+    that uncertainties are given in kilometers
+
+* trunk
+
+  * Fix memory leak and type mapping of QuakeML exporter used with sccnv
+  * Ship xsd and xsl files in ```share/xml```
+
+* scwfparam
+
+  * Add Rupture::strike attribute to strong motion data model extension
+
+* GUI
+
+  * Add StandardLegend class to create map legends in an easy way
+  * Add support for map legend descriptions in map layer configuration 
+
+## Release 2017.334 patch1
+
+* trunk
+
+  * Fix crash in FDSNWS recordstream if server cannot be reached
   * Updated sc3ml_0.10.xsd
+  * Use correct name in connection info for Python scripts
+  * Fix SQL character escape bug for strings starting with a single quote
 
 * scamp
 
@@ -16,6 +74,12 @@
 
   * Event list shows only the full summary tooltip if the mouse hovers
     the ID column (last column)
+
+
+* scmapcut
+
+  * Add new module documentation
+  * Allow float values for the region parameter
 
 ## Release 2017.334
 
