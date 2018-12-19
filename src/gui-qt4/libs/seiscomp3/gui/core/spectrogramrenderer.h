@@ -90,6 +90,9 @@ class SC_GUI_API SpectrogramRenderer {
 		void setLogScale(bool f);
 		bool logScale() const { return _logarithmic; }
 
+		void setSmoothTransform(bool);
+		bool smoothTransform() const { return _smoothTransform; }
+
 		//! Sets the transfer function for deconvolution
 		void setTransferFunction(Math::Restitution::FFT::TransferFunction *tf);
 
@@ -105,7 +108,11 @@ class SC_GUI_API SpectrogramRenderer {
 
 		//! Renders the y axis. This call must precede a call to render otherwise
 		//! the frequency range can by out of sync.
-		void renderAxis(QPainter &p, const QRect &rect, bool leftAlign = true);
+		void renderAxis(QPainter &p, const QRect &rect, bool leftAlign = true,
+		                int paddingOuter = 6, int paddingInner = 0,
+		                bool stretch = false);
+
+		QPair<double,double> range() const;
 
 
 	// ----------------------------------------------------------------------
@@ -151,10 +158,16 @@ class SC_GUI_API SpectrogramRenderer {
 		Gradient512               _gradient;
 		bool                      _normalize;
 		bool                      _logarithmic;
+		bool                      _smoothTransform;
 		bool                      _dirty;
 		double                    _renderedFmin;
 		double                    _renderedFmax;
 };
+
+
+inline QPair<double,double> SpectrogramRenderer::range() const {
+	return QPair<double,double>(_renderedFmin, _renderedFmax);
+}
 
 
 }

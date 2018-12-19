@@ -42,6 +42,7 @@ SpectrogramRenderer::SpectrogramRenderer() {
 
 	_normalize = false;
 	_logarithmic = false;
+	_smoothTransform = true;
 	_dirty = false;
 
 	_renderedFmin = _renderedFmax = -1;
@@ -288,6 +289,15 @@ void SpectrogramRenderer::setLogScale(bool f) {
 	if ( !_spectralizer ) return;
 
 	setDirty();
+}
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+void SpectrogramRenderer::setSmoothTransform(bool st) {
+	_smoothTransform = st;
 }
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -593,7 +603,8 @@ void SpectrogramRenderer::render(QPainter &p, const QRect &rect,
 	double dx = 1.0/xlen;
 
 	p.save();
-	p.setRenderHint(QPainter::SmoothPixmapTransform);
+	if ( _smoothTransform )
+		p.setRenderHint(QPainter::SmoothPixmapTransform);
 
 	// Draw images
 	for ( it = _images.begin(); it != _images.end(); ++ it ) {
@@ -702,7 +713,9 @@ void SpectrogramRenderer::render(QPainter &p, const QRect &rect,
 
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-void SpectrogramRenderer::renderAxis(QPainter &p, const QRect &rect, bool leftAlign) {
+void SpectrogramRenderer::renderAxis(QPainter &p, const QRect &rect,
+                                     bool leftAlign, int paddingOuter,
+                                     int paddingInner, bool stretch) {
 	if ( (_renderedFmin < 0) || (_renderedFmax < 0) ) return;
 
 	int w = rect.width();
@@ -719,6 +732,10 @@ void SpectrogramRenderer::renderAxis(QPainter &p, const QRect &rect, bool leftAl
 	p.setFont(font);
 
 	double frange = _renderedFmax - _renderedFmin;
+
+	int fontHeight = p.fontMetrics().height();
+	int tickLength = fontHeight/2+1;
+	int tickSpacing = tickLength*3/2-tickLength;
 
 	QString minFreq = QString("%1").arg(_renderedFmin);
 	QString maxFreq = QString("%1").arg(_renderedFmax);
@@ -737,7 +754,10 @@ void SpectrogramRenderer::renderAxis(QPainter &p, const QRect &rect, bool leftAl
 	minR.adjust(0,-1,0,1);
 	maxR.adjust(0,-1,0,1);
 
-	int wAxis = std::max(minR.width(), maxR.width()) + 6;
+	int wAxis = std::max(minR.width(), maxR.width()) + tickLength + tickSpacing + paddingInner;
+	if ( stretch )
+		wAxis = rect.width() - axisLabelR.height() - 2;
+
 	QRect axis(0,0,wAxis,h), area;
 
 	if ( leftAlign ) {
@@ -753,10 +773,14 @@ void SpectrogramRenderer::renderAxis(QPainter &p, const QRect &rect, bool leftAl
 
 	p.fillRect(area, p.brush());
 
-	if ( leftAlign )
+	if ( leftAlign ) {
+		axis.adjust(0,0,-paddingInner,0);
 		p.drawLine(axis.topRight(), axis.bottomRight());
-	else
+	}
+	else {
+		axis.adjust(paddingInner,0,0,0);
 		p.drawLine(axis.topLeft(), axis.bottomLeft());
+	}
 
 	p.save();
 	p.translate(area.right()-2, area.center().y()+axisLabelR.width()/2);
@@ -765,20 +789,20 @@ void SpectrogramRenderer::renderAxis(QPainter &p, const QRect &rect, bool leftAl
 	p.restore();
 
 	if ( leftAlign ) {
-		p.drawText(axis.adjusted(0,0,-6,0), Qt::AlignRight | Qt::AlignTop, maxFreq);
-		p.drawText(axis.adjusted(0,0,-6,0), Qt::AlignRight | Qt::AlignBottom, minFreq);
+		p.drawText(axis.adjusted(0,0,-tickLength-tickSpacing,0), Qt::AlignRight | Qt::AlignTop, maxFreq);
+		p.drawText(axis.adjusted(0,0,-tickLength-tickSpacing,0), Qt::AlignRight | Qt::AlignBottom, minFreq);
 	}
 	else {
-		p.drawText(axis.adjusted(6,0,0,0), Qt::AlignLeft | Qt::AlignTop, maxFreq);
-		p.drawText(axis.adjusted(6,0,0,0), Qt::AlignLeft | Qt::AlignBottom, minFreq);
+		p.drawText(axis.adjusted(tickLength+tickSpacing,0,0,0), Qt::AlignLeft | Qt::AlignTop, maxFreq);
+		p.drawText(axis.adjusted(tickLength+tickSpacing,0,0,0), Qt::AlignLeft | Qt::AlignBottom, minFreq);
 	}
 
 	// Reduce axis rect to free area
 	QRect labels = axis.adjusted(0,maxR.height()-2,0,-minR.height()-2);
 	if ( leftAlign )
-		labels.adjust(0,0,-6,0);
+		labels.adjust(0,0,-tickLength-tickSpacing,0);
 	else
-		labels.adjust(6,0,0,0);
+		labels.adjust(tickLength+tickSpacing,0,0,0);
 
 	int steps = 10;
 	double vSpacing;
@@ -796,7 +820,11 @@ void SpectrogramRenderer::renderAxis(QPainter &p, const QRect &rect, bool leftAl
 
 	double fSpacing = frange / steps;
 
-	int xPos = leftAlign ? axis.right()-4 : axis.left();
+	int xPos = leftAlign ? axis.right()-tickLength : axis.left();
+	int sxPos = leftAlign ? axis.right()-tickLength/2 : axis.left();
+	int subSteps = 10;
+	while ( vSpacing*2 < fontHeight*subSteps )
+		subSteps /= 2;
 
 	p.save();
 	p.setBrush(Qt::NoBrush);
@@ -809,7 +837,12 @@ void SpectrogramRenderer::renderAxis(QPainter &p, const QRect &rect, bool leftAl
 	for ( int i = 0; i <= steps; ++i, yPos += vSpacing, f -= fSpacing ) {
 		int y = axis.top() + (int)(_logarithmic ? pow(10.0, yPos) : yPos);
 		if ( y > axis.bottom() ) y = axis.bottom();
-		p.drawLine(xPos, y, xPos+4, y);
+		p.drawLine(xPos, y, xPos+tickLength, y);
+
+		for ( int j = 1; j < subSteps; ++j ) {
+			int sy = y + j*vSpacing/subSteps;
+			p.drawLine(sxPos, sy, sxPos+tickLength/2, sy);
+		}
 
 		// Try to render label
 		QString freq = QString("%1").arg(f);

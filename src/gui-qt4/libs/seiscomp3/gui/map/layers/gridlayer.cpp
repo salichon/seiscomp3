@@ -16,6 +16,7 @@
 #include <seiscomp3/gui/core/application.h>
 #include <seiscomp3/gui/map/canvas.h>
 #include <seiscomp3/gui/map/projection.h>
+#include <seiscomp3/geo/coordinate.h>
 
 
 namespace Seiscomp {
@@ -43,27 +44,18 @@ GridLayer::~GridLayer() {}
 
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-void GridLayer::draw(const Seiscomp::Gui::Map::Canvas* canvas,
-                     QPainter& painter) {
+void GridLayer::draw(const Seiscomp::Gui::Map::Canvas *canvas,
+                     QPainter &painter) {
 	if ( !isVisible() ) return;
 	if ( canvas == NULL ) return;
 
-	Seiscomp::Gui::Map::Projection* projection = canvas->projection();
+	Seiscomp::Gui::Map::Projection *projection = canvas->projection();
 	if ( projection == NULL ) return;
 
 	painter.save();
 
 	painter.setRenderHint(QPainter::Antialiasing, isAntiAliasingEnabled());
-
-	QPen gridPen(SCScheme.colors.map.grid);
-#ifdef Q_WS_MAC
-	// For unknown reasons OSX cannot display dotted lines
-	gridPen.setStyle(Qt::DashLine);
-#else
-	gridPen.setStyle(Qt::DotLine);
-#endif
-
-	painter.setPen(gridPen);
+	painter.setPen(SCScheme.colors.map.grid);
 
 #if 0
 	// Y gridlines
@@ -80,45 +72,50 @@ void GridLayer::draw(const Seiscomp::Gui::Map::Canvas* canvas,
 	projection->drawLonCircle(p, -66.55);
 #else
 
-	QPointF c = projection->visibleCenter();
-	qreal modX = fmod(c.x(), _gridDistance.x());
-	qreal modY = fmod(c.y(), _gridDistance.y());
+	Geo::GeoCoordinate c(projection->visibleCenter().y(),
+	                     projection->visibleCenter().x());
+	c.normalize();
+	qreal modX = fmod(c.lon, _gridDistance.x());
+	qreal modY = fmod(c.lat, _gridDistance.y());
 
-	QPointF start0 = QPointF(c.x() - modX, c.y() - modY);
-	QPointF start1;
+	Geo::GeoCoordinate start0(c.lat - modY, c.lon - modX);
+	Geo::GeoCoordinate start1;
 
-	if ( c.x() < 0 ) {
-		start1.setX(start0.x());
-		start0.setX(start0.x() - _gridDistance.x());
+	if ( c.lon < 0 ) {
+		start1.lon = start0.lon;
+		start0.lon = start0.lon - _gridDistance.x();
 	}
 	else
-		start1.setX(start0.x() + _gridDistance.x());
+		start1.lon = start0.lon + _gridDistance.x();
 
-	if ( c.y() < 0 ) {
-		start1.setY(start0.y());
-		start0.setY(start0.y() - _gridDistance.y());
+	if ( c.lat < 0 ) {
+		start1.lat = start0.lat;
+		start0.lat = start0.lat - _gridDistance.y();
 	}
 	else
-		start1.setY(start0.y() + _gridDistance.y());
+		start1.lat = start0.lat + _gridDistance.y();
 
-	qreal x = start1.x();
-	qreal toX = c.x() + 180;
+	start0.normalize();
+	start1.normalize();
+
+	qreal x = start1.lon;
+	qreal toX = c.lon + 180;
 
 	while ( x < toX && projection->drawLatCircle(painter, x) )
 		x += _gridDistance.x();
 
-	x = start0.x();
-	toX = c.x() - 180;
+	x = start0.lon;
+	toX = c.lon - 180;
 	while ( x > toX && projection->drawLatCircle(painter, x) )
 		x -= _gridDistance.x();
 
-	qreal y = start1.y();
+	qreal y = start1.lat;
 	qreal toY = 90;
 
 	while ( y < toY && projection->drawLonCircle(painter, y) )
 		y += _gridDistance.y();
 
-	y = start0.y();
+	y = start0.lat;
 	toY = -90;
 
 	while ( y > toY && projection->drawLonCircle(painter, y) )
@@ -133,7 +130,7 @@ void GridLayer::draw(const Seiscomp::Gui::Map::Canvas* canvas,
 
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-void GridLayer::setGridDistance(const QPointF& p) {
+void GridLayer::setGridDistance(const QPointF &p) {
 	_gridDistance = p;
 }
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -142,7 +139,7 @@ void GridLayer::setGridDistance(const QPointF& p) {
 
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-const QPointF& GridLayer::gridDistance() const {
+const QPointF &GridLayer::gridDistance() const {
 	return _gridDistance;
 }
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

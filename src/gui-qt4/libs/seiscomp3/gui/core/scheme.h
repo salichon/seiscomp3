@@ -17,6 +17,8 @@
 
 
 #include <QColor>
+#include <QPen>
+#include <QBrush>
 #include <QPoint>
 #include <QFont>
 #include <seiscomp3/gui/qt4.h>
@@ -85,8 +87,11 @@ class SC_GUI_API Scheme {
 				QColor foreground;
 				QColor alternateForeground;
 				QColor spectrogram;
-				QColor gaps;
-				QColor overlaps;
+				QPen offset;
+				QPen gridPen;
+				QPen subGridPen;
+				QBrush gaps;
+				QBrush overlaps;
 				RecordStates states;
 			};
 
@@ -160,7 +165,7 @@ class SC_GUI_API Scheme {
 				Map();
 				QColor lines;
 				QColor outlines;
-				QColor grid;
+				QPen   grid;
 				QColor stationAnnotations;
 				QColor cityLabels;
 				QColor cityOutlines;
@@ -236,6 +241,7 @@ class SC_GUI_API Scheme {
 			bool showLegends;
 			int cityPopulationWeight;
 			bool toBGR;
+			int polygonRoughness;
 			std::string projection;
 		};
 

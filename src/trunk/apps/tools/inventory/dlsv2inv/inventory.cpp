@@ -1349,7 +1349,8 @@ void Inventory::ProcessDatalogger(ChannelIdentifier& ci, DataModel::StreamPtr st
 		// blockette that should have been handled by the reader. Issue an
 		// error
 		if ( lastStage && *lastStage == stages[i].stage ) {
-			SEISCOMP_ERROR("Same stage number in subsequent responses: this must be checked!");
+			SEISCOMP_ERROR("Same stage number (%d) in subsequent responses: this must be checked!",
+			               (int)*lastStage);
 			throw Core::GeneralException("Undefined behaviour expected, conversion aborted");
 		}
 
@@ -1968,7 +1969,7 @@ void Inventory::InsertSensorCalibration(ChannelIdentifier& ci, DataModel::Sensor
 	try {
 		cal->setEnd(strm->end());
 	}
-	catch ( Core::ValueException ) {
+	catch ( Core::ValueException & ) {
 		cal->setEnd(Core::None);
 	}
 
@@ -2000,7 +2001,7 @@ void Inventory::UpdateSensorCalibration(ChannelIdentifier& ci, DataModel::Sensor
 	try {
 		cal->setEnd(strm->end());
 	}
-	catch ( Core::ValueException ) {
+	catch ( Core::ValueException & ) {
 		cal->setEnd(Core::None);
 	}
 
@@ -2635,19 +2636,19 @@ Inventory::SequenceNumber Inventory::GetFAPSequence(ChannelIdentifier& ci, strin
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 Inventory::ResponseType Inventory::GetSensorResponseType(const ChannelIdentifier &ci, SequenceNumber &stageSequenceNumber) {
-	if ( stageSequenceNumber = hasSensorStage(ci.rc, adc) )
+	if ( (stageSequenceNumber = hasSensorStage(ci.rc, adc)) )
 		return RT_RC;
 
-	if ( stageSequenceNumber = hasSensorStage(ci.firr, adc) )
+	if ( (stageSequenceNumber = hasSensorStage(ci.firr, adc)) )
 		return RT_FIR;
 
-	if ( stageSequenceNumber = hasSensorStage(ci.rpz, adc) )
+	if ( (stageSequenceNumber = hasSensorStage(ci.rpz, adc)) )
 		return RT_PAZ;
 
-	if ( stageSequenceNumber = hasSensorStage(ci.rp, adc) )
+	if ( (stageSequenceNumber = hasSensorStage(ci.rp, adc)) )
 		return RT_Poly;
 
-	if ( stageSequenceNumber = hasSensorStage(ci.rl, adc) )
+	if ( (stageSequenceNumber = hasSensorStage(ci.rl, adc)) )
 		return RT_FAP;
 
 	stageSequenceNumber = Core::None;

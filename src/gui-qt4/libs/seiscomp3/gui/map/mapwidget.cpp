@@ -12,7 +12,7 @@
 
 #define SEISCOMP_COMPONENT Gui::MapWidget
 
-#include <seiscomp3/geo/geofeatureset.h>
+#include <seiscomp3/geo/featureset.h>
 #include <seiscomp3/gui/map/mapwidget.h>
 #include <seiscomp3/gui/map/projection.h>
 #include <seiscomp3/gui/map/texturecache.h>
@@ -40,6 +40,7 @@ const static char *cmStrProjection = "Projection";
 const static char *cmStrFilter = "Filter";
 const static char *cmStrNearest = "Nearest";
 const static char *cmStrBilinear = "Bilinear";
+const static char *cmStrScreenshot = "Save image";
 
 
 inline QString lat2String(double lat, int precision) {
@@ -277,6 +278,26 @@ bool MapWidget::isGrayScale() const {
 }
 
 
+bool MapWidget::saveScreenshot() {
+	QString filename = QFileDialog::getSaveFileName(this, tr("Save file"));
+	if ( filename.isEmpty() ) return false;
+
+	QImage image(size(), QImage::Format_ARGB32);
+	image.fill(0);
+
+	QPainter p(&image);
+	_canvas.draw(p);
+
+	if ( !image.save(filename) ) {
+		QMessageBox::warning(this, tr("Error"),
+		                     tr("Failed to save image to %1").arg(filename));
+		return false;
+	}
+
+	return true;
+}
+
+
 void MapWidget::draw(QPainter &painter) {
 	_canvas.setPreviewMode(_isDragging || _isMeasureDragging);
 	_canvas.setGrayScale(!isEnabled() || _forceGrayScale);
@@ -303,7 +324,7 @@ void MapWidget::draw(QPainter &painter) {
 #else
 			painter.drawEllipse(QRectF(p.x()-1.3f, p.y()-1.3f, 2.6f, 2.6f));
 #endif
-			dist += _canvas.drawGeoLine(painter, _measurePoints[i-1], _measurePoints[i]);
+			dist += _canvas.drawLine(painter, _measurePoints[i-1], _measurePoints[i]);
 		}
 
 		QString aziArea;
@@ -314,7 +335,7 @@ void MapWidget::draw(QPainter &painter) {
 			dashes << 3 << 7;
 			pen.setDashPattern(dashes);
 			painter.setPen(pen);
-			_canvas.drawGeoLine(painter, _measurePoints.last(), _measurePoints.first());
+			_canvas.drawLine(painter, _measurePoints.last(), _measurePoints.first());
 			painter.restore();
 			aziArea = QString("Area    : %1 km²").arg(polyArea(_measurePoints));
 		}
@@ -393,6 +414,8 @@ void MapWidget::updateContextMenu(QMenu *menu) {
 	_contextProjectionMenu = NULL;
 	_contextFilterMenu = NULL;
 
+	menu->addAction(cmStrScreenshot);
+
 	// Copy Measurements
 	if ( !_measureText.isEmpty() ) {
 		QMenu *measurementsMenu = menu->addMenu(cmStrMeasure);
@@ -435,7 +458,9 @@ void MapWidget::executeContextMenuAction(QAction *action) {
 		return;
 	}
 
-	if ( _contextProjectionMenu && action->parent() == _contextProjectionMenu )
+	if ( action->text() == cmStrScreenshot )
+		saveScreenshot();
+	else if ( _contextProjectionMenu && action->parent() == _contextProjectionMenu )
 		_canvas.setProjectionByName(action->text().toStdString().c_str());
 	else if ( _contextFilterMenu && action->parent() == _contextFilterMenu ) {
 		_filterMap = action->text() == cmStrBilinear;
@@ -552,8 +577,8 @@ void MapWidget::mousePressEvent(QMouseEvent* event) {
 			_measureText.clear();
 		}
 	}
-	else if ( _canvas.filterMousePressEvent(event) )
-		event->ignore();
+
+	_canvas.filterMousePressEvent(event);
 }
 
 

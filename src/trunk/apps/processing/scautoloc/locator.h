@@ -28,8 +28,7 @@ class Locator : public Seiscomp::LocSAT {
 		Locator();
 		~Locator();
 
-		void setStations(const Autoloc::StationDB *stations);
-
+		void setStation(const Station *station);
 		void setMinimumDepth(double);
 
 	public:
@@ -41,7 +40,7 @@ class Locator : public Seiscomp::LocSAT {
 
 	private:
 		// this is the SC3-level relocate
-		Origin *_sc3relocate(const Origin *origin, double fixedDepth=-1);
+		Origin *_sc3relocate(const Origin *origin);
 
 	private:
 		typedef std::map<std::string, Seiscomp::DataModel::SensorLocationPtr> SensorLocationList;

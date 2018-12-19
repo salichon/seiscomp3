@@ -128,19 +128,26 @@ class SC_GUI_API Axis : public QObject {
 		 * @brief Update the layout and sizes based on the range and settings.
 		 *        This calls generates also the tick marks and the extend of
 		 *        the axis in the flexible direction.
-		 * @param painter The painter used to render the axis.
+		 * @param fm The font metrics of the font used to render the axis.
 		 * @param rect The target rect which will be changed according to the
-		 *             flexible dimension, e.g. width or height.
+		 *             flexible dimension, e.g. width or height. The width/height
+		 *             of the rect is only changed if it is equal to 0.
 		 */
-		void updateLayout(QPainter &painter, QRect &rect);
+		void updateLayout(const QFontMetrics &fm, QRect &rect);
+
+		//! Convenience function
+		void updateLayout(const QPainter &painter, QRect &rect);
 
 		/**
 		 * @brief Returns the size hint for the flexible dimension, for vertical
 		 *        axes it is the width and for horizontal axes the height.
-		 * @param painter The painter used to render the axis.
+		 * @param mf The font metrics of the font used to render the axis.
 		 * @return The value in pixels or -1 if not determinable.
 		 */
-		int sizeHint(QPainter &painter) const;
+		int sizeHint(const QFontMetrics &fm) const;
+
+		//! Convenience function
+		int sizeHint(const QPainter &painter) const;
 
 		/**
 		 * @brief Renders the axis into the given rect.
@@ -150,8 +157,12 @@ class SC_GUI_API Axis : public QObject {
 		 *             the rect dimension (either width or height) is not valid.
 		 *             A valid dimension forces the axis to render into the given
 		 *             rect.
+		 * @param clipText Whether to check for tick label overlaps with the given
+		 *                 rect or not. If enabled, then tick labels that intersect
+		 *                 with the rect will be pushed into the rect if possible.
 		 */
-		void draw(QPainter &painter, const QRect &rect);
+		void draw(QPainter &painter, const QRect &rect,
+		          bool clipText = false);
 
 		/**
 		 * @brief Draws the grid lines at the (sub)ticks within a passed plot rect.

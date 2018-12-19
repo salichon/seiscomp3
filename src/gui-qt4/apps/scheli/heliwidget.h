@@ -66,15 +66,15 @@ class HeliCanvas {
 
 
 	private:
-		typedef boost::shared_ptr<Seiscomp::Gui::RecordPolyline> RecordPolylinePtr;
+		typedef Seiscomp::Gui::AbstractRecordPolylinePtr AbstractRecordPolylinePtr;
 		typedef Seiscomp::Math::Filtering::InPlaceFilter<float> Filter;
 
 		struct Row {
 			Row() {}
 
-			Seiscomp::Core::Time time;
-			RecordPolylinePtr    polyline;
-			bool                 dirty;
+			Seiscomp::Core::Time      time;
+			AbstractRecordPolylinePtr polyline;
+			bool                      dirty;
 
 			void update();
 		};
@@ -93,7 +93,7 @@ class HeliCanvas {
 		int                       _numberOfRows;
 		float                     _scale;
 
-		QColor                    _gaps[2];
+		QBrush                    _gaps[2];
 		double                    _amplitudeRange[2];
 		int                       _labelMargin;
 		bool                      _antialiasing;

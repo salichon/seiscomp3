@@ -330,7 +330,7 @@ PluginRegistry::PluginEntry PluginRegistry::open(const std::string &file) const 
 #ifdef WIN32
 	void *handle = LoadLibrary(file.c_str());
 #else
-	void *handle = dlopen(file.c_str(), RTLD_NOW);
+	void *handle = dlopen(file.c_str(), RTLD_NOW | RTLD_GLOBAL);
 #endif
 	if ( !handle ) {
 		SEISCOMP_ERROR("Loading plugin %s failed: %s", file.c_str(), sysLastError().c_str());
@@ -376,7 +376,7 @@ PluginRegistry::PluginEntry PluginRegistry::open(const std::string &file) const 
 	// by definition.
 	if ( (SC_API_VERSION_MAJOR(plugin->description().apiVersion) != SC_API_VERSION_MAJOR(SC_API_VERSION)) ||
 	     (SC_API_VERSION_MINOR(plugin->description().apiVersion) > SC_API_VERSION_MINOR(SC_API_VERSION)) ) {
-		SEISCOMP_WARNING("API version mismatch (%d.%d != %d.%d) can lead to unpredicted behaviour: %s",
+		SEISCOMP_WARNING("API version mismatch (plugin %d.%d != API %d.%d) can lead to unpredicted behaviour: %s",
 		                 SC_API_VERSION_MAJOR(plugin->description().apiVersion),
 		                 SC_API_VERSION_MINOR(plugin->description().apiVersion),
 		                 SC_API_VERSION_MAJOR(SC_API_VERSION), SC_API_VERSION_MINOR(SC_API_VERSION),

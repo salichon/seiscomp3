@@ -166,14 +166,14 @@ class SwigPyIterator(_object):
 SwigPyIterator_swigregister = _Client.SwigPyIterator_swigregister
 SwigPyIterator_swigregister(SwigPyIterator)
 
-import Logging
-import Config
-import Communication
-import Core
+import seiscomp3.Logging
+import seiscomp3.Config
+import seiscomp3.Communication
+import seiscomp3.Core
 import DataModel
-import IO
-import Math
-import Utils
+import seiscomp3.IO
+import seiscomp3.Math
+import seiscomp3.Utils
 class CommandLine(_object):
     """Proxy of C++ Seiscomp::Client::CommandLine class."""
 
@@ -414,15 +414,15 @@ def EApplicationStatusNames_name(i):
     """EApplicationStatusNames_name(int i) -> char const *"""
     return _Client.EApplicationStatusNames_name(i)
 
-class ApplicationStatusMessage(Core.Message):
+class ApplicationStatusMessage(seiscomp3.Core.Message):
     """Proxy of C++ Seiscomp::Client::ApplicationStatusMessage class."""
 
     __swig_setmethods__ = {}
-    for _s in [Core.Message]:
+    for _s in [seiscomp3.Core.Message]:
         __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
     __setattr__ = lambda self, name, value: _swig_setattr(self, ApplicationStatusMessage, name, value)
     __swig_getmethods__ = {}
-    for _s in [Core.Message]:
+    for _s in [seiscomp3.Core.Message]:
         __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
     __getattr__ = lambda self, name: _swig_getattr(self, ApplicationStatusMessage, name)
     __repr__ = _swig_repr
@@ -571,15 +571,15 @@ class Notification(_object):
 Notification_swigregister = _Client.Notification_swigregister
 Notification_swigregister(Notification)
 
-class Application(Core.InterruptibleObject):
+class Application(seiscomp3.Core.InterruptibleObject):
     """Proxy of C++ Seiscomp::Client::Application class."""
 
     __swig_setmethods__ = {}
-    for _s in [Core.InterruptibleObject]:
+    for _s in [seiscomp3.Core.InterruptibleObject]:
         __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
     __setattr__ = lambda self, name, value: _swig_setattr(self, Application, name, value)
     __swig_getmethods__ = {}
-    for _s in [Core.InterruptibleObject]:
+    for _s in [seiscomp3.Core.InterruptibleObject]:
         __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
     __getattr__ = lambda self, name: _swig_getattr(self, Application, name)
     __repr__ = _swig_repr
@@ -1035,6 +1035,11 @@ class Application(Core.InterruptibleObject):
         return _Client.Application_handleNotifier(self, notifier)
 
 
+    def version(self):
+        """version(Application self) -> char const *"""
+        return _Client.Application_version(self)
+
+
     def Instance():
         """Instance() -> Application"""
         return _Client.Application_Instance()
@@ -1046,11 +1051,6 @@ class Application(Core.InterruptibleObject):
         return _Client.Application_HandleSignals(termination, crash)
 
     HandleSignals = staticmethod(HandleSignals)
-
-    def version(self):
-        """version(Application self) -> char const *"""
-        return _Client.Application_version(self)
-
 
     def createCommandLineDescription(self):
         """createCommandLineDescription(Application self)"""
@@ -1485,11 +1485,6 @@ class StreamApplication(Application):
     def handleAlarm(self):
         """handleAlarm(StreamApplication self)"""
         return _Client.StreamApplication_handleAlarm(self)
-
-
-    def version(self):
-        """version(StreamApplication self) -> char const *"""
-        return _Client.StreamApplication_version(self)
 
 
     def createCommandLineDescription(self):

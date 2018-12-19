@@ -28,6 +28,9 @@
 #define READ_COLOR(location) \
 	location = SCApp->configGetColor("scheme."#location, location);
 
+#define READ_BRUSH_COLOR(location) \
+	location = SCApp->configGetColor("scheme."#location, location.color());
+
 #define READ_COLOR_GRADIENT(location) \
 	location = SCApp->configGetColorGradient("scheme."#location, location);
 
@@ -36,6 +39,9 @@
 
 #define READ_FONT_BY_NAME(var, location) \
 	var = SCApp->configGetFont("scheme."#location, var);
+
+#define READ_PEN(location) \
+	location = SCApp->configGetPen("scheme."#location, location);
 
 #define READ_INT(location) \
 	try { location = SCApp->configGetInt("scheme."#location); } \
@@ -210,6 +216,9 @@ Scheme::Colors::Records::Records() {
 	foreground = QColor(128, 128, 128);
 	alternateForeground = foreground;
 	spectrogram = Qt::black;
+	offset = QColor(192,192,255);
+	gridPen = QPen(QColor(0,0,0,32), 1, Qt::DashLine);
+	subGridPen = QPen(QColor(0,0,0,0), 1, Qt::DotLine);
 	gaps = QColor(255, 255, 0, 64);
 	overlaps = QColor(255, 0, 255, 64);
 }
@@ -219,16 +228,16 @@ Scheme::Colors::Records::Records() {
 
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-Scheme::Colors::Stations::Stations()
-: text(Qt::white),
-  associated(130, 173, 88),
-  selected(77, 77, 184),
-  triggering(Qt::red),
-  triggered0(0, 128, 255),
-  triggered1(0, 0, 255),
-  triggered2(0, 0, 128),
-  disabled(102, 102, 102, 100),
-  idle(102, 102, 102, 128) {
+Scheme::Colors::Stations::Stations() {
+	text = Qt::white;
+	associated = QColor(130, 173, 88);
+	selected = QColor(77, 77, 184);
+	triggering = QColor(Qt::red);
+	triggered0 = QColor(0, 128, 255);
+	triggered1 = QColor(0, 0, 255);
+	triggered2 = QColor(0, 0, 128);
+	disabled = QColor(102, 102, 102, 100);
+	idle = QColor(102, 102, 102, 128);
 }
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -311,7 +320,7 @@ Scheme::Colors::RecordView::RecordView() :
 Scheme::Colors::Map::Map() :
 	lines(255, 255, 255, 64),
 	outlines(255, 255, 255),
-	grid(Qt::white),
+	grid(Qt::white, 1, Qt::DotLine),
 	stationAnnotations(Qt::red),
 	cityLabels(Qt::black),
 	cityOutlines(Qt::black),
@@ -348,19 +357,20 @@ Scheme::Splash::Splash() {
 
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-Scheme::Map::Map() :
-	stationSize(12),
-	originSymbolMinSize(9),
-	vectorLayerAntiAlias(true),
-	bilinearFilter(true),
-	showGrid(true),
-	showLayers(true),
-	showCities(true),
-	showLegends(false),
-	cityPopulationWeight(150),
-	toBGR(false),
-	projection("")
-{}
+Scheme::Map::Map() {
+	stationSize = 12;
+	originSymbolMinSize = 9;
+	vectorLayerAntiAlias = true;
+	bilinearFilter = true;
+	showGrid = true;
+	showLayers = true;
+	showCities = true;
+	showLegends = false;
+	cityPopulationWeight = 150;
+	toBGR = false;
+	polygonRoughness = 3;
+	projection = "";
+}
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
@@ -378,7 +388,7 @@ Scheme::Marker::Marker() {
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 Scheme::Records::Records() {
 	lineWidth = 1;
-	antiAliasing = false;
+	antiAliasing = true;
 	optimize = true;
 }
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -495,8 +505,11 @@ void Scheme::fetch() {
 	READ_COLOR(colors.records.foreground);
 	READ_COLOR(colors.records.alternateForeground);
 	READ_COLOR(colors.records.spectrogram);
-	READ_COLOR(colors.records.gaps);
-	READ_COLOR(colors.records.overlaps);
+	READ_PEN(colors.records.offset);
+	READ_PEN(colors.records.gridPen);
+	READ_PEN(colors.records.subGridPen);
+	READ_BRUSH_COLOR(colors.records.gaps);
+	READ_BRUSH_COLOR(colors.records.overlaps);
 	READ_COLOR(colors.records.states.unrequested);
 	READ_COLOR(colors.records.states.requested);
 	READ_COLOR(colors.records.states.inProgress);
@@ -557,7 +570,7 @@ void Scheme::fetch() {
 
 	READ_COLOR(colors.map.lines);
 	READ_COLOR(colors.map.outlines);
-	READ_COLOR(colors.map.grid);
+	READ_PEN(colors.map.grid);
 	READ_COLOR(colors.map.stationAnnotations);
 	READ_COLOR(colors.map.cityLabels);
 	READ_COLOR(colors.map.cityOutlines);
@@ -610,6 +623,7 @@ void Scheme::fetch() {
 	READ_BOOL(map.showLegends);
 	READ_INT(map.cityPopulationWeight);
 	READ_BOOL(map.toBGR);
+	READ_INT(map.polygonRoughness);
 	READ_STRING(map.projection);
 
 	READ_INT(precision.depth);
