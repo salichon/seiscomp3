@@ -1,5 +1,119 @@
 # Jakarta
 
+## Release YYYY.ddd
+
+* scmv
+
+  * Set correct legend if started with ```--displaymode```
+
+* scolv
+
+  * If arrival state (active/inactive) is taken from the weight
+    then it now compares against 0 instead of < 0.5 (inactive)
+    and > 0.5 (active). It otherwise shows sometimes inconsistent
+    results in combination with locators that assign non binary
+    weight such as NonLinLoc.
+
+* Hypo71
+
+  * Increase maximum phase number to 1001
+  * Raise an error if no velocity model is given for a profile
+
+## Release 2018.327 patch7
+
+```SC_API_VERSION 12.1.0```
+
+* trunk
+
+  * Split ```amplitudes.ML.measureType``` for ML and MLv. MLv must be configured
+    with ```amplitudes.MLv.measureType```.
+  * Added ```amplitudes.ML.combiner``` to configure how the amplitudes of either
+    horizontal component are combined to the final amplitude.
+  * Add blockette 1001 when writing miniSEED with MSeedRecord
+  * Fixed Hypo71 bug that caused a crash if no phase was part of a solution
+
+## Release 2018.327 patch6
+
+* seedlink
+
+  * Fix caps\_plugin to not send incompatible miniSEED records (!= 512)
+
+## Release 2018.327.patch5
+
+* scolv
+
+  * Fix crash when artificial origin is received sent from e.g. scrttv. This
+    is a regression from 2018.327.patch4.
+
+## Release 2018.327.patch4
+
+* system
+
+  * Updated libmseed to 2.19.6
+
+* trunk
+
+  * Fix bug in ims10 export if AgencyID contains white spaces
+  * Fixed bug with hyp71sum2k and ims10 export that caused truncated strings.
+    Many thanks to Luca Scarabello (ETHZ) for finding and fixing this bug.
+
+* seedlink
+
+  * Added caps\_plugin which allows to retrieve data from gempa's CAPS
+    server, for example to import RaspberryShake data
+
+* scolv
+
+  * Added toggle to amplitude picker to either override the configured minimum
+    SNR per station or not. The default is now to use what is configured.
+
+* scevent
+
+  * The evrc plugin does not change the status of events with manual preferred origin
+
+* scautoloc
+
+  * Fixed a bug that sometimes caused manual origins not to be used with the correct depth.
+  * Minor cleanups.
+
+## Release 2018.327.patch3
+
+* trunk
+
+  * Add MN magnitude plugin (still experimental)
+
+* scolv
+
+  * Keep showing waveform components that do not depend on other components
+    for transformation. Vertical components which are the only components
+    of a station will still be visible with any rotation selected if they
+    are properly aligned upwards.
+
+## Release 2018.327 patch2
+
+* GUI
+
+  * Allow to configure the N top populated places to be shown in the
+    cities map layer
+
+* trunk
+
+  * Fix infinite loop when building a quadtree of some geo region sets
+
+## Release 2018.327 patch1
+
+* fdsnws
+
+  * Fix potential security issue
+
+* scheli
+
+  * Improve anti-aliased trace rendering
+
+* GUI
+
+  * Add option to map context menu to save an image of the current view
+
 ## Release 2018.327
 
 ```SC_API_VERSION 12.0.0```
@@ -135,7 +249,7 @@ magnitude correction. Note that **it only affects ML, not MLv and not MLh**.
 
 * scbulletin
 
-  * In enhanced mode all coordinates and distances have precisions 
+  * In enhanced mode all coordinates and distances have precisions
     of e-05 degree
 
 * scart
@@ -176,10 +290,29 @@ magnitude correction. Note that **it only affects ML, not MLv and not MLh**.
     from an SDS archive by scanning its content repeatedly and populating
     the new availability database tables (read by fdsnws)
 
+## Release 2017.334 patch10
+
+* trunk
+
+  * Fix bug in ims10 export if AgencyID contains white spaces
+
+* seedlink
+
+  * Added caps\_plugin which allows to retrieve data from gempa's CAPS
+    server, for example to import RaspberryShake data
+
+## Release 2017.334 patch9
+
+* trunk
+
+  * Fix bug in stringify functions which discards the last character if
+    the output length of a string should be exactly 64 charaters. This
+    affects the hyp71sum2k and ims10 output.
+
 ## Release 2017.334 patch8
- 
+
  * gui
- 
+
    * Fix bug that caused a segfault when GUI application are run in TTY mode
      and the database connection is configured in the configuration file
 
@@ -344,7 +477,7 @@ magnitude correction. Note that **it only affects ML, not MLv and not MLh**.
 * GUI
 
   * Add StandardLegend class to create map legends in an easy way
-  * Add support for map legend descriptions in map layer configuration 
+  * Add support for map legend descriptions in map layer configuration
 
 ## Release 2017.334 patch1
 
@@ -1144,7 +1277,7 @@ UPDATE Meta SET value='0.8' WHERE name='Schema-Version';
    ```
    annotations = true
    annotionsWithChannels = false
-   ``` 
+   ```
 
 * scrttv
 
@@ -1209,7 +1342,7 @@ UPDATE Meta SET value='0.8' WHERE name='Schema-Version';
  * Added warning to trace if not metadata are available
  * Added option to cycle through filters with keyboard
  * Do not show acquisition error box if acquisition has been cancelled by user
- 
+
 * tabinvmodifier
 
  * Fixed Python return codes for event handlers

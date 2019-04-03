@@ -1381,7 +1381,28 @@ ArrivalModel::ArrivalModel(DataModel::Origin* origin, QObject *parent)
 			if ( SCScheme.unit.distanceInKM )
 				_header << QString("%1 (km)").arg(EArrivalListColumnsNames::name(i));
 			else
-				_header << QString("%1 (deg)").arg(EArrivalListColumnsNames::name(i));
+				_header << QString("%1 (°)").arg(EArrivalListColumnsNames::name(i));
+		}
+		else if ( i == RESIDUAL ) {
+			_header << QString("%1 (s)").arg(EArrivalListColumnsNames::name(i));
+		}
+		else if ( i == UNCERTAINTY ) {
+			_header << QString("%1 (s)").arg(EArrivalListColumnsNames::name(i));
+		}
+		else if ( i == LATENCY ) {
+			_header << QString("%1 (s)").arg(EArrivalListColumnsNames::name(i));
+		}
+		else if ( i == SLOWNESS ) {
+			_header << QString("%1 (s/°)").arg(EArrivalListColumnsNames::name(i));
+		}
+		else if ( i == AZIMUTH ) {
+			_header << QString("%1 (°)").arg(EArrivalListColumnsNames::name(i));
+		}
+		else if ( i == TAKEOFF ) {
+			_header << QString("%1 (°)").arg(EArrivalListColumnsNames::name(i));
+		}
+		else if ( i == BACKAZIMUTH ) {
+			_header << QString("%1 (°)").arg(EArrivalListColumnsNames::name(i));
 		}
 		else if ( i == TIME ) {
 			if ( SCScheme.dateTime.useLocalTime )
@@ -1973,10 +1994,8 @@ bool ArrivalModel::useArrival(int row) const {
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 void ArrivalModel::setUseArrival(int row, DataModel::Arrival *arrival) {
-	bool used = false;
 	try {
 		setBackazimuthUsed(row, arrival->backazimuthUsed());
-		used = true;
 	}
 	catch ( ... ) {
 		Pick *pick = Pick::Cast(PublicObject::Find(arrival->pickID()));
@@ -1995,7 +2014,6 @@ void ArrivalModel::setUseArrival(int row, DataModel::Arrival *arrival) {
 
 	try {
 		setHorizontalSlownessUsed(row, arrival->horizontalSlownessUsed());
-		used = true;
 	}
 	catch ( ... ) {
 		Pick *pick = Pick::Cast(PublicObject::Find(arrival->pickID()));
@@ -2014,21 +2032,20 @@ void ArrivalModel::setUseArrival(int row, DataModel::Arrival *arrival) {
 
 	try {
 		setTimeUsed(row, arrival->timeUsed());
-		used = true;
 	}
 	catch ( ... ) {
-		setTimeUsed(row, true);
-	}
-
-	// TODO check if this is really required for backward compatibility
-	try {
-		if ( !used && arrival->weight() < 0.5 ) {
+		// If the timeUsed attribute is not set then it looks like an origin
+		// created with an older version. So use the weight value to decide
+		// whether the pick is active or not.
+		if ( fabs(arrival->weight()) < 1E-6 ) {
 			setBackazimuthUsed(row, false);
 			setHorizontalSlownessUsed(row, false);
 			setTimeUsed(row, false);
 		}
+		else {
+			setTimeUsed(row, true);
+		}
 	}
-	catch ( ... ) {}
 }
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -2790,6 +2807,9 @@ void OriginLocatorView::applyPlotFilter() {
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 void OriginLocatorView::runScript(const QString &script, const QString &name) {
 	QString cmd = QString("%1 %2").arg(script).arg(_currentOrigin->publicID().c_str());
+	if ( _baseEvent ) {
+		cmd += QString(" %1").arg(_baseEvent->publicID().c_str());
+	}
 
 	// start as background process w/o any communication channel
 	if ( !QProcess::startDetached(cmd) ) {
@@ -3000,7 +3020,7 @@ void OriginLocatorView::plotTabChanged(int tab) {
 		if ( SCScheme.unit.distanceInKM )
 			_residuals->setAbscissaName("Distance (km)");
 		else
-			_residuals->setAbscissaName("Distance (deg)");
+			_residuals->setAbscissaName("Distance (°)");
 		_residuals->setOrdinateName("Residual (s)");
 	}
 	// Azimuth / Residual
@@ -3008,7 +3028,7 @@ void OriginLocatorView::plotTabChanged(int tab) {
 		_residuals->setMarkerDistance(10, 1);
 		_residuals->setType(DiagramWidget::Rectangular);
 		_residuals->setIndicies(PC_AZIMUTH,PC_RESIDUAL);
-		_residuals->setAbscissaName("Azimuth (deg)");
+		_residuals->setAbscissaName("Azimuth (°)");
 		_residuals->setOrdinateName("Residual (s)");
 	}
 	// Distance / TravelTime
@@ -3019,7 +3039,7 @@ void OriginLocatorView::plotTabChanged(int tab) {
 		if ( SCScheme.unit.distanceInKM )
 			_residuals->setAbscissaName("Distance (km)");
 		else
-			_residuals->setAbscissaName("Distance (deg)");
+			_residuals->setAbscissaName("Distance (°)");
 		_residuals->setOrdinateName("TravelTime (s)");
 	}
 	else if ( tab == PT_MOVEOUT ) {
@@ -3029,7 +3049,7 @@ void OriginLocatorView::plotTabChanged(int tab) {
 		if ( SCScheme.unit.distanceInKM )
 			_residuals->setAbscissaName("Distance (km)");
 		else
-			_residuals->setAbscissaName("Distance (deg)");
+			_residuals->setAbscissaName("Distance (°)");
 		_residuals->setOrdinateName(QString("Tred = T-d/%1 km/s (s)").arg(_config.reductionVelocityP));
 	}
 	else if ( tab == PT_POLAR ) {
@@ -3445,6 +3465,15 @@ void OriginLocatorView::setConfig(const Config &c) {
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const OriginLocatorView::Config &OriginLocatorView::config() const {
 	return _config;
+}
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+void OriginLocatorView::addLocalPick(Seiscomp::DataModel::Pick *pick) {
+	_changedPicks.insert(std::pair<DataModel::PickPtr, bool>(pick, true));
 }
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -5777,6 +5806,11 @@ void OriginLocatorView::commitWithOptions() {
 		if ( SCApp->configGetBool("olv.commit.fixOrigin") == false ) {
 			dlg.ui.cbFixSolution->setChecked(false);
 		}
+	}
+	catch ( ... ) {}
+
+	try {
+		dlg.ui.cbBackToEventList->setChecked(SCApp->configGetBool("olv.commit.returnToEventList"));
 	}
 	catch ( ... ) {}
 

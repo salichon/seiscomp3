@@ -594,7 +594,7 @@ DatabaseIterator getComments4PrefOrigins(DatabaseArchive *ar, const EventListVie
 		<<       "POrigin." << _T("publicID") << " = Event." << _T("preferredOriginID") << " and "
 		<<       "Comment._parent_oid = Origin._oid";
 
-	 return ar->getObjectIterator( oss.str(), Comment::TypeInfo() );
+	return ar->getObjectIterator( oss.str(), Comment::TypeInfo() );
 }
 
 
@@ -3402,13 +3402,13 @@ FocalMechanismTreeItem* EventListView::addFocalMechanism(Seiscomp::DataModel::Fo
 
 
 void EventListView::messageAvailable(Seiscomp::Core::Message* msg, Seiscomp::Communication::NetworkMessage*) {
-	CommandMessage* cmsg = CommandMessage::Cast(msg);
+	CommandMessage *cmsg = CommandMessage::Cast(msg);
 	if ( cmsg ) {
 		onCommand(cmsg);
 		return;
 	}
 
-	ArtificialOriginMessage* aomsg = ArtificialOriginMessage::Cast(msg);
+	ArtificialOriginMessage *aomsg = ArtificialOriginMessage::Cast(msg);
 	if ( aomsg ) {
 		Origin* o = aomsg->origin();
 		if ( o )
